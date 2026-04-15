@@ -8,5 +8,10 @@ namespace SkyScan.Core.Entities
 {
     internal class Airplane
     {
+        public Guid AirplaneId { get; set; }
+
+        public string Model { get; set; }
+
+        public List<CabinClass> CabinClasses { get; set; }
     }
 }

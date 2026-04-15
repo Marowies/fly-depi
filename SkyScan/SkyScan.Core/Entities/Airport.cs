@@ -8,5 +8,12 @@ namespace SkyScan.Core.Entities
 {
     internal class Airport
     {
+        public Guid AirportId { get; set; }
+
+        public string Name { get; set; }
+        public string Code { get; set; }
+
+        public Guid CityId { get; set; }
+        public City City { get; set; }
     }
 }
