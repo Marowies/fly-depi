@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkyScan.Core.Entities
 {
-    internal enum SearchType
+    public enum SearchType
     {
                 OneWay,
                 RoundTrip,

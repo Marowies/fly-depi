@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SkyScan.Infrastructure.Data.Data_Sources;
+
 namespace SkyScan.Presentation
 {
     public class Program
@@ -8,6 +11,8 @@ namespace SkyScan.Presentation
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+            builder.Services.AddDbContext<SkyScanDbContext>(options => 
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             var app = builder.Build();
 

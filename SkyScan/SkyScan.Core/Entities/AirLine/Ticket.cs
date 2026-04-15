@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Entities
+namespace SkyScan.Core.Entities.AirLine
 {
-    internal class Ticket
+    public class Ticket
     {
         public Guid TicketId { get; set; }
 

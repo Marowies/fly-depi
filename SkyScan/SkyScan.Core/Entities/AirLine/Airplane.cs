@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Entities
+namespace SkyScan.Core.Entities.AirLine
 {
-    internal class Airplane
+    public class Airplane
     {
         public Guid AirplaneId { get; set; }
 

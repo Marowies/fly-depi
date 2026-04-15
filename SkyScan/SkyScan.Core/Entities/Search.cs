@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkyScan.Core.Entities
 {
-    internal class Search
+    public class Search
     {
         public Guid SearchId { get; set; }
         public DateTime TimeStamp { get; set; }

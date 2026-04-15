@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SkyScan.Core.Entities
 {
-    internal class PriceAlert
+    public class PriceAlert
     {
-        public Guid AlertId { get; set; }
+        public Guid Id { get; set; }
 
         public Guid UserId { get; set; }
         public User User { get; set; }

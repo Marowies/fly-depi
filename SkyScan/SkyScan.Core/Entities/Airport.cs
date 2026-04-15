@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkyScan.Core.Entities
 {
-    internal class Airport
+    public class Airport
     {
         public Guid AirportId { get; set; }
 

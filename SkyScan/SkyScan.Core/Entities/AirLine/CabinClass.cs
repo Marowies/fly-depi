@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Entities
+namespace SkyScan.Core.Entities.AirLine
 {
-    internal class Perks
+    public class CabinClass
     {
-        public Guid PerkId { get; set; }
+        public Guid Id { get; set; }
+
+        public CabinType Type { get; set; }
+        public int LegRoomSize { get; set; }
 
         public bool HasFood { get; set; }
         public bool HasWifi { get; set; }
         public bool HasEntertainment { get; set; }
-
-        public Guid CabinClassId { get; set; }
-        public CabinClass CabinClass { get; set; }
     }
 }
