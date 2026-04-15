@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SkyScan.Application/SkyScan.Application.csproj" />
+  <Project Path="SkyScan.Core/SkyScan.Core.csproj" />
+  <Project Path="SkyScan.Infrastructure/SkyScan.Infrastructure.csproj" />
+  <Project Path="SkyScan.Presentation/SkyScan.Presentation.csproj" />
+</Solution>
