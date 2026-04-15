@@ -1,0 +1,65 @@
+## [Visual Studio]
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (DotSettings)
+*.Generated.DotSettings.user
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio 2015/2017/2019/2022 cache/options directory
+.vs/
+# Uncomment if you use a custom Visual Studio output directory:
+#[Tt]est[Rr]esults/
+
+## [NuGet]
+# Restore artifacts
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Extension packages
+*.nupkg
+# NuGet Symbol Packages
+*.snupkg
+
+## [DotNet]
+# Entity Framework Crash Logs
+*.dotnet-testresults
+*.v2.sqlite
+
+## [Operating Systems]
+# Windows thumbnail cache
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# macOS folder settings
+.DS_Store
+
+## [Tools]
+# ReSharper
+_ReSharper*/
+*.[Rr]e[Ss]harper.user
+
+# Rider
+.idea/
+
+# Visual Studio Code
+.vscode/
