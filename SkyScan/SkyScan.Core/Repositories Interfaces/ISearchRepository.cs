@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Entities
+namespace SkyScan.Core.Repositories_Interfaces
 {
-    public enum SearchType
+    public interface ISearchRepository
     {
-                OneWay,
-                RoundTrip,
-                MultiWay
     }
 }

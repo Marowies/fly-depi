@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyScan.Core.Constants;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace SkyScan.Core.Entities
     {
         public Guid SearchId { get; set; }
         public DateTime TimeStamp { get; set; }
-        public SearchType Type { get; set; }
+        public TripType Type { get; set; }
         public DateTime DepartureDate { get; set; }
         public Guid OriginAirportId { get; set; }
         public Guid DestinationAirportId { get; set; }

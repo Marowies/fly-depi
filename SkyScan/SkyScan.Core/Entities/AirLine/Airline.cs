@@ -11,7 +11,8 @@ namespace SkyScan.Core.Entities.AirLine
         public Guid AirlineId { get; set; }
         public string Name { get; set; }
         public string HotlineNumber { get; set; }
-        public List<Flight> Flights { get; set; }
+        public List<Airplane> Airplanes { get; set; } = new List<Airplane>();
+        public List<Flight> Flights { get; set; } = new List<Flight>();
 
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Entities.AirLine
+namespace SkyScan.Core.Constants
 {
     public enum CabinType
     {

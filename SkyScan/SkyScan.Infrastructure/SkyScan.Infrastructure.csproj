@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Data Sources\DbConfigurations\" />
-    <Folder Include="Repositories Implementations\" />
+    <Folder Include="Data\DataContext\DbConfigurations\" />
+    <Folder Include="Data\Repositories Implementations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
