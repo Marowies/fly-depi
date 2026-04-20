@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -20,11 +20,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SkyScan.Core\SkyScan.Core.csproj" />
+    <ProjectReference Include="..\SkyScan.Application\SkyScan.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Data\Data Sources\DbConfigurations\" />
     <Folder Include="Repositories Implementations\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
