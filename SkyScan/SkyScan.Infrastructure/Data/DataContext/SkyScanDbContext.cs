@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
 using System;
@@ -24,7 +24,7 @@ namespace SkyScan.Infrastructure.Data.Data_Sources
         public DbSet<Airline> Airlines { get; set; }
         public DbSet<Airplane> Airplanes { get; set; }
         public DbSet<Airport> Airports{ get; set; }
-        public DbSet<CabinClass> CabinClasses { get; set; }
+        public DbSet<Country> Countries { get; set; }
         public DbSet<City> Cities{ get; set; }
         public DbSet<Flight> Flights{ get; set; }
         public DbSet<PriceAlert> PriceAlerts { get; set; }

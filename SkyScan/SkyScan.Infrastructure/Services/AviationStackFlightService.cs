@@ -13,9 +13,9 @@ namespace SkyScan.Infrastructure.Services
         public AviationStackFlightService(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
-            _apiKey = configuration.GetValue<string>("FlightProviderSettings:AviationStackApiKey") ?? "";
+            _apiKey = configuration["FlightProviderSettings:AviationStackApiKey"] ?? "";
             
-            var baseUrl = configuration.GetValue<string>("AviationStack:BaseUrl") ?? "http://api.aviationstack.com/v1/";
+            var baseUrl = configuration["AviationStack:BaseUrl"] ?? "http://api.aviationstack.com/v1/";
             _httpClient.BaseAddress = new Uri(baseUrl);
         }
 

@@ -8,19 +8,20 @@ namespace SkyScan.Presentation
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<SkyScanDbContext>(options => 
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")),
+                    ServiceLifetime.Transient);
             
             // Add AutoMapper
-            builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
-
-            var useMockData = builder.Configuration.GetValue<bool>("FlightProviderSettings:UseMockData");
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+ 
+            var useMockData = builder.Configuration["FlightProviderSettings:UseMockData"] == "true";
 
             if (useMockData)
             {
@@ -32,6 +33,22 @@ namespace SkyScan.Presentation
             }
 
             var app = builder.Build();
+
+            // Seed Data Integration
+            using (var scope = app.Services.CreateScope())
+            {
+                try 
+                {
+                    var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
+                    var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
+                    await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding datasets.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             // 1. Add our Global Exception Handler at the very start of the pipeline

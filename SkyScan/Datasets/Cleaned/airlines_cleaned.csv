@@ -1,0 +1,1444 @@
+AirlineId,Name,HotlineNumber,IcaoCode,Callsign
+745718ab-d228-4393-92b1-63a42107c991,Indian Air Force,,IFC,INDIAN AIRFORCE
+0b9196d0-9159-4cf7-946f-51e047c1cf65,Qatar Executive,,QQE,
+a4836ad8-d60a-45e1-8136-3fc615b4e221,Delta Air Lines,,DAL,DELTA
+cbb703c1-418a-46b3-98ce-fcc70236d2c3,Starspeed,,SSP,STARSPEED
+899a7606-23cd-427c-b775-9cccc005b1e7,United States Air Force,,AIO,AIR CHIEF
+26b189d2-035a-4d91-88ed-ff2e98913f85,Corporate Airlink,,COO,CORPORATE
+9b8c8f47-203d-497b-98e9-4b5632482182,Virgin Australia,,VOZ,VELOCITY
+31851992-a313-4eb9-a5b6-bc81372d9d2e,Federal Express,,FDX,FEDEX
+ae9a05ac-797f-46ee-bced-102304fd5504,Tap Portugal,,TAP,AIR PORTUGAL
+63404deb-1f42-42b9-aba7-a13a4258ba3a,Jet Aviation Business Jets,,BZF,BIZFLEET
+a2a0ce08-c3fb-42f4-852d-7b47dc7b89c9,Air France,,AFR,AIRFRANS
+8ddd983a-9527-44af-9bf9-333805b71f4a,Aegean Airlines,,AEE,AEGEAN
+30f2fb9d-8b44-4b59-b1b4-e0f1fa90a424,Capital Airlines,,CPD,CAPITAL DELTA
+0bb004ff-e144-4913-b34c-4c1715e64ab2,Norwegian Air Shuttle A.s. T/a Norwegian - Norway,,NAX,NOR SHUTTLE
+afadfd62-f3fe-4b2a-9ead-2ae916a68923,Eagle Air Iceland,,FEI,ARCTIC EAGLE
+32a003be-03df-45f1-85c6-990d895fdcd9,Qantas,,QFA,QANTAS
+2a4c3cbb-5fad-4ad4-bec6-809f48c0753e,Ameriflight,,AMF,AMFLIGHT
+c46e4de5-1d2e-411e-894c-1eb340ed6230,Massachusetts Institute Of Technology,,MTH,RESEARCH
+bc26b99f-ad5d-465b-bd34-ff5c03c3a4e7,Lucky Air,,LKE,LUCKY AIR
+69c8a790-6bdd-4ad7-b62c-8210a41bb6f5,Blue Air,,JOR,BLUE TRANSPORT
+48416efd-a572-4b4a-9c05-1b96e5ef59f4,Army Air Corps,,AAC,ARMYAIR
+abf10739-199e-4a16-8e84-8246ef3f8149,Air Canada,,ACA,AIR CANADA
+2a26aa5a-4eee-4d24-b6fc-0b441f13a0e3,Royal Air Force,,SHF,VORTEX
+250fac86-6343-4318-b05b-c04ee7a41870,Egyptair,,MSR,EGYPTAIR
+42ebf6a3-d57c-47ef-9a78-911f9515cd4b,China Express Airlines,,HXA,CHINA EXPRESS
+8309b35b-9557-4786-ab5c-f630bedf03d3,Royal Australian Air Force,,ASY,AUSSIE
+d06bb86f-b8d7-4def-82c8-038c644962aa,Nordwind Airlines,,NWS,NORDLAND
+91652c09-e31f-4006-b655-09d04300b7ae,Egyptian Air Force,,EGY,
+170532f9-7878-4762-aac6-abcd6e114794,United States Department Of Agriculture,,AGR,AGRICULTURE
+96b8f0af-3e90-49e0-b152-c4e5243ab9f8,Kurzemes Avio,,KZA,
+28257f20-a7c2-4f30-b416-28884faf823e,Ryanair,,RYR,RYANAIR
+001103fa-1734-4bf9-ad8b-f05d6f158822,German Air Force,,GAF,GERMAN AIR FORCE
+85acbbec-626e-42ce-87ea-08ca25180e0a,Valljet,,VLJ,
+685ce131-64e1-4a2f-b4e9-e54e3fb6b1eb,Neos,,NOS,MOONFLOWER
+f471db6f-0c05-41b6-8d1d-c360071a31b5,Tarom,,ROT,TAROM
+114544f3-83fb-4d10-931c-7d9d5835f7d9,American Airlines,,AAL,AMERICAN
+4f895a94-d0a5-48b7-85d4-a59d32578ddc,Southwest Airlines,,SWA,SOUTHWEST
+3b843224-199d-48f4-810d-b0ac3f1cd05c,China Southern Airlines,,CSN,CHINA SOUTHERN
+8f100e92-84a2-4dce-bca9-208186a3fedb,France Marine Nationale,,FNY,FRENCH NAVY
+75175691-f2e2-4ee4-a75d-4bd8d53a8368,Boeing,,BOE,BOEING
+f0fa41c1-ef90-4905-8423-b9b70352d05d,Flightworks,,KDZ,KUDZU
+2142f279-7799-4cfb-b859-fe95d61c1cfd,J-air,,JLJ,J AIR
+d047d889-3fa5-47f6-b815-b1f55fde7c83,Royal Netherlands Air Force,,NAF,NETHERLANDS AIR FORCE
+ed6048ef-1f52-42db-bd2c-1c89cd31bb8b,Binair,,BID,BINAIR
+b0e70c4c-0318-4d50-8583-9411d2e9f5f3,Spanish Air Force,,AME,AIRMIL
+4af491b9-2fc8-4d06-99e6-cd1e83fee388,Jet Air,,JEA,JETA
+ab973df8-61a1-4991-9388-182a2c0a295f,Blue Dart Aviation,,BDA,BLUE DART
+2374c26e-fd8f-47dc-88c4-e096c32c5e94,Aerotaxi,,ITE,AEROTAXI
+cf46a786-9638-4f43-a455-ebee5005fd35,Sichuan Airlines,,CSC,SI CHUAN
+76e76c88-359a-4a0c-94ee-fb072de7c1be,United Parcel Service,,UPS,UPS
+f499d163-f2a7-4f44-97f1-a76b716a33fa,German Army,,GAM,GERMAN ARMY
+1217d965-dfcc-4151-8288-0aba91eaa221,Flight Options,,OPT,OPTIONS
+e2d4f30e-cad2-4299-bbde-5fa49b12af8a,Bombardier,,BFO,BOMBARDIER
+871067fd-1b3e-4046-b25f-9fd7d1053148,Eurowings,,EWG,EUROWINGS
+373637fb-00c6-4898-800d-47eaa562c6fb,Czech Air Force,,CEF,CZECH AIR FORCE
+1a4bc4b3-f21e-4500-aefc-b4d20d282b67,Dassault Aviation,,DAB,
+dcd282cf-2ade-432d-aa37-9f32c628b9c9,Royal Navy,,NVY,NAVY
+75066917-fb0d-40c4-afee-53f8f134a2fc,Syncrude Canada,,SYN,SYNCRUDE
+b3676e83-7901-445e-9c44-827b6e8d706e,Hop!,,HOP,AIR HOP
+fa2f9cff-29f8-4c1b-96d0-f4db2fbbfa80,Royal Saudi Air Force,,RSF,ARSAF
+3d69d8d6-7f2f-43d3-92cb-d41333043027,Safair,,SFR,CARGO
+5d5324f7-5dd6-499b-ba10-ffd8862bdc08,Sky Aviation,,SSY,SIERRA SKY
+93e4d461-757c-461f-bca4-ea89c9928cf3,Journey Aviation,,JNY,UNIJET-ROCKBAND
+a8cb3dd2-f0aa-4d6f-8917-669c2012b513,Allegiant Air,,AAY,ALLEGIANT
+4832ac6f-d94b-4cd6-9c1e-376915033dfa,Sirius-aero,,CIG,SIRIUS AERO
+bcc98088-8ef4-4948-9b84-ed0260ddc99f,Embry-riddle Aeronautical University,,XSL,SATSLAB
+91aefeb3-f0f1-436c-a0a6-1e6116ea2191,Republic Airlines,,RPA,BRICKYARD
+828a1ea0-0944-4558-bccb-563a06239479,Gulfstream Aerospace,,GLF,GULFSTREAM TEST
+813bd7dc-ed1d-4f90-a311-2288a18adf09,Air Europa,,AEA,EUROPA
+1dfdff36-3cfc-4dfd-a4ba-15525af1457d,Air Transport Service,,ATS,
+a7f61a4e-b914-4bad-97cb-e060221ac287,Jazeera Airways,,JZR,JAZEERA
+e55c4a29-7122-41e7-b1a4-11f23783df71,Swiss International Air Lines,,SWR,SWISS
+dd6842b0-fa7b-4798-9554-1ee4a03f3472,Israeli Air Force,,IAF,
+4f5d163d-c14b-486e-9e2a-0fce2c570e1e,United Express,,SKW,SKYWEST
+57be3e61-f276-417b-b901-fb54c2b5cda9,Rossiya,,SDM,RUSSIA
+4afdb1bc-0662-4f00-ab7a-7f57b7a7701b,Columbia Helicopters,,WCO,COLUMBIA HELI
+0d5043c9-d79c-4907-a0d7-e8c4592907cd,United Airlines,,UAL,UNITED
+e26cb9ed-77c5-43f8-b5ac-ae9314620075,Dhl Air,,DHK,WORLD EXPRESS
+d3f527ec-1eb0-489b-bc8f-98497f70a517,North-wright Airways,,NWL,NORTHWRIGHT
+36f883ab-65d8-402c-a5d4-723e3f7ee8ba,Egyptair Cargo,,MSX,EGYPTAIR CARGO
+3495a95e-0c6e-4bc5-bfc8-12fb332405cb,Frontier Airlines,,FFT,FRONTIER FLIGHT
+8ae1a175-e207-4c4b-aad6-c6e3bfcdb979,South African Airways,,SAA,SPRINGBOK
+cedb4949-6a33-403a-b041-db8551a64b77,Turkmenistan Airlines,,TUA,TURKMENISTAN
+7fce4f79-f3bd-48f2-ae98-eccc5970afc5,Vivacolombia,,VVC,VivaColombia
+6a36cf32-7982-415b-ab5a-ee5c6c9dc739,Alfa Air,,AFA,BLUE ALFA
+21c08bc0-2b0c-4960-944d-c03e5ac07708,Royal Air Maroc,,RAM,ROYALAIR MAROC
+6960fd30-f6cd-4311-bae4-0cb610b67e0e,Volaris,,VOI,VOLARIS
+32dd7366-c81c-4a3e-b87b-34b59ed37ef8,Keystone Aerial Surveys,,FTP,FOOTPRINT
+240f6ac6-6862-4a5a-aab4-c3a408ae8246,Bristow Helicopters,,BHL,BRISTOW
+81edb95c-c645-4e0c-a4b6-c4dafe3ee5e7,Skywest Airlines,,OZW,OZWEST
+c27eea3e-a9ae-478d-8294-d6413714fa83,U.s. Transportation Command - United States Of America,,CMB,OMNI-EXPRESS
+3529fb4e-8467-462c-873d-7ebb620d62a4,Air Senegal International,,SZN,AIR SENEGAL
+6329d604-8829-48ba-9de9-dbbef89e8f2f,Air Transport International,,ATN,AIR TRANSPORT
+0d921dfe-9525-4065-81dc-52bfdb1978be,Southern Seaplane,,SSC,SOUTHERN SKIES
+b674cf0d-48cf-4d8c-b661-022f13fcbdce,Mediterranean Air Freight,,MDF,MED-FREIGHT
+754faafc-7149-4d17-9eec-6738b427a0ff,American Eagle Airlines,,EGF,EAGLE FLIGHT
+6e9a1872-547c-4a58-8a05-611f40bcd871,Air Corsica,,CCM,CORSICA
+d1b4cb1f-cc18-456d-b142-989aa902a554,Center-south,,CTS,CENTER-SOUTH
+0e5d5db7-e7fb-49fe-9d15-0023ce93892d,Lufthansa,,DLH,LUFTHANSA
+45d9ad46-bf09-47c6-81f5-61d72a33d255,Blue Sky Aviation,,BSM,
+e42aff75-0f6e-43cc-b5ff-e6b3757c51ba,China Postal Airlines,,CYZ,CHINA POST
+fa911351-041f-4738-a25a-973d7b6ea937,Korean Air,,KAL,KOREANAIR
+4510248d-4177-4540-bd64-7465a0f9cc8f,Air Hong Kong,,AHK,AIR HONG KONG
+a0a31a9d-6a33-4308-8b9f-8a459b5b5967,Kalitta Air,,CKS,CONNIE
+768cf5b9-e5f0-413e-ad19-b91ff2ff967b,Bell Helicopter Textron,,TXB,TEXTRON
+bedc452d-104b-4868-a8b9-24ae6010d302,Finnair,,FIN,FINNAIR
+cb07f9f9-1bf9-47cf-bc29-74a7f6de66bc,Pskovavia,,PSW,PSKOVAVIA
+ae683d90-c67f-437d-9b4b-438013234e8a,British Airways,,XMS,SANTA
+7bd0c9fe-fc6c-4fe4-b5bc-23d0bb4a81d1,Icelandair,,ICE,ICEAIR
+9ed946f3-782a-45bd-80d2-bf044f804b00,Aero Union,,TNO,AEROUNION
+d8d71af8-6f77-4cff-abfc-47a8c941a74a,Himalaya Airlines,,HIM,HIM
+14d29363-3602-4105-8390-f823a9a0a4d8,Avior Airlines,,ROI,AVIOR
+78243f60-ef71-4ef5-aa35-1d9d45bd9688,Air Alsie,,MMD,MERMAID
+4bd51583-4964-4bea-b6cc-dcdbb29742b2,Air-glaciers Sa,,AGV,AIR GLACIERS
+dc9f15cc-1ab8-4599-b26e-e22b8db43faf,U.s. Navy Reserve Logistic Air Forces,,CNV,CONVOY
+2275d562-d08e-4d2a-b899-2a716c13c9e1,Snunit Aviation,,SNU,
+14692081-b876-4aeb-bca3-3f92e107db5d,Air Creebec,,CRQ,CREE
+75c9b716-ebc8-4eca-a6fa-8731dc3a53ba,Force Aerienne Francaise,,FAF,FRENCH AIR FORCE
+e08d92ff-4a95-487d-9800-fad206117210,Temsco Helicopters,,TMS,TEMSCO
+06d2880d-ff35-4844-a610-26d394e3666d,Mhs Aviation Gmbh,,MHV,SNOWCAP
+0b6e1b6f-82af-4e89-bbe2-57bd37aafc7f,Easyjet,,EZY,EASY
+60ec7dfb-04ce-44e9-910e-b907f78c70c3,Aviation Legere De L'armee De Terre,,FMY,FRENCH ARMY
+d5e3510e-0794-4b8e-9ccf-62460b973b08,Air Atlanta Icelandic,,ABD,ATLANTA
+05f545e0-9448-4908-96a3-e342e0873a38,Aeroflot Russian Airlines,,AFL,AEROFLOT
+6df2decc-a78d-461c-927b-4ca909bf80bd,Azimuth,,AZO,
+33f3f0ac-70fb-4fa4-81ac-54ccdbafe597,Southern Cross Aviation,,SXA,FERRY
+993735ce-4519-4efe-ac9d-14cebc85cb9c,Silverhawk Aviation,,SLH,SILVERHAWK
+39fa7b91-f15d-4666-8d1a-6bc920c3ad78,Sunset Aviation,,VXN,VIXEN
+b83a0b9d-9ec0-4d33-969e-c644c3a0f313,Singapore Airlines,,SIA,SINGAPORE
+93d240a2-9497-4474-bec1-5b7206fb3ce9,Atlas Air,,GTI,GIANT
+2c2e73b5-3379-4504-8f3c-fe2e6b4a2fb6,Blue Chip Jet,,VOL,BLUE SPEED
+e76e3e9e-3ee3-4b38-9c59-fc4079088ef0,Brussels Airlines,,BEL,BEE-LINE
+fae49895-283b-4683-b374-6dda3bb2a59b,Bighorn Airways,,BHR,BIGHORN AIR
+349c260c-ac64-4adf-8611-c1cd65dd8ebf,Air Mauritius,,MAU,AIRMAURITIUS
+4dea21cf-4a1a-4453-b15f-099b3b27396e,Royal Air Freight,,RAX,AIR ROYAL
+65de7541-4589-4fc1-9be0-10a654f3290c,Jetblue Airways,,JBU,JETBLUE
+a47f93f2-044b-4c53-935d-19b27e5e8382,Lufthansa Cargo,,GEC,LUFTHANSA CARGO
+3d838e02-99bb-4d4f-b878-3ee6b53749d2,Lion Air Services,,WGT,WORLDGATE
+8a33d664-1cb6-43ed-addd-eeedc8717543,Euro-asia Air,,EAK,EAKAZ
+eb63d0ce-0e93-4df1-ac31-677de86161cc,Cougar Helicopters,,CHI,COUGAR
+ead9e05a-cba6-4994-a719-bb4593b7599e,Buffalo Airways,,BVA,BUFFALO AIR
+db9cf5bd-7f21-4306-80b7-1d00e4882807,Air Nippon Network Co. Ltd.,,AKX,ALFA WING
+9f6d3aa5-3758-451e-a569-b417a4d14d84,Eva Air,,EVA,EVA
+0df6ba13-4d72-475f-a62e-17388dae2b2e,Royal Malaysian Air Force,,RMF,ANGKASA
+8cf57634-f03f-4423-94bf-fde8ea8b3959,Benair,,HAX,SCOOP
+6b8fc812-5740-4559-87d5-f4e5ecb6a88d,Qatar Airways,,QTR,QATARI
+d8fee9f9-dbbc-4ef3-b252-e7dbce6cc5ef,Klm Cityhopper,,KLC,KLM
+ce2b1246-7273-41d0-9fd7-3a6b90014749,Kalitta Charters,,KFS,KALITTA
+b73c1b44-1f5e-42ec-a780-4241a3a638db,Air Mobility Command,,RCH,REACH
+e31da7c1-2b92-48e2-a15d-1dbae680d856,Utair Aviation,,UTA,UTAIR
+a61ebb33-0534-4af7-a81a-dd5cab444d8f,Kenn Borek Air,,KBA,BOREK AIR
+b8f5336a-bf4b-4262-ac25-a5348d3d72f9,Panh,,PNH,KUBAN LIK
+e08bcf46-e8fc-421b-9774-d70fac5d37a8,Norwegian Air Sweden,,NSW,
+6660a028-066a-4eaa-8a83-5feeffef1824,Petroleum Helicopters,,PHM,PETROLEUM
+db73ffa7-88a4-4569-ae15-2ace406ea27b,Wiggins Airways,,WIG,WIGGINS AIRWAYS
+ea83818c-9735-48f0-84c3-314579f603de,Kansas State University,,KSU,K-STATE
+2b7d3ca1-00b1-4ba0-ab0c-35a9593a31cb,Heli Bernina,,HEB,HELIBERNINA
+9268e285-d54d-4874-8c2c-bfc878faec1c,National Airways Corporation,,LFI,AEROMED
+3309dc86-e6c1-4c1b-8867-361c64b4ea72,Victor Echo,,VEE,VICTOR ECHO
+0e444318-d2d7-43f7-9f71-6cb9d845e8e3,Grant Aviation,,GUN,HOOT
+4441df63-5084-4764-bcc1-56ad646c0ba8,Toronto Airways,,TOR,TORONTAIR
+8744c245-21a1-4458-8f0d-83710f844256,Pilatus Flugzeugwerke,,PCH,PILATUS WINGS
+ad6da733-b117-4cc7-bcb5-c13fb4704c5f,Fly-coop Air Service,,FCA,COOPAIR
+b06ad203-618f-4fc1-af21-7e5ed473ee67,Latam Chile,,LAN,LAN CHILE
+5e1012d4-74f4-44e9-b927-2abf4ff121f5,Vueling Airlines,,VLG,VUELING
+7606edc5-460e-4dab-94b8-3d0266224501,Xl Airways France,,SEU,STARWAY
+d3689dc3-3b60-4d49-b07e-1f192f955d6c,Turkish Airlines,,THY,TURKISH
+6fd042bb-796d-4177-8f72-7f94e8fd8944,German Navy,,GNY,GERMAN NAVY
+10968cc1-f9a7-4f01-ad6c-c07448228ddd,Openskies,,BOS,MISTRAL
+8f802a38-9383-4255-be4f-b9df979406b2,Diamond Aviation,,SPK,SPARKLE
+484bf48f-4357-4a93-a77c-ef5ed6488a0f,Brussels Airlines,,DAT,BEE-LINE
+7f7c47a6-0180-45cd-ba31-7e079e273bf3,Cathay Pacific,,CPA,CATHAY
+ef1897df-93a5-4fe2-bfd3-aca57cf7281c,Avianca - El Salvador,,AVA,AVIANCA
+e787abdb-c2f6-4394-a158-ee45dedc53a2,Swiss Air Force,,SUI,SWISS AIR FORCE
+11b4a635-5c51-4d9c-92a2-c6d5ed59f1fc,Indigo Airlines,,IGO,IFLY
+f10e7b31-2be2-4934-86e5-116a6e6b0cc8,Arik Air,,ARA,ARIK AIR
+40279ef1-b36f-4022-a0a1-09d0e0eac296,Synergy Aviation,,SYG,SYNERGY
+f3f35a62-f189-43a1-8b6e-edd63a22b829,Maleth Aero,,MLT,
+6a6062de-4453-4db2-89cd-58e4bc638bd2,Scandinavian Airlines,,SAS,SCANDINAVIAN
+c1792b9b-e43f-4b94-8933-2b16f0b0e6be,Luxair,,LGL,LUXAIR
+31dce803-40ac-4e80-81db-f5b7fb0c5d2c,Asl Airlines Ireland,,ABR,CONTRACT
+48a59649-11bc-4553-a104-7c86823073b8,American Aviation,,LKP,LAKE POWELL
+298f487a-3125-4387-bc73-8d7cdae68036,Careflight,,CFH,CARE FLIGHT
+9fd5441e-e160-4cd2-b418-7763614ea1f9,Aspen Helicopters,,AHF,ASPEN
+6805eba2-f62b-4780-b666-1e4d655f88a6,Interjet,,MTF,INTERJET
+67239a12-44aa-438a-9a73-fd72fce697ae,European Air Transport,,BCS,EUROTRANS
+e4a3703f-04ff-4f73-bc00-012740882f13,Alaska Airlines,,ASA,Inc.
+001e2677-250b-4e67-b4d1-a6518b42197d,Astraeus,,AEU,FLYSTAR
+eedcde56-e029-4a96-a767-71ae838099f3,Republic Of Singapore Air Force,,SAF,SINGA
+31db1872-2349-4d33-9fdc-0deb19f2c833,I-fly,,RSY,RUSSIAN SKY
+ed0275e4-c0c2-4cad-8744-44ce2b069463,Mauretania Airlines International,,MAI,
+d6173b5c-21a0-4162-a353-a407eab7ca24,Airmax,,MMX,PERUMAX
+d9c4a91e-45ab-413e-8ef6-4eedc7cfe4e1,Red Baron Aviation,,RBN,RED BARON
+9521b2fc-2d14-4cf7-9e44-d4e0a137db05,Centennial Flight Centre,,CNS,CENTENNIAL
+27554ded-72e7-48cd-83fa-250995a3b8e7,Bulgarian Air Charter,,BUC,BULGARIAN CHARTER
+67e83ab5-28d5-491f-91f3-d71899c40a5f,University Of North Dakota,,NDU,SIOUX
+723935ed-c7ec-4a25-b942-55eea6e8620e,Quest Diagnostics,,LBQ,LABQUEST
+55042a5d-94dd-4fe1-876f-8bc439adcd30,Aerowest Flugcharter Gmbh,,AWH,
+c0dd366f-2999-49a7-912c-a9d135498dcf,Deutsche Rettungsflugwacht,,AMB,CIVIL AIR AMBULANCE
+f0479660-ca9e-47b4-b6a9-249f751641ba,Spirit Airlines,,NKS,SPIRIT WINGS
+0177849c-53ee-46f3-bcc3-d4002b74cd21,Alpine Aviation,,LPC,NETSTAR
+c83ccce9-3b36-4c02-bb39-64932668ce14,Federal Air,,FDR,FEDAIR
+b122cfe9-3c92-4423-905b-cf488e3db590,Ethiopian Airlines,,ETH,ETHIOPIAN
+17472676-ab72-4fb2-8243-ca648dfc0aad,Hawaiian Airlines,,HAL,HAWAIIAN
+39e2627f-36ca-4b73-9f46-3c059b732a82,Phoenix Aviation,,PHG,PHOENIX GROUP
+47749eaf-8cf2-43c6-b377-5b95d125377f,Tradewind Aviation,,GPD,GOODSPEED
+e760ce7e-ccea-4419-b51e-ef4a353f180c,Private Wings Flugcharter,,PWF,PRIVATE WINGS
+5d9743e1-26d8-43b2-b684-5f953990a0b6,Air Memphis,,MHU,MEPHIS UGANDA
+26c1e0e0-2ca0-46f9-949b-a84d1886d809,Abx Air,,ABX,ABEX
+61708a11-48e1-4e94-b42c-49d78863b3f6,Epps Air Service,,EPS,EPPS AIR
+89ab890e-10d5-4dde-97fa-653aaf294611,Japan Airlines,,JAL,JAPANAIR
+3150ecde-bb15-42da-9ddc-49eba309c877,Royal New Zealand Air Force,,KIW,KIWI
+0362bbe5-e445-48c7-b018-196e0f2ec9c1,Zagros Airlines,,IZG,ZAGROS
+03090c95-4b3e-4ccf-be4c-954c3030d337,Air Tahiti Nui,,THT,TAHITI AIRLINES
+703f9640-2248-45d2-97df-29d64b979025,Argentine Air Force,,FAG,FUAER
+f510596b-aef9-442b-9b1c-253ef954c76c,Bae Systems,,WTN,TARNISH
+9dc31041-6831-4a88-b051-1c923febdc19,Air China,,CCA,AIR CHINA
+7c352507-2fef-4b21-91ba-16ce2c987e6c,Aviaexpress Aircompany,,VXX,EXPRESSAVIA
+e6c74bee-63ec-4db3-a7f0-7df0eaf762f4,Griffin Aviation,,GFF,GRIFFIN AIR
+134af5a1-a461-4b78-80e7-ec948ebf016f,Portuguese Air Force,,AFP,PORTUGUESE AIR FORCE
+a6855414-c2d8-4005-a499-095614adea96,Era Helicopters,,ERH,ERAH
+25061ad1-7132-4ee8-b585-14e4295b0fa9,Mission Aviation Fellowship,,MAF,MISSI
+d6a6310f-7537-4717-bfae-19dcac885b9f,Coulson Aviation,,CUL,
+2a429156-477f-4382-8de8-18851188336a,Masterjet,,LMJ,MASTERJET
+585ba302-a7e6-4142-a73f-896cf0a82e62,Silk Way Airlines,,AZQ,SILK LINE
+6e857f66-d23e-43ac-9d97-193c1b6b78d6,Hokkaido Air System,,NTH,NORTH AIR
+3ad57375-ab32-47db-b3ee-237110a5e697,Heliportugal,,HPL,HELIPORTUGAL
+cf385b18-48b3-4db5-9e02-6ca3220c0217,Ulyanovsk Higher Civil Aviation School,,UHS,PILOT AIR
+b4673d6a-4bdc-4d90-95de-bd6011090d42,Jetconnect,,QNZ,QANTAS JETCONNECT
+60882cdf-fa9d-4b03-87f3-55b385e2449e,Trade Air,,TDR,TRADEAIR
+38354e96-8133-4f01-956f-a0db0f249a56,Ameristar Jet Charter,,AJI,AMERISTAR
+ef027609-f306-426c-8310-ae4c160f80c7,Nippon Cargo Airlines,,NCA,NIPPON CARGO
+24617771-9ea4-4b01-b9f8-23bae86bd535,Flamingo Air,,FMR,FLAMINGO AIR
+549f1b9a-c4d7-4899-b426-c9cb917e6ff3,Reliance Aviation,,REL,RELIANCE AIR
+790d8afb-51d9-4a77-8bed-1ca96285f2bf,London Executive Aviation,,LNX,LONEX
+acfcebc7-8500-46c3-9cd7-9d8047ccfb81,Air Bravo,,BRF,AIR BRAVO
+d46cff85-04ae-4a6d-8df8-2ebfa8425e6f,Air Center Helicopters,,RAP,RAPTOR
+768d2f0b-92f7-4fe8-b6f2-9ccd71830220,Maxair,,MXL,MAXAIR
+f3f2aa7c-6bac-4254-8480-63a8fcedab3b,Federal Aviation Administration,,NHK,NIGHTHAWK
+13704851-f10d-492a-abc8-6ed8f7963a21,Flair Airlines,,FLE,FLAIR
+3115fc77-374f-4d4f-975a-24c7595cd8c1,Braathens,,BRA,Braathens
+0156b4b9-f10c-4f10-a089-b1b1936febe0,Flugschule Basel,,FLU,YELLOW FLYER
+39d2797b-3a58-4898-a226-31714a5b64f6,Wizz Air,,WZZ,WIZZAIR
+477dfbe5-ff6c-431f-9868-3623f306785d,American Jet International,,SCM,SCREAMER
+24b97c9f-46ae-4704-bbf4-c66cff0be7c9,Reed Aviation,,RAV,REED AVIATION
+b3734d99-3e0d-4d98-b522-52912292ee55,Klm,,KLM,KLM
+886ae554-48c2-4707-b4c9-2350410bddbd,British Airways,,BAW,SPEEDBIRD
+994382e5-a7c8-400d-8f59-9989f8296b9d,Dalia Air,,DLI,DELTA EXPRESS
+657804f1-a3e0-49b2-88cf-f273620fc439,Netjets Europe,,NJE,FRACTION
+35dac9b0-3d4a-4b41-8e90-2de207decfad,Island Air,,ISI,ISLANDMEX
+bd54e80a-8b6c-4823-b57c-07882f90f926,Polish Air Force,,PLF,POLISH AIRFORCE
+d55bad8f-1c1e-4b03-92d5-52a541812352,Mac Aviation,,MAQ,MAC AVIATION
+71440a2a-a08f-400f-adb6-c6f6f0441618,Maximus Air Cargo,,MXU,CARGO MAX
+bca50758-a5ea-40ad-b03a-d73685b7ffdc,Pobeda,,PBD,POBEDA
+7802256e-9ed1-4f59-881b-631b44bf3bda,Royal Norwegian Air Force,,NOW,NORWEGIAN
+d0d0c710-a3f3-445f-a141-065bd30fa3c8,Ukraine Air Alliance,,UKL,UKRAINE ALLIANCE
+76f962a3-a101-45ef-a2c8-c64a94fe27cb,Martin-baker Ltd. - United Kingdom,,MBE,MARTIN
+3f02a571-822a-4f84-8254-ff2be782cfd2,Badr Airlines,,BDR,BADR AIR
+fd06b74e-6223-4c0c-948e-c78047b3cb76,Nicholas Air,,JTZ,JTZ287
+12590374-7bae-4b96-82b6-be2e3a4ba9d1,Jordan Aviation,,JAV,JORDAN AVIATION
+307fbef4-5cb7-4c84-9b5c-83691442509b,Air Zermatt Ag,,AZF,AIR ZERMATT
+fd470019-ccca-4ded-b2b9-2ac41dc067a1,Condor Flugdienst,,CFG,CONDOR
+7e6d6950-d284-4b22-80b3-bbd517b9f034,Philippine Airlines,,PAL,PHILIPPINE
+4d168701-a59f-4745-b876-e30602c4490d,Alkan Air,,AKN,ALKAN AIR
+23ee5d1c-887a-4b8a-8aa0-5b04b5975a87,Iberia Airlines,,IBE,IBERIA
+bbac0d7b-6172-4d8e-862b-7a33b1b2ba0a,Edelweiss Air,,EDW,EDELWEISS
+7de89a45-5329-404e-a7c6-f09f096dd66a,Aeroméxico,,AMX,AEROMEXICO
+209fd3ff-99a3-4718-bbc0-8ab07124fb0d,Baltic Airlines,,BLL,BALTIC AIRLINES
+74b511e4-a6a8-426e-8e2c-9870e0590fd6,Mississippi State University,,BDG,BULLDOG
+f2d1d81a-6133-4e91-bef9-8870f7418011,Sky Express,,SXR,SKYSTORM
+540118a7-09d6-4ebb-b1d9-bbc456d57940,Titan Airways,,AWC,ZAP
+066a36b7-b22e-4db3-9302-63d655c97a32,Worldwide Jet Charter,,WWI,WORLDWIDE
+20c8c0b4-d1a6-4283-a27e-9b6418495412,Malta Air,,MMO,
+c5a37743-4b98-43f6-a8ca-a2131c85a583,Falcon Aviation Services,,FVS,FALCON AVIATION
+8f1c30e6-60e1-435f-b110-f5a08487ccf9,Angara Airlines,,AGU,SARMA
+8f6b3dab-ad20-4b96-9aa9-cf4844280946,Aviaservice,,BIV,AVIASERVICE
+3a935aca-6b22-4302-b8d3-768e3854d298,Phoenix Air Group,,PHA,GRAY BIRD
+a367bfd5-9aec-4ac0-9be7-265a042d7c00,Virgin Atlantic Airways,,VIR,VIRGIN
+d8175112-9d3e-4fdb-9a76-7b1203c187e6,Irish Air Corps,,IRL,IRISH
+e4b63083-800c-4db7-a2e3-61bc3c377c4e,Hk Bellawing,,BWJ,
+9779c115-eaf4-4dcb-938a-6675d8ec933f,Canadian Coast Guard,,CTG,CANADIAN COAST GUARD
+62b701dd-0bbc-4378-99f2-577bdfcd4be1,Austrian Airlines,,AUA,AUSTRIAN
+a55f6382-31bb-423c-a3f3-7da0273f4fd6,Flydubai,,FDB,SKYDUBAI
+6bf33b55-97db-4aef-a9ee-df45386cfd00,Universal Avia,,HBU,KHARKIV UNIVERSAL
+514f9e76-9817-46ff-a13c-f2d09ab1e239,Dc Aviation,,DCS,TWIN STAR
+d43f79a7-5b30-4c67-93a7-c3cda4061619,Direct Flight,,DCT,
+488e2663-358c-4d4c-9c59-2f0c85f1b74f,Regional Express,,RXA,REX
+a5966c01-2b35-4963-a009-2c1ab74e800d,Cargolux,,CLX,CARGOLUX
+ed16728e-0528-42e4-ad3e-8ddeaba2edbf,Copterline,,AAQ,COPTERLINE
+75bce6a2-5f03-4e26-ac99-335a76fdc438,Pegasus Airlines,,PGT,SUNTURK
+5034d938-296e-4453-b2e5-c22aa61e1ded,China Airlines,,CAL,DYNASTY
+b0bbf4e8-7b68-4890-848c-2421d07bf3e1,Tunisavia,,TAJ,TUNISAVIA
+d8cd4e8f-be49-4a45-b58a-370a8f85aba2,Silk Way West Airlines,,AZG,SAKSERVICE
+05882362-22b1-4312-a2f9-2fc656cc742a,Egyptair Express,,MSE,EGYPTAIR EXPRESS
+4a13a809-56d3-4ad9-91fd-661778932b1b,Envoy Air,,ENY,Envoy
+1ff3d4f4-8101-4b69-b80d-643beed6cf9e,Aviostart As,,VSR,AVIOSTART
+c6aa25a8-106b-453b-b3b1-b52196d6e025,Heli Securite,,HLI,HELI SAINT-TROPEZ
+da399961-9590-4669-bb1a-991c968238e1,Rhoades Aviation,,RDS,RHOADES EXPRESS
+b39df8f4-770b-46e9-ab66-a450f24b761a,Norsk Luftambulanse,,DOC,HELIDOC
+0af2daa6-1f62-4811-81e5-d2143fd50488,Silverjet,,FJE,ENVOY
+f5c42ee0-c5bc-418b-bb79-01b346bc5d0a,Avialesookhrana,,FFA,AVIALESOOKHRANA
+2e4510db-f58d-42af-b825-576ec86e71b8,Dornier Aviation Nigeria,,DAV,DANA AIR
+19b8cfe7-6e29-4502-a372-a7c8115c4588,Allied Air,,AJK,BAMBI
+bc7165d2-27e0-4399-b5e4-9a0514500e4c,Ostend Air College,,OCO,AIR COLLEGE
+a49e71a2-53c0-4e65-ba14-59e07b5ae5f9,Emirates Airlines,,UAE,EMIRATES
+297f9584-ecf9-4c70-b8c8-0d37753f525e,Gama Aviation,,GMA,GAMA
+c75ffa11-788b-4595-834f-a7760b436a96,Priester Aviation,,PWA,PRIESTER
+5b68be85-1323-45ea-8b97-56386101b231,Tayside Aviation,,TFY,TAYSIDE
+5e24367d-52f3-43c9-81a0-66b5ea954dab,Air Tanzania,,ATC,TANZANIA
+1f4bd597-de13-451f-8201-47d4ea41059f,Horizon Air,,QXE,HORIZON AIR
+1a198646-7397-4a71-91a9-5bfcd51ef10a,Castle Aviation,,CSJ,CASTLE
+3ce54aff-2ab8-49d8-9cd5-7c9f471c11ba,Dexter Air Taxi,,DXT,Dexter
+d8d1f98a-dcd8-40dd-813c-96af703e0f00,New York State Police,,GRY,GRAY RIDER
+03d6fba9-8152-4750-8665-63c0c774184b,Bahrain Defence Force,,BFW,SUMMAN
+ca6e09e3-4d95-441e-be18-f0b6c84f5a93,Usa Jet Airlines,,JUS,JET USA
+96f1856a-e391-4c53-9e86-5a3ada129492,Aviation Defense Service,,DEF,TIRPA
+46651375-24cf-4e31-9b00-0c5a3f69cc87,Libyan Wings,,LWA,LIBYAN WINGS
+029d46bb-0ef3-4db4-8430-87d6fa90d87d,Omni Air International,,OAE,OMNI-EXPRESS
+bc7ee550-9e7c-441f-a79f-02b1fc163fe7,Southern Air,,SOO,SOUTHERN AIR
+f96c898f-801b-4c8f-aff9-68254cc9081a,Network Aviation,,NWK,
+132c6bd1-1ba3-458a-ba9e-df3e15617ef8,Air Seychelles,,SEY,SEYCHELLES
+f3d5a0c5-6197-4c8a-a49e-63ca64f13b06,Us-bangla Airlines,,UBG,
+7e683187-931b-42a7-904c-7a1c80d6000b,Eastern Air Executive,,EAX,EASTEX
+18cf3492-97f5-43a6-b85e-1782f8393099,Thomson Airways,,TOM,TUI AIR[32]
+e148810b-8638-48ec-ab51-b008c178621f,"Eigenmann, Lukas",,FOX,
+f571d430-6222-448f-9d88-59a7f0efbb87,Hainan Airlines,,CHH,HAINAN
+91d63cfb-8a8c-4b62-982a-ecb0f97a9adb,Yeti Airlines,,NYT,YETI AIRLINES
+eb1aa7fd-6fd1-450d-9325-548eef7240df,Air Nostrum,,ANE,AIR NOSTRUM
+0a752c08-cd3c-402d-9fc4-66d6169d7ef2,Oman Air,,OMA,OMAN AIR
+3c3b5bb7-e7fd-4a5b-947e-33f6ecef9db7,Qeshm Air,,IRQ,QESHM AIR
+a793f9e3-6e75-4c4b-b755-c5937bb400ed,Sunexpress,,SXS,SUNEXPRESS
+6a268253-dc88-4ce6-b08e-f61714f0ca67,Metrojet,,MTJ,METROJET
+c1220ea5-dd8c-473e-b12a-f2f1a55410ad,Empresa Brasileira De Aeronautica,,EMB,EMBRAER
+105dae0f-5eb1-40cf-9192-61e7eb5407f9,Vieques Air Link,,VES,VIEQUES
+f1705f4b-ff2e-4716-a129-fb11be8e240d,Eckles Aircraft,,CMN,CIMMARON AIRE
+469a9cdb-2baa-4d67-9d60-a94ebff57b0b,Air Transport,,EAT,TRANS EUROPE
+91e6a475-9de9-45fc-b940-22e833e3c8ab,Ita Airways,,ITY,
+5d49e9c3-d825-4029-ae0a-18d0882ab36d,Trans Maldivian Airways,,TMW,
+68cd4653-264c-431b-bc49-c7fd7325a71b,Nav Canada,,NVC,NAV CAN
+1c5a43e4-02da-4281-ab53-ef1b2e1ece16,Atlas Helicopters,,TDT,TRIDENT
+33b55f33-0d68-4713-8657-763691627d20,South African Air Force,,LMG,SOUTH AFRICAN
+ba5de451-881e-44f4-bd80-e7c9581cfaf6,Izhavia,,IZA,IZHAVIA
+92baa62c-da45-4f0a-897b-3bdd83b25e48,Alliance Avia,,KVR,KAVAIR
+ce0a2536-8b37-42db-b8c9-ba4c8a12381e,S C Ion Tiriac,,TIH,TIRIAC AIR
+731c145e-49d9-48d4-8362-d7aa115a8b9c,Scoala Superioara De Aviatie Civila,,RFT,ROMANIAN ACADEMY
+967a9e0b-37fe-4145-bd71-a9f47687b845,Flexflight,,FXT,
+fbcc3ae0-9144-4272-baac-6c5a3f928864,Aero Air,,WIL,WILLIAMETTE
+34fefd62-22f2-463b-ac31-f3bcaa12b2c3,Aer Lingus Limited - Ireland,,EIN,SHAMROCK
+2f4fbdc2-1834-45f3-aae7-85a537fa0009,Aeromexico Connect,,SLI,COSTERA
+32aaecd8-dae0-4211-b9a9-f665fabd6b32,Airnorth,,ANO,TOPEND
+4ed948bd-8143-403e-be3d-f921e8024af6,Berry Aviation,,BYA,BERRY
+803b6fa9-4a52-4f4f-a8ff-9c269a03b8b4,Delta Air Elite,,ELJ,ELITE JET
+0ab14baa-ed33-40d0-a90c-4794127aac27,Amerijet International,,AJT,AMERIJET
+78ed8646-169d-4094-a7dd-ddd17c9d2d3c,Commonwealth Jet Service,,CJS,COMMONWEALTH
+1ec5686b-a26b-4230-92e7-ee6830d848a2,Propair,,PRO,PROPAIR
+ae2165ef-5364-478f-bf4c-799e46d0cb37,Pelita Air Service,,PAS,PELITA
+bf0c4fdb-3465-434b-ab25-e450ca22ffb2,Aerovias Dap,,DAP,DAP
+0fd9b347-5587-4216-b936-265dcf568d85,Binter Canarias,,IBB,
+ec3d717c-7bd9-4617-b522-0326058571c8,Cargo Air,,CGF,CLEVER
+bcc70458-6202-4b4e-a619-14a67bbb1934,Aeronaves Tsm,,VTM,AERONAVES TSM
+5a94741c-bbc6-4248-a296-3eb8563f87cf,Heliocean,,OCE,HELIOCEAN
+11449acb-fde0-43d6-a020-6dfbb41e1c4d,Aviastar-tu,,TUP,TUPOLEVAIR
+a1ffb623-1a4e-49d8-a240-7b04ddcb42e6,Albion Aviation,,ALD,ALBION
+bd1dfb85-9c6f-4283-adb3-7fd302eec70e,Alidaunia,,LID,ALIDA
+03f7335a-eb61-4303-8719-4ece957675cd,Time Air,,TIE,TIME AIR
+12842ab9-5a80-4f3b-a2b9-89b56732a846,Sasair,,SSB,SASIR
+9d03684a-1d87-4fbc-8951-d974df5aa6e1,Royal Flight,,DME,
+47f75469-87c8-4c0d-8482-0101bc97aa8e,Ukrainian Helicopters,,UHL,UKRAINE COPTERS
+ac398d31-4641-4895-ab0d-21ea2a240dd4,Sunwing Airlines,,SWG,SUNWING
+951723d7-2c59-4385-b3b1-215445ab4605,Anderson Aviation,,ADX,ANDAX
+523c7362-e843-43e7-a183-00f19d4e4bc2,Jetfly Aviation,,JFA,MOSQUITO
+fa5b0441-35d6-4891-8ee1-6ead7075bb71,All Nippon Airways Co. Ltd. - Japan,,ANA,ALL NIPPON
+6758ceb5-feff-4980-9831-c3be2f9d5356,Executive Jet Management,,EJM,JET SPEED
+5d709540-d599-40ec-99ca-f4a1e709ce31,Knight Air,,KNA,KNIGHTAIR
+bbdf2afb-76e6-4cd5-8f71-d5350a2a1630,Copenhagen Airtaxi,,CAT,AIRCAT
+4ea1e456-3fd2-4a12-a457-77eab94b32e7,Sheltam Aviation,,SHM,SHELTAM
+1b9c3ebb-fe77-4ad4-8a4e-2bb488ddfee0,Wright Air Service,,WRF,WRIGHT FLYER
+535121ee-a137-4dda-b98f-21d9439967f0,Saudi Arabian Airlines,,SVA,SAUDIA
+4e455c81-32ed-4de9-b0c1-ba9567cac587,Kulula.com,,CAW,COMMERCIAL
+c2755a73-c067-4615-a28c-2f3b4457f89f,Bristow Helicopters Nigeria,,BHN,BRISTOW HELICOPTERS
+eba1ecf1-0f08-4981-9c2e-a97297bcf9cd,Stapleford Flight Centre,,STL,STAPLEFORD
+c22a783b-72d3-491c-a28d-15601a38930d,Delta State University,,DSU,DELTA STATE
+9169b1e7-9a6c-40f9-8db3-1b9d460d69f7,Royal Jordanian Air Force,,RJZ,JORDAN AIR FORCE
+55164491-c31f-4455-8ade-9860a8074a99,Qantaslink (eastern Australia Airlines),,QLK,QLINK
+8fe80c42-2d42-4e01-a866-dbc81dcc28c7,Chair Airlines,,GSW,
+e5d2b70b-0d28-4035-8272-8ffdd2fd571a,Malta Air Limited - Malta,,MAY,
+7df55263-fc48-42df-9215-455ded0946f1,Belavia Belarusian Airlines,,BRU,BELARUS AVIA
+114457b1-9d13-4f00-b48a-966b6d4a74aa,Aero Vision,,AOV,AEROVISION
+d1ad5035-7fd9-4ff6-a4fe-a07823293a15,Viva Aerobus,,VIV,AEROENLACES
+c33d7245-b7f5-4910-a35d-16da55fb283d,Airbus Transport International,,BGA,BELUGA
+7f1cf46e-6301-497f-baea-160dcf03d0bf,Millennium Air,,MLK,NIGERJET
+b2181f9f-3c7e-44b1-90fa-805d583b8aba,Japan Air Commuter,,JAC,COMMUTER
+8ecb2091-eb21-4611-a44a-291847daaf5f,Caribbean Airlines,,BWA,CARIBBEAN
+9f5b3177-1f2f-477d-b64a-3fa5bca2316c,S7 Airlines,,SBI,SIBERIAN AIRLINES
+523b8607-93d4-4742-8558-78106966529d,Westjet,,WJA,WESTJET
+5fb58631-430c-4163-95a3-8cb36e813502,Uganda Air Cargo,,UCC,UGANDA CARGO
+e96ee94b-d208-49e3-b0ec-0049fc844049,Zimex Aviation,,IMX,ZIMEX
+d9ad2177-9a24-4c2f-b9e6-4deeb8713869,Tiger Airways,,TGW,GO CAT
+dceb1c48-eb69-4f3a-a56e-73df84c45f7b,Gojet Airlines,,GJS,LINDBERGH
+ac38df33-749c-44b6-bb5f-92143b093485,Transportes Aereos Pegaso,,TPG,TRANSPEGASO
+d09ead53-5fa8-4e1c-9b5d-ab07e95f7a2e,Azul Linhas Aéreas Brasileiras,,AZU,Azul
+d50f2260-476b-4b72-b93a-227a5f55eb3d,Flight Training Europe,,AYR,CYGNET
+2655aaed-3e62-4251-a949-4d9528368a19,Tunisair,,TAR,TUNAIR
+2bfb4948-cec7-47e8-a060-111cfb5fe3f6,Westair Aviation,,WAA,WESTAIR WINGS
+77d5eb2e-3cff-477f-aba6-6b9a31fbc001,Jet Air Group,,JSI,SISTEMA
+bd27862b-c49a-46ef-9957-9d72b87aaa26,Caverton Helicopters,,CJR,CAVERTON AIR
+8aee7feb-a480-4650-92ae-3d1b464a85a3,Etihad Airways,,ETD,ETIHAD
+39fea2e4-b4ee-4a80-8eb8-29181f376ced,Airspeed Aviation,,SPD,SPEEDLINE
+c6f5d8d4-821c-45fc-8ad6-d2e601b56a8d,Farmingdale State University,,FDL,FARMINGDALE STATE
+9197b15f-d8d1-4e4a-ba93-c53c295963ab,Prime Aviation,,PKZ,PRAVI
+fc7c04e6-10c5-4d31-bd0b-958f4bf237a0,Mountain Air Service,,BRR,MOUNTAIN AIR
+42504765-582c-4759-bade-7af4b9502880,Copa Airlines,,CMP,COPA
+907aec04-0534-4f4b-afeb-3786ce71ec75,Alrosa Air Company,,DRU,MIRNY
+521f7e1e-7d09-468d-b8ee-6fba282d0ba7,Execujet Charter,,VCN,AVCON
+a7182d66-67f4-4bcd-b2a2-edccfcec6043,Condor,,CIB,CONDOR BERLIN
+c076d222-f96d-4d52-a105-e1da39397a17,Jat,,JAT,ROCKSMART
+0ba7606f-8e1e-4a13-804c-f2938b654f5f,Peruvian Air Force,,FPR,
+a61633fd-2222-40f5-a650-c70a78432f02,Orenburg Airlines,,ORB,ORENBURG
+be7a9534-ecbb-4f28-b0b1-e4964aa31338,Sku,,SKU,AEROSKY
+1fc68876-b5fa-4d15-bc16-309d77a60f2c,Air Mana,,EFC,FLIGHT TAXI
+12ad187d-3f14-419e-acda-a9ae727e06a8,Formula One Management,,FOR,FORMULA
+365bbb9a-e53f-4690-a1b5-57cdc2e7a7ed,Sky Helicopteros,,HSY,HELISKY
+a94c97ca-f4af-437a-817e-ac2c329d283f,Tassili Airlines,,DTH,TASSILI AIR
+169bffa2-6813-4145-bf61-869e2626aa5b,Wings Air,,WON,WINGS ABADI
+d7ed4f2f-11b1-4604-aa31-c62808d913ed,La Ronge Aviation Services,,ASK,AIR SASK
+7b6f78bb-5d63-4c88-b908-04104b483d9e,Antonov Airlines,,ADB,ANTONOV BUREAU
+5918d242-c322-4507-9b62-85dc7a84199b,Air Transat,,TSC,AIR TRANSAT
+f3fb5190-824b-48a3-8d89-c3d716f58b89,Queen Air,,QNA,QUEEN AIR
+c201216e-d8e3-412c-8776-05bf4fd5fa81,Alpha Aviation,,APH,Inc.
+dff1d3ab-3815-4641-9d57-7b395654abc5,Avia Air N.v.,,ARB,AVIAIR
+f1c0f529-0cbd-432c-a350-d4baefbe7ebf,Airexplore - S.r.o. - Slovakia,,AXE,
+68738e7a-384b-480d-8442-428bcc3d572f,Air Austral,,REU,REUNION
+1c5fe165-f1cc-4aae-9258-207f629a81b5,Sefofane Air Charters,,SFE,SEFOFANE
+9c70ef58-24eb-452b-98f2-e687154a7ad9,Lauda Air,,LDA,LAUDA AIR
+4a99fbd5-bb2b-47dd-8bcd-236037a02ae4,China Cargo Airlines,,CKK,CARGO KING
+da7e1ed5-982c-4c61-84cd-c9936a9bddc2,Airasia,,AXM,RED CAP
+3e7c2a45-aca2-4637-809c-33e98ab669cd,Qatar Amiri Flight,,QAF,AMIRI
+dddcf291-0b73-487a-8cb5-643ffd3c941a,Coastal Airways,,CNG,SID-AIR
+3ad46fc6-f4be-4296-b2ae-fdc82ec5bfe4,Bering Air,,BRG,BERING AIR
+ae91430a-356f-4aaf-a682-262a39dd93f8,Gulf Air,,GFA,GULF AIR
+17cc7485-4ae4-44d9-9cad-a7f77e404397,National Jet Express,,JTE,JETEX
+efd430cf-4ce3-4267-a389-fb71eed14d85,Hungarian Air Force,,HUF,HUNGARIAN AIRFORCE
+8e445ec4-b187-4106-b8f6-9f5797c0afa8,Sierra Pacific Airlines,,SPA,SIERRA PACIFIC
+8243fd4b-0d74-467b-89b4-0fc71b2bb45d,Bidair Cargo,,BRH,
+ecaa9346-aa17-463f-970e-c1d984250f31,Metro Express,,MEX,EAGLE EXPRESS
+68cbaebf-97f6-4266-b234-482ef9535b44,Aero Mongolia,,MNG,AERO MONGOLIA
+5175c874-437a-48ab-bec5-a74272ad001c,Tui Airlines Netherlands,,TFL,ORANGE
+47f94dae-ee73-4cd0-bd22-0acafc0b79f5,Jettime,,JTG,JETTIME
+768fb536-57ff-450a-b8f7-d713c95038a1,National Air Cargo Dba National Airlines,,NCR,NATIONAL CARGO
+2187d2d7-dcdf-4819-b700-9d001a93a2b0,Multiflight,,MFT,YORKAIR
+92a63a5d-cd5b-4515-a953-1bf3d295d775,Flybe,,BEE,JERSEY
+b2595f43-9432-4f9a-8d0d-ea9072f7810a,United Arab Emirates Air Force,,UAF,UNIFORCE
+2dacccd0-5ac2-42aa-a28f-3313b6fd4765,Executive Airshare,,XSR,
+27e99d9f-1f41-43cb-8045-ae57b0862378,Execujet Scandinavia,,VMP,VAMPIRE
+c9b3b603-051e-4ba2-a082-fae5036ef40a,Wow Air,,WOW,WOW air
+0433d134-739b-41f4-94f4-5105c6ffd184,Hta Helicopteros,,AHT,HELIAPRA
+c3b3a1d5-62f6-41df-83c7-7bd03c053cf9,Bankair,,BKA,BANKAIR
+a46de76f-3671-450e-87dc-f386ee3e5900,Pacific Wings,,NMI,TSUNAMI
+868ddde3-d18c-4a90-932e-b3d075042452,Alitalia,,AZA,ALITALIA
+9823ab49-2134-4667-870d-b56c38601950,Transpais Aereo,,TPM,TRANSPAIS
+8051a5c5-db01-4496-8a17-fa0092bec940,Guinea Ecuatorial Airlines,,GEA,GEASA
+65a67461-6bd9-4bac-9a6c-1d6d01e0de7f,Gol Transportes Aéreos,,GLO,GOL TRANSPORTE
+21118e7b-9c3a-4960-9edf-a0d9c2e1aedd,Transaero Airlines,,TSO,TRANSOVIET
+3cd410ff-368d-4a52-9604-58d5fb95e6ae,Tnt Airways,,TAY,QUALITY
+96f6a145-18d8-4c7b-9e87-b37655313545,African Express Airways,,AXK,EXPRESS JET
+610a0f71-afab-4a63-9d21-6dfd58e372ff,South African Express Airways,,EXY,EXPRESSWAYS
+2c3a4640-45f0-46b8-8fab-c0d1e947aa36,Taban Air Lines,,TBM,TABAN AIR
+662c775b-17d0-4b2e-8cb7-d5530c6288b5,Polar Air Cargo,,PAC,POLAR
+07b8cdb2-a7a3-481a-bd4d-163cb4246e48,Chartright Air,,HRT,CHARTRIGHT
+022c2de6-7b78-4df2-b5bb-7435725c9def,Jubba Airways,,JUB,JUBBA
+22c28a23-8a1a-49ff-a2c6-6edcdc77ce68,Ministic Air,,MNS,MINISTIC
+fd8542da-77d0-4a89-9937-a32bb6413291,Alaska Central Express,,AER,ACE AIR
+6d499ed2-8ff5-4126-ab72-5567c455eb57,Asiana Airlines,,AAR,ASIANA
+3fa56dcb-e5cd-46d3-8853-146fe01dba4e,Air Canada Rouge,,ROU,ROUGE
+feac0bb1-74b5-43d7-ac80-673ce7e02e15,Somon Air,,SMR,SOMON AIR
+0b56fee6-1a68-4717-96e6-596c731866fe,Star Aviation,,STA,STAR
+903c78d8-01b0-4f13-8d4c-9c0136fa1f13,Maple Air Services,,MAD,MAPLE AIR
+48f45b16-5a45-4d91-b120-d9d59958fa35,African Airlines,,FDA,AIR SANKORE
+6d811290-024a-4807-9bc0-32d8c7e5b669,Tol-air Services,,TOL,TOL AIR
+158460b4-2046-4958-8fcc-daa73c6bdbc4,3d Aviation,,SEC,SECUREX
+86e73d8d-0147-4c82-ab4f-1d1ac04b8e1e,Northern Thunderbird Air,,NTA,THUNDERBIRD
+12eaaac1-be65-45f6-8b4c-8f0b92c49266,Inter-state Aviation,,ITS,INTER-STATE
+79ae2093-2381-4fd4-9de5-8ec4ca097e5c,Helvetic Airways,,OAW,HELVETIC
+3942b9d5-52e5-4885-8fad-eece490a6028,Central Airlines,,CTL,CENTRAL COMMUTER
+7248059d-b796-4124-90e5-bdbf4d916bca,Airest,,AIT,
+f62b3fb5-d2c4-4adb-a938-d2ba4b8f8bdd,Duncan Aviation,,PHD,PANHANDLE
+4c0e1e3d-e24f-4872-982b-e2f8cfc315d5,Finnish Air Force,,FNF,FINNFORCE
+a1946951-107a-4fe4-bb7c-467201094a5b,Air Baltic,,BTI,AIRBALTIC
+2e2e676b-aae8-41da-9164-4f8cfcd09b00,Central Flying Service,,CHA,CHARTER CENTRAL
+31718568-74e9-4236-b73d-339f61dcaed4,Safe Air,,SFP,SAFE AIR
+7fbfbd98-44a3-4360-8419-49a280edb431,Norwegian Air Shuttle Aoc,,NOZ,
+21f4a208-3481-456e-b4e9-32d389067418,Middle East Airlines,,MEA,CEDAR JET
+9933b3bf-9926-41ed-928a-e6ee53b4f2b4,Princely Jets,,PJP,PRINCELY JETS
+9f1df325-52e0-4c94-9b1c-e168295dfde3,Gestair,,GES,GESTAIR
+da2c0617-f19e-417c-9de5-6080ec0539d5,Easyjet Switzerland Sa,,EZS,TOPSWISS
+339e2c5f-cc33-4ad4-ae8d-131a9947195c,Bluebird Cargo,,BBD,BLUE CARGO
+6937f58b-45d5-4597-94d0-0ce9d881cafa,Royal Air Force Of Oman,,MJN,MAJAN
+d61328fe-ccb2-436f-9828-0bbc2ded0938,Vistajet,,VJT,VISTA
+9ca71153-029f-4562-bf0f-3730431163d1,Bahamasair,,BHS,BAHAMAS
+5b84748c-840b-4c49-a478-acbd0a624e86,Eagle Aviation,,GYP,GYPSY
+64a0888c-806d-4954-a708-2a039d1b7fc0,Lithuanian Air Force,,LYF,LITHUANIAN AIRFORCE
+7de54444-503b-40b9-957e-3c4d180e2b03,Cargojet Airways,,CJT,CARGOJET
+bb5cb85d-d9fa-42da-8f6d-97b493dddc4c,Sun Air,,SUR,
+de049392-91e4-4a58-9fec-0c75bd54dccd,Cabo Verde Express,,CVE,KABEX
+86fdfd10-03ac-4cf4-a91f-57eb94c07b1f,Jet Stream,,JSM,JET STREAM
+580acda6-29b3-46d6-8e4e-81cacf3896e1,Hpm Investments,,HWD,FLITEWISE
+1cea6595-7b34-407c-ae68-f1d4caf8a4ce,Trans Guyana Airways,,TGY,TRANS GUYANA
+68724e20-836e-4621-af8f-87e3801f3930,H-bird Aviation Services Ab,,ETI,JETHAWK
+37e5e92b-a551-4da7-8d82-1d60ec18be70,Gazpromavia,,GZP,GAZPROMAVIA
+1795eade-f170-4a02-9e07-f4ea68fd7b7e,Vistara,,VTI,
+15b5f073-3261-4cce-bdfd-e451f847047c,Total Linhas Aereas,,TTL,TOTAL
+8630a097-b9bb-46ef-92e4-a79b32df18e7,Isles Of Scilly Skybus,,IOS,SCILLONIA
+0e61e020-f45d-430a-829f-460615328071,Pel-air Aviation,,PFY,PELFLIGHT
+d9f258ae-9a63-4932-be31-8cec8c3495dd,Air Service,,SPJ,AIR SKOPJE
+e2911810-6620-4393-b28c-68f4a8f5ba81,Visionair,,VAT,VISIONAIR
+6b7a2701-8c25-4a58-bfcb-aad957246731,Wings Aviation,,WOL,WINGJET
+6f97d39a-6971-4e9c-b368-32e1b2ee0031,Richland Aviation,,RCA,RICHLAND
+6f111a29-2fba-4238-82ce-8ff5648e6b02,Warbelow's Air Ventures,,WAV,WARBELOW
+d5022b0c-f794-4811-9113-4634f5540878,Noordzee Helikopters Vlaanderen,,NHZ,NADA AIR
+7f593cfb-2eff-4d6f-8d51-14ee6cb2862d,Fai Air Service,,IFA,RED ANGEL
+ec7231ec-4db8-4bba-a235-ac88b8855bd8,Arrow Air,,APW,BIG A
+fc06d193-5026-49b5-9c41-a90f4e42f0b5,Aero Servicios Azteca,,TED,AEROAZTECA
+bd708e28-2196-4b83-ab81-5c52120773fa,Ifl Group,,IFL,EIFEL
+5f587943-13dd-49c0-b758-d57cb08f04b1,Clay Lacy Aviation,,CLY,CLAY-LACY
+dfadcf81-c24c-4cc6-8e60-eee02cbebb3c,Omniflys,,OMF,OMNIFLYS
+42579c40-e94d-4a59-88d5-57b0c2df23e6,Donair Flying Club,,DON,DONAIR
+45d469b6-0c3f-4d24-a076-59f455163bc8,Air Senegal International,,SNG,AIR SENEGAL
+bf952a27-9b4d-47bf-99a5-579b5e29673d,Flugschule Eichenberger,,EZB,EICHENBURGER
+14a417bc-7801-422c-9e59-bdb631d5c43f,Mcc Aviation,,MCC,DISCOVERY
+7b4e10ba-8cbe-4369-ac4e-90854bfa7e2b,The Airline Ifly - Russian Federation,,XGO,
+8f738c06-29ca-4c34-a6fc-2d26b7caf206,Midwest Airlines,,MEP,
+1f53d958-312a-4308-bf31-9b00b2589061,Flyegypt,,FEG,
+a7a76191-cc90-4155-b88b-01f372b4e9c8,Air Caledonie International,,ACI,AIRCALIN
+b299a6c5-16d7-4cd1-9554-917d9d4b5a39,Air Manas,,MBB,AIR MANAS
+2344b819-bc91-485c-adbb-8e8790d1932e,Southern Airways Express,,LTD,LIGHTSPEED
+44340661-37e9-4b13-9fab-6ad9f4223fea,Compania Transportes Aereos Del Sur,,HSS,TAS HELICOPTEROS
+9d4be466-f9d0-4611-ba00-d8bc6c21e75c,General Aviation,,GNZ,GONZO
+d0d7203e-4ad9-4955-8e91-e4a9af5931ec,Jetstar Airways,,JST,JETSTAR
+e64e485f-a36d-480d-b04f-1aabf918151e,Flyadeal,,FAD,AIR FRONTIER
+9b5aafe3-8cc6-49df-99a3-c040797b25c6,Airsprint,,ASP,AIRSPRINT
+ca7e3b9b-c5c7-4623-85bf-634e2518e9d1,Kan Air,,KND,Kan Air
+9edd809c-5ced-47f7-a715-4138aa948381,Westjet Encore,,WEN,Encore
+eb7368ef-76e2-411b-bb9e-cd0e7c5a8f4c,Myanmar Airways International,,MMM,assignment postponed
+6bdf33d1-1415-4775-ad31-1cb21d77a664,Luxembourg Air Rescue,,LUV,LUX RESCUE
+9af93da0-9c7c-45ee-af71-ae25523164b8,Gta Air,,GTX,BIG-DEE
+9b6878fb-2659-4f02-9e37-053b88b36bf2,Transavia France,,TVF,FRANCE SOLEIL
+bdb436c4-8ca2-4c6c-95c1-a1b6908a9c08,Air Century,,CEY,
+66b6c71a-8d38-4810-9039-6dd2ccc0391d,China Eastern Airlines,,CES,CHINA EASTERN
+959c1864-1646-4680-8442-f753ce49fa3b,Caribbean Wings,,ZYZ,caribbean Wings
+a1e350b5-0aaf-479a-9af4-7adec577e607,Heli Air Services,,HLR,HELI BULGARIA
+4956244a-653b-4bea-af87-060a00527bdd,Fly Alpha,,BFX,
+d511a6ab-2da5-42a0-93f2-eba91cf03c25,Logan Air,,LOG,LOGAN
+8142cf99-dc8f-4139-8a81-b53db1a8b111,Alliance Airlines,,UTY,UNITY
+079f9d1c-c5ec-406a-8f26-2765fa4aa086,Wizz Air Uk,,WUK,
+62ecf177-4dcb-421a-ba9e-c5fbe0e74a9c,Thai Flying Service,,TFT,THAI FLYING
+1c98b4cc-6ca8-4c06-94fc-c00da0922e4b,Air Cairo,,MSC,
+6100d3a1-2535-4fab-928f-ed447d8d32e4,Dutch Antilles Express,,DNL,DUTCH ANTILLES
+26c182b0-59e1-400a-afb6-a8421c261313,Capital Air Service,,CPX,CAPAIR
+ad0068eb-ea89-49de-89ae-6154ca642732,Lund University School Of Aviation,,UNY,UNIVERSITY
+f10b02a7-cae4-459a-92a2-68d8dac8b4e9,General Aviation Flying Services - Inc. - United States Of America,,GTH,GOTHAM
+991b3b70-890a-49c7-af13-56ff90f59564,Fastjet,,FTZ,
+03234145-e6ec-4687-811d-787ea2550a80,Yakutia Airlines,,SYL,AIR YAKUTIA
+c18361e8-f9ec-4638-ba7d-f3c290b7aad9,Atlantique Air Assistance,,TLB,TRIPLE-A
+2bf4bf92-00e5-4747-991c-b7c7394c8b03,K-mile Air,,KMI,KAY-MILE AIR
+860a2fe8-aa58-4018-9c2f-643841b6d013,Elite Air,,EAI,ELAIR
+d89a3e94-12f0-4fc4-b85c-cc41b9825bde,Lot - Polish Airlines - Poland,,LOT,POLLOT
+00febca8-5633-4c21-a343-1033223d753e,Lynden Air Cargo,,LYC,LYNDEN
+00dfa09b-b995-4965-89e5-51adc9382b75,Bombardier Business Jet Solutions,,LXJ,FLEXJET
+2e308e3c-8579-4040-b03a-c97157d10341,United Aviation,,UVN,UNITED AVIATION
+6447ded5-fa9f-44d2-8e85-a209b0278c80,Jetkonnect,,JLL,
+4402a4c8-81d3-445e-849a-16e7ce2be4b7,Mistral Air,,MSA,AIRMERCI
+01f7fdfa-0848-431f-b5ef-37839d6a7ad3,Aspen Aviation,,APQ,ASPEN BASE
+0a5acc2c-b00d-4aed-8175-bbca49b82e96,Cat Aviation,,CAZ,EUROCAT
+8ae45fc7-c45f-4f91-9a70-61315482fc44,Express Air,,FXA,EFFEX
+3bb7ce2b-71a3-4d7d-894a-30bd10d35a57,Pouya Air,,PYA,
+5ea752be-38fe-42d7-8104-21dac3fba3db,Redding Aero Enterprises,,BXR,BOXER
+8225e8ca-b897-449f-bb37-9bf0e87937c5,Aerocorp,,RCP,AEROCORPSA
+56e07a95-02ea-48f8-8f06-2c69f2a47f64,Sylt Air Gmbh,,AWU,SYLT-AIR
+dd646d8f-26a0-4ffc-9250-6d9d1ce1e771,Pak West Airlines,,PKW,PLATINUM WEST
+170a3b29-d9ba-4c5d-a4eb-2d80a6ae9223,Easyjet,,EJU,Alpine
+08799537-8a93-4bbd-9bac-4a24cf050628,United Aviation Services,,SAU,UNISERVE
+0841a83b-040d-4d31-b501-094f9a279555,Prime Air,,PRM,PRIME AIR
+099a03a0-578a-4843-a86d-3714d3478e23,Sun Country Airlines,,SCX,SUN COUNTRY
+4cbfc40c-8262-4090-a63b-485a04840a87,Miami Air International,,BSK,BISCAYNE
+edba8564-9b9e-4d72-8af7-4cc7e68f3ff7,Smartavisa,,AUL,ARCHANGELSK AIR
+8616f659-90c3-449a-8b5e-3078a56f86dd,Nigerian Air Force,,NGR,NIGERIAN AIRFORCE
+6acb20dd-b01e-474d-8306-543cc5e0a189,Swiftair,,SWT,SWIFT
+a4fa4dc5-692e-4588-a7eb-87838ee7ec26,Corporate Flight Management,,VTE,VOLUNTEER
+9ba86eaf-4bbe-4086-bb9e-4aab5870d142,Central Mountain Air,,GLR,GLACIER
+33ba66ad-9e1c-45b8-b753-978c3579fcea,Small Planet Airlines,,ELC,
+f602ed64-d8b6-48ee-8a8c-3effafcf4855,Priority Air Charter,,PRY,PRIORITY AIR
+0438814d-1522-4ee0-a0e0-58e0e776b16f,Brazilian Air Force,,BRS,BRAZILIAN AIR FORCE
+90e64746-433f-4feb-98a9-46206435525c,Aviation Partners,,WLT,WINGLET
+2f99133a-feac-4353-b02e-79a16251be73,Westland Helicopters,,WHE,WESTLAND
+d69ad852-1632-4bf5-b3f7-884fe29ef1a0,Iran Air,,IRA,IRANAIR
+5ce5c0e0-ab15-48cd-ae89-b83d514674c3,Ijm International Jet Management,,IJM,JET MANAGEMENT
+85b539fb-028e-4980-8243-118332a5854b,Aurigny Air Services,,AUR,AYLINE
+a89a4160-8d6a-403c-a71e-7a512f1754a8,Cranfield University,,CFD,AERONAUT
+d57f0408-0cbc-4461-82ab-fc16a16eda77,Tyrol Air Ambulance,,TYW,TYROL AMBULANCE
+b767d68c-741f-4a94-97e7-26a5267b29e2,Linea Aerea Sapsa,,LNP,SAPSA
+a6399e59-7451-4073-ba88-02cd6b81fcdb,Pool Aviation,,PLX,POOLEX
+f1f1b65a-6e55-4f74-99a2-1f7ad76257ac,Action Air,,ORS,AVIATION SERVICE
+e05165c9-a5de-4d3d-bac3-c6671e4c6ef4,Baja Air,,BJA,BAJA AIR
+2b9ad33f-52d7-46c7-aef8-c0395e5d8053,Sunbird Airlines,,CDL,CAROLINA
+ad9b3176-6913-4e15-b2e4-f8fcb9ef76c2,Alaska Island Air,,AAK,ALASKA ISLAND
+6e6ab815-5e84-48c3-9347-05e797f8dc6e,Laudamotion Gmbh - Austria,,LDM,
+4e7f368d-0483-4847-94c4-ed4a94304d6a,Airline Skol,,CDV,SKOL
+2e17d200-51b1-4970-b7b5-6b3d949388b6,Blue Bird Aviation,,BLB,BLUEBIRD SUDAN
+c5d328dd-85b5-4d73-ac95-3aed5a7064c7,Air Park Aviation Ltd.,,APA,CAN-AM
+be43e939-90e1-4c40-8888-9c424dd8b54b,United Express,,UEU,UNITED EUROPEAN
+4d17c421-d398-46c4-ba56-4ed727c3fb7d,Pioneer Airlines,,PIO,PIONEER
+715d978c-9908-4a9b-8ee0-0396fb99810d,Freight Runners Express,,FRG,FREIGHT RUNNERS
+6ff9542b-0bc3-495f-8a4b-027b107b09b5,Wiking Helikopter Service,,WHS,WEEKING
+d4d31d94-349a-44f3-aa67-f0f46b03cc32,Cargologic Germany,,GCL,
+597d3be0-1aef-4166-be72-f44a2cd03ac9,135 Airways,,GNL,GENERAL
+ebf19a9d-1c56-4101-b3bf-85685d526a9a,Olympic Air,,OAL,OLYMPIC
+ac090551-1469-4d6a-82c2-fbf7f9e98cfb,Hop-a-jet,,HPJ,HOPA-JET
+5730cba8-0650-4f9b-96ad-b67d1855dd6c,Executive Flight,,EXE,EXEC
+c12058b0-464a-427d-a92c-1c9ea762b927,Srilankan Airlines,,ALK,SRILANKAN
+b6840d79-7b19-4595-8220-54c6f6774c01,Kabo Air,,QNK,KABO
+8bef7dd7-ac6a-4810-81c1-8b90a5661539,Ojets,,EAU,
+d7a8e3c1-7f4f-4cb6-b115-039e3dfa748f,Banco De Mexico,,BMX,BANXICO
+714549a5-4be6-4249-b2ac-61bb5e0a0e28,Avia Traffic Company,,AVJ,ATOMIC
+f4938242-42da-4b42-8890-0d3ce62cce9a,Jet Executive International Charter,,JEI,JET EXECUTIVE
+22181bfa-c38f-4295-998d-525c4bf28980,Garuda Indonesia,,GIA,INDONESIA
+7e16228f-5d84-46a9-ad1b-ae0935d658ef,Lynch Flying Service,,LCH,LYNCH AIR
+1d977f4b-2459-4ee2-aa4f-e13ecf817b7d,Air Corporate,,CPV,AIRCORPORATE
+3143dfe7-3d9e-4e77-b827-fd6390f7595b,Key Lime Air,,LYM,KEY LIME
+8c935298-bcc7-4160-ad3f-9707cd1aac47,Executive Airlines,,EXU,SACAIR
+02430ccc-5338-4d9f-8f36-7905b1a49b04,Falcon Air,,FAR,FALCAIR
+02d64687-ffed-4f5d-87b1-b8fa62f38f26,Sonair Servico Aereo,,SOR,SONAIR
+8bc435f2-542f-40e7-9823-14d6ccb6ab69,Top Air,,TOP,AIR TOP
+4245e395-2be7-4d23-afcd-6f4a63e5a488,Air Medical,,MCD,AIR MED
+89ebcea1-a56f-4395-93d7-8e72a592d055,Eurowings Europe,,EWE,
+4fc1e313-215e-4fe3-b76b-6c598e06d45f,Easyfly,,EFY,EASYFLY
+d0c86960-b7f7-4a5f-82bb-951b14b5f144,Iliamna Air Taxi,,IAR,ILIAMNA AIR
+643580be-902a-4728-9d2b-cf41b30c432f,Air Itm,,MQT,MUSKETEER
+07f579bb-22ff-4cc6-a0f2-d3005c7d72fd,New England Airlines,,NEA,NEW ENGLAND
+5998693c-1660-4883-a748-279d3dc3846a,Aero Servicios Platinum,,PNU,AERO PLATINUM
+93195089-034c-4822-8170-3bc699cf7e85,Tuifly,,HLX,YELLOW CAB
+50e2dc90-0355-4925-82e9-54768d2ebb54,Linea Aerea De Servicio Ejecutivo Regional,,LER,LASER
+351dcd1f-f1f7-4959-93b6-c2f9a70f24a0,Air New Zealand,,ANZ,NEW ZEALAND
+a05ad436-7e59-4aa8-9d97-ed890c5bc1ab,White Eagle Aviation,,WEA,WHITE EAGLE
+79ef2a64-720a-4ead-a605-a8b28dde0f88,Amelia International,,AEH,Avex
+6d42de8b-c8c3-4e38-92e9-d8daf9558ea9,Sunclass Airlines A/s - Denmark,,VKG,VIKING
+9a4b6a6b-8a64-48e4-a335-7b0b6801da22,Northway Aviation Ltd,,NAL,NORTHWAY
+ba883b16-b1cf-4ad3-90eb-5127d57d2759,Global Jet Luxembourg,,SVW,SILVER ARROWS
+08e258f6-0c20-4bd4-b0fb-a1eb42858c07,Aerostar Airlines,,UAR,AEROSTAR
+cf611926-9a72-4023-86d6-7d501b68d1c2,Mali Air Express,,VXP,AVION EXPRESS
+fb96a0fc-667c-45ae-baa5-add332644362,Mccall Aviation,,MKL,MCCALL
+008c2284-6f0b-4aa9-9177-c623bd8df77f,Central Aviation,,YOG,YOGAN AIR
+38fc91e1-6a00-40b6-b9f5-e403f88ba20b,Excellent Air,,GZA,EXCELLENT AIR
+e73179f4-b36f-4d50-b18c-6bae4b1741f0,Anisec Luftfahrt Gmbh,,NLY,AUSTROJET
+7f5b19ea-8228-405d-b047-0f6b0b921f2d,Ameravia,,VAM,AMERAVIA
+3d422dcd-bb35-453f-a1b4-da4b85bbfdc8,Danu Oro Transportas,,DNU,DANU
+5b722c2b-8876-4f85-ab48-b856d2fd2513,Bmw,,BMW,BMW-FLIGHT
+6b0c8a27-957b-4711-a8f2-492ea6cdad5c,Wdl Aviation,,WDL,WDL
+a020177b-5e7e-495e-b78d-e604bd6111be,Buddha Air,,BHA,BUDDHA AIR
+6877a051-6150-442a-8176-326134514b7c,Albinati Aviation Ltd / Cashair Sa	2,,ULC,
+b196f105-4a3d-4fe3-bc0c-345775dc0272,Aerotransportes Rafilher,,RFD,RAFHILER
+e2aabf79-220c-4d8c-b4e2-08df74030d54,Nimbus Aviation,,NBS,NIMBUS
+a6f7a4b3-b0ed-46f0-a3b1-fa0a00a7d8a5,Interjet-abc,,AIJ,ABC AEROLINEAS
+92444ae4-bde6-49d1-ab38-2659ba4b1ced,Air Algerie,,DAH,AIR ALGERIE
+57607f17-6fcb-4a62-909a-d7a1f0599a5b,Sevenair,,SEN,SEVENAIR
+3de37b75-c790-4a50-9cf5-b7c5a6e91830,Corporate Air,,CPR,CORPAIR
+5e27a3e4-7e83-49ad-96ce-381a81855fc1,Laneas Aereas Trans Costa Rica - S.a. - Costa Rica,,TCR,TICOS
+d4a0fef7-4715-4e7c-af1f-afece4406ba2,Acropolis Aviation Ltd,,CRV,CARGOIV
+9138715a-5d12-49ce-b3db-2e2d0bd3dcf1,International Jet Aviation Services,,IJA,I-JET
+712a72b4-dced-4138-bf40-51a2d9606397,Skytaxi,,IGA,IGUANA
+724be4ab-96a9-40b0-8cfa-e410c7c657d9,Talon Air,,TFF,TALON FLIGHT
+68ed1e80-c0a1-48bd-9cbf-2f5fca3edee1,Aerosucre,,KRE,AEROSUCRE
+bf0858be-1f1b-413c-ab38-38c4593c8e1d,Silver Air,,SLD,SILVERLINE
+8a3aaee1-b5fd-4d23-badd-be51c667ecfe,Air India Limited,,AIC,AIRINDIA
+4147ca79-e2fa-49b2-a9cd-6b2f4821b645,Heli Union Heli Prestations,,HLU,HELI UNION
+b4bfdfb5-d7a6-4f38-af34-ac6e672b0fae,Business Air Services,,BAM,BUSINESS AIR
+47cbe61a-fc1d-4a21-a8dc-0dbab2a190b0,African Company Airlines,,FPY,AFRICOMPANY
+8e1febb4-c01c-4c18-b28b-853324135685,Northumbria Helicopters,,NHL,NORTHUMBRIA
+99a9aab6-acce-4a65-b159-86ec7a8b6661,Jet-stream,,JSH,STREAM AIR
+76bc7e1c-5c60-4490-a592-12fcf05df7fa,Air Express,,AXD,AIR SUDEX
+f4132721-90f7-4aed-a41d-4b2623840703,Ibc Airways,,CSQ,CHASQUI
+7093921b-4c0e-46bf-89a8-6b65e56f1df6,Lion Mentari Airlines,,LNI,LION INTER
+d2fa8d3c-c7ad-41da-8390-0c1a9bad0149,Skylink Aviation,,SKK,SKYLINK
+7f9f4ee5-d7b4-4a18-bfc2-3e04f0dc2e37,Kelowna Flightcraft Air Charter,,KFA,FLIGHTCRAFT
+6e8b4493-6f8a-4cf2-ad06-13d1639a3f8c,Smartwings,,TVS,SKYTRAVEL
+69561381-1414-42ce-90e7-ea470538ce7e,Avialift Vladivostok,,VLV,VLADLIFT
+e19f35fb-01ab-446c-b57a-8ed2dac73058,Scenic Air,,ENR,
+40096879-e96f-42a2-bf28-bb8199e938e9,My Jet Xpress Airlines,,NEP,
+f6f2bb8d-78fa-4b53-a93a-a31cc0a6b352,Lorraine Aviation,,LRR,LORRAINE
+a46202af-accb-4d5b-9751-42e09a6a337c,Avcom,,AOC,AERO AVCOM
+e283efb2-846e-4767-a3f2-76e6dcb7f743,Corse Air International - France,,CRL,CORSAIR
+f359da65-09ae-4005-8311-3a6910ea9509,Zenith Air,,AZR,ZENAIR
+37fcd5d7-ecdc-4004-acd4-ace1f9e03609,Jackson Air Services,,JCK,JACKSON
+7e9cd9bd-e46d-45bc-86e3-044d1e3a3a78,Luxwing,,LWG,
+a54dca6f-998a-422a-ac0c-ad9ac999dfd1,Grand Canyon Airlines,,CVU,CANYON VIEW
+64405b38-8411-40c9-b6f5-3e5eb6a1e0f7,Flight Express,,FLX,FLIGHT EXPRESS
+b61983ae-e8b4-437f-878e-2635e4dd4ff2,Open Sky Aviation,,OSA,
+fdd4c338-7fd6-4459-8651-192f8a45155c,Skyking,,SKI,SKYKING
+08a66b68-4a35-4a55-a081-e98ee97a8e5d,Airbus Industrie,,AIB,AIRBUS INDUSTRIE
+8caf176d-7a4a-4f21-9f6b-f1b1ae0cd6fd,Stewart Aviation Services,,YBE,YELLOW BIRD
+2be4de81-06b0-46b9-9d34-624c8e7716cc,Corendon Airlines,,CAI,CORENDON
+8d3b52d7-fa78-405e-8bfd-cfb31e909c9f,Jet2.com,,EXS,CHANNEX
+59ae27c1-03c5-46b0-90a0-990d19cc7d80,Fly One,,FIA,Fly One
+f377e158-2059-4252-95a4-92310bcbe49f,Mombasa Air Safari,,RRV,SKYROVER
+0f94fd23-956b-46c5-9fdb-df7d358bb23e,Royal Jordanian,,RJA,JORDANIAN
+6ec85455-4fd0-426b-86d6-693fbea3c944,Air Berlin,,BER,AIR BERLIN
+7e177545-fa89-437c-a8a4-db3d02eaf38e,Kenya Airways,,KQA,KENYA
+878cf454-3fe3-4ec1-8769-2bdecc2081b5,Georgian Airways,,TGZ,TAMAZI
+e2b1179f-86da-4688-90cd-0edc4df3198f,Red Wings,,RWZ,AIR RED
+7f915eab-4115-477c-ae97-767ccd8d4c6b,Asl Airlines France S.a. - France,,FPO,FRENCH POST
+264ff324-bf56-4841-af5d-2584bd2ca1a7,Druk Air,,DRK,ROYAL BHUTAN
+b8ae6a35-330d-4655-b417-69be8089c1b5,Mahan Air,,IRM,MAHAN AIR
+9dfa4418-ca23-4201-9d4a-064c9531e8a4,Blue Islands,,BCI,BLUE ISLAND
+2620c58a-8fe1-485a-96b2-689f704786b3,Aloha Air Cargo,,AAH,ALOHA
+b4927e1e-44c5-475a-aa5f-97e677b5263d,South Coast Aviation,,GAD,SOUTHCOAST
+b95e9c9a-e519-4c7d-b9d4-f7419a6a5591,Sunrise Airways,,KSZ,
+2982e09c-f665-4f82-8207-99100c283d06,Aerologic,,BOX,GERMAN CARGO
+278942fc-fe45-4c36-a06c-53f15599ce05,Starlite Aviation,,TRL,STARSTREAM
+20b3d09d-8e0d-4028-a904-f70c97669ca4,Northern Air Cargo,,NAC,YUKON
+5d6a01d7-ab6b-4d88-a640-74fb4d4e7b95,United Airlines,,ASH,UNITED
+5eeb1acf-79b4-445c-92cd-853233141552,Carpatair Flight Training,,SMW,Smartwings
+eebca7c7-72dc-4ff4-9351-11e3055e092a,Johnson Air,,JHN,AIR JOHNSON
+85a71c0b-011d-4dae-a2c7-0b5803395502,Baker Aviation,,BAJ,BAKER AVIATION
+48eb6b06-386e-4d1d-bed7-1826df36513e,Sokol,,PIV,AEROSOKOL
+4e3255ef-2bd6-40af-9c8a-1b6c94788ac8,Silesia Air,,SUA,AIR SILESIA
+71767d14-a7ff-4866-b478-513db15ff39e,Priority Air Transport,,PAT,PAT
+e43519b8-1f24-436f-8815-6ae82a16f381,Cityjet,,BCY,CITY-IRELAND
+886345a9-de4f-4565-88e0-dbdc917f23a7,Latam Brasil,,TAM,TAM
+b2569c88-558c-4d11-a37a-f684beea946a,Air Astana,,KZR,ASTANALINE
+4f29038b-a83b-4d76-a2bd-aa9ac8ae78d9,Texair Charter,,TXA,OKAY AIR
+18920b80-4934-4ab9-9073-5b0ed3d1016f,Aliscargo Airlines,,LSI,
+9faf6521-21d9-4250-89a0-592aab602b05,Island Air Charters,,ILF,ISLAND FLIGHT
+ea4d755b-5a3c-43b7-9e1a-4235d7d069e9,Flight Calibration Services Ltd.,,VOR,FLIGHT CAL
+c9dca90d-5aff-4b26-b2d3-0ac0cf070620,First International Airways,,FIW,
+17bd2c89-aae8-4159-bdb3-e5da36830021,Aero Services,,BAS,AEROSERV
+553d2590-14cf-4ba4-940d-e2fc58cf022c,Air Saint Pierre,,SPM,
+28e3a966-55d5-4dce-b041-dcd1c1fe0262,World Cargo Airline,,CXM,
+b5396d74-5bae-468a-84b8-7c572b0d3f82,Superior Aviation,,HKA,SPEND AIR
+6dcb7707-cea9-4f38-84a2-e499227c10ae,Executive Jet Charter,,EXJ,
+256f0767-2195-4023-ab58-c26856143a4d,Fly International Airways,,NVJ,NOUVINTER
+cb317131-efda-4311-9f93-589c0e8589c1,Jetnetherlands,,JNL,JETNETHERLANDS
+ae973574-eda9-4ed8-a074-315623829983,Southern Aviation,,SOI,SOAVAIR
+81e93cee-f2c5-471e-bf25-ddbdec9df9d5,Avianca Cargo,,ONE,OCEANAIR
+1e34a3dc-a33c-49e0-9f11-1ff44b04b707,Transair,,TTZ,
+58711b8c-111c-45a2-a406-0e2390abac1f,Potosina Del Aire,,PSN,POTOSINA
+916f8c95-238d-436f-b28d-e0423accb064,Rossair,,RSS,ROSS CHARTER
+954dc8bd-e46a-4da3-b035-39afe29a44cc,Atlantic Airlines,,NPT,NEPTUNE
+1de36690-1106-4cfe-a63a-040eb59aff20,West Air Sweden Ab - Sweden,,SWN,AIR SWEDEN
+bdbf085e-3228-4180-b554-ffcd3eada668,Island Aviation,,SOY,SORIANO
+801bb022-a99c-47c7-8229-0cfcbab6f679,Peach,,APJ,S.A.
+6ed30391-fac1-4377-bb58-a0bc598bbe02,Gm Helicopters,,GMG,GEE-EM HELICOPTERS
+4a6e7994-7761-44c5-a861-528f943142b3,Transportes Aereos Regionales,,TGI,TRANSPORTE REGIONAL
+4025fa4d-2096-4fe2-9aa5-6f11e5f74a1f,Helitrans,,HTA,SCANBIRD
+7156c84d-48d9-4f83-96e3-2ae1affdc39e,Air Arabia,,ABY,ARABIA
+1a8e68ab-af48-4624-8406-ca35f86eef50,Libyan Airlines,,LYW,LIBYAN AIRWAYS
+8075abc4-004e-4f7d-8e51-c4db22115333,Skyway Enterprises,,SKZ,SKYWAY-INC
+4487f925-5096-4123-9bbc-47b9c3156821,Flynas,,KNE,NAS EXPRESS
+6f0a460f-3a5d-41cf-9538-37b7fa893e0a,Blue Wings,,BWG,BLUE WINGS
+4b95cc9b-c5e4-442b-9d9a-5c43fd225c96,Wamos Air - S.a. - Spain,,PLM,PULLMANTUR
+f0ba3bc6-aee4-414f-8d3b-82dad1db64c1,Hong Kong Airlines,,CRK,BAUHINIA
+9d24a7a4-2d18-4c55-8c75-f42c146ff4f7,Ural Airlines,,SVR,SVERDLOVSK AIR
+bd992a3e-dfb2-40a3-95f8-b11ffd058c33,Qatar Airways Cargo,,QAC,QATAR CARGO
+13fade44-9940-492e-b523-5d70f8354c11,Netjets,,EJA,EXECJET
+690cb2e8-ea65-4b17-b4b0-c8998514b426,Champion Air,,CCP,CHAMPION AIR
+9d8f166e-1cce-4b72-85a2-8b4a6cdd70f0,Heli-holland,,HHE,HELI HOLLAND
+227029cf-5666-4cb5-b6a3-2f4093c2da95,Far Eastern Air Transport,,EFA,Far Eastern
+261f3c42-e876-4b51-9f84-96a9a93db176,Go2sky,,RLX,RELAX
+e5f933d4-31b0-400c-a98d-21dc0174ccbf,Heavylift Cargo Airlines,,HVY,HEAVY CARGO
+ccb08cfb-c4ca-451c-aae6-ced63ad170e1,Aerotrans Cargo,,ATG,BACHYT
+e9fd7738-5597-4480-b378-c74e858106f3,Airlink,,LNK,LINK
+aef84b41-f5f0-4651-b3c8-003cb2a0e52c,Vlm Airlines,,VLM,RUBENS
+aa2df4b7-c37b-4e3f-982b-c55470840592,Baf,,BAF,BELGIAN AIRFORCE
+f8bd96e6-1c09-45c1-a0b8-6844b56dfe76,Xtra Airways,,CXP,RUBY MOUNTAIN
+5375ec5b-73ee-4a4c-a039-c6c9621c17b4,Afriqiyah Airways,,AAW,AFRIQIYAH
+7f888bce-ac35-4488-bcb2-2290bbcb2ed8,Longtail Aviation,,LGT,LONGTAIL
+a690f038-788a-48b6-a1b6-0f97443a335b,Hahn Air,,HHN,ROOSTER
+dd12d780-d9ca-400a-91c9-98c8ad424753,Scat Air,,VSV,VLASTA
+8816ef64-e640-4e91-ae07-a330a7e61237,Sirvair,,VRS,VAIRSA
+f5e37add-5360-404c-8acb-2a5aac2e0e1f,Eastern Express,,LIS,LARISA
+033ffb98-3250-4955-9416-50588694de70,Entergy Services,,ENS,ENTERGY SHUTTLE
+4ff9b24c-217e-480a-a827-6804bfa6b52a,Freedom Air,,FRE,FREEDOM
+ac2fc08e-fea6-4118-a61f-5511582d68f6,Phoebus Apollo Aviation,,PHB,PHOEBUS
+44cbd13f-d2b6-40e8-b665-077cc3d8d300,Pegas Fly,,KAR,
+074ad323-5252-48b6-8cc2-ca83bb1489be,Tulpar Air,,TUL,URSAL
+4f46ee42-9e2e-49d6-843f-5f360a2aa8c2,Corpac Canada,,CPB,PENTA
+ffeb35f7-32ba-4aab-950c-2b85460f2873,Grantex Aviation,,LMK,LANDMARK
+8e056e4c-2a1e-44bf-a0fa-dce500a9536a,Caravan Air,,VAN,CAMEL
+2ad704a5-6c45-4193-8439-31a3506e0df0,Aeromar,,TAO,TRANS-AEROMAR
+9b06c76a-802d-47a8-a602-b43992f93840,Toll Aviation,,TFR,
+03d798d7-c8fc-4e24-a7c3-af078dc4945c,Privilege Style,,PVG,PRIVILEGE
+9898e084-7aee-41da-bb65-1bd47fdbb4a9,Arab Wings,,AWS,ARAB WINGS
+ca9dd4c3-f00d-4ab2-b53e-1c6fbd586144,Yangtze River Express,,YZR,YANGTZE RIVER
+b3f4d963-c82c-4a42-9c35-e974d0fabdf1,Servicios Aeronauticos De Oriente,,SVO,SERVIORIENTE
+e4aae234-94fd-44bf-869e-1cb03cf90169,Qantaslink,,QJE,QJET
+82a10d15-92eb-423e-b3b1-0a1d4f927327,Tg Aviation,,TGC,THANET
+b7c8bbee-55e7-4eb4-8504-96f2a470c223,Ryanair Sun,,RYS,ROYAL SKY
+9a32c801-6d37-456a-86c9-10d0ff9e5374,Crow Executive Air,,CWX,CROW EXPRESS
+3e5da8f5-52f7-4594-97a3-6c4094553937,Hewa Bora Airways,,ALX,ALLCONGO
+ec5fdd87-293a-42bd-82a1-1ab95d390cc9,Newair,,HVA,HAVEN-AIR
+5d209d10-eb65-4f1e-bb87-d731785d0c68,Air Canada Express,,SKV,Maple
+91aa4934-fab6-47d1-bb2f-c3e00b8c1bd0,Aviacion Comercial De America,,VME,AVIAMERICA
+853fac7a-96e5-4c2f-9133-ff5be4a1f110,Naviera Mexicana,,NVM,NAVIERA
+a90e82c4-63ee-46fe-b24f-26374ec1aa52,Coastal Travels,,CSV,COASTAL TRAVEL
+3d892272-2441-4004-abbf-9987ef90fe84,Panaviatic,,VPC,
+873dce13-b53d-4f3d-b9b5-838381be09ea,Go First,,GOW,GOAIR
+e2bec09a-0358-4630-ab9b-e006c6f68103,National Oceanic And Atmospheric Administration,,NAA,NOAA
+24ca1294-8137-46f8-9103-372bd76203d9,Springbok Classic Air,,SPB,SPRING CLASSIC
+92d5dad5-2294-4b78-ac4c-90e4304a5c84,Ba Cityflyer,,CFE,FLYER
+65f66afc-155d-426f-9a3b-b3b6255a7d41,Nouvelair Tunisie,,LBT,NOUVELAIR
+cb4579f6-15d9-4a7b-969c-d1fd644dfb21,Romanian Air Force,,ROF,ROMAF
+a5b1b800-337b-4e1e-a5ea-38f30eca0585,Latam Chile,,DSM,LAN CHILE
+078f6a34-fc81-487d-9430-903dfec75618,Airlines Of Tasmania,,ATM,AIRTAS
+cd7f34b8-4f80-4a47-bee8-a8cf6bfcf39c,Universal Airways,,UVA,UNIVERSAL
+cea8f81b-1dbf-457a-8654-ee65f34be9aa,Donghai Airlines,,EPA,DONGHAI AIR
+238a6731-e8e5-4154-8946-44b18b6cb97b,Russia State Transport,,RSD,STATE AERO
+ae81018e-2755-4589-9d66-ee2aefb9962b,Elliott Aviation,,ELT,ELLIOT
+05704411-ca94-40f0-b9a3-1120606b7d6f,Executive Aircraft Services,,XAH,
+afed9ac3-4f67-4fb8-a34a-3d9487b2bb56,Royal Jet,,ROJ,ROYALJET
+1336a060-356e-45ca-bd19-67295901353d,Air Hamburg (aho),,AHO,Air Hamburg
+206cfe17-863b-4ae4-a220-ec1a55b84709,D & D Aviation,,DDA,DUSTY
+22948944-168d-4799-a702-739e35f5bade,Presidential Aviation,,PRD,PRESIDENTIAL
+9de5e7d3-e728-40d0-9838-e21599445dee,Gold Belt Air Transport,,GBT,GOLD BELT
+c53e416f-20f4-46a2-bf04-8f55d3c2a63e,Volga-dnepr Airlines,,VDA,VOLGA-DNEPR
+c1dc4103-f557-4c32-af4f-bd19012c4988,Executive Jet Management (europe),,JME,Jetman
+18bfb66e-c45b-4bcf-aa91-ad5ef260da47,Hi Fly Malta,,HFM,MOONRAKER
+7ee3336a-337c-4c87-be98-a37198a1a619,Aeromax,,AXP,AEROMAX SPAIN
+43e0d898-1b55-4705-85fe-57941c32e33a,Yanair,,ANR,YANAIR
+857ab436-a6c1-4bc0-a519-69aa235101e5,Lufthansa Cityline,,CLH,HANSALINE
+d15420a4-535e-49d5-888e-f49a3b667925,Sundair,,SDR,SUNDAIR
+149a1992-5310-4bc3-8ba7-9645adfd660a,Jet Aviation,,PJS,JETAVIATION
+bceda7ce-acfc-4157-8d2f-e5d75bf005a9,Flairjet Ltd - United Kingdom,,FLJ,
+29ab7872-2045-4686-a6b0-92cd47db3928,Archer Aviation,,DHM,ARCHER
+f9b530de-03bc-4c49-97fe-f49406c10861,Aeronautical Radio Of Thailand,,AET,AEROTHAI
+db385cd0-aa44-479a-8c87-7c3fae3fb826,Severstal Air Company,,SSF,SEVERSTAL
+661d005c-cb26-4ae2-bf99-3d26c1998998,Air Almaty,,LMY,AGLEB
+1c953c96-d8f2-4973-b368-ab8fe140ac94,Vim Airlines,,MOV,MOV AIR
+bdace426-1b07-4fe6-aa46-820190c47bf1,Arctic Air,,AKR,Arctic Norway
+47d5a075-1bf3-4f1c-8bc1-59d7c0f86309,Rocky Mountain Holdings,,LIF,LIFECARE
+f1faa0ce-4c79-481e-a362-38c6643f1b1b,Cape Air Transport,,CTO,
+d6d749c5-2d52-46e3-9ce9-ae36f061c101,Commander Mexicana,,CRM,COMMANDERMEX
+9465454f-60c3-4035-9d32-9796b61f60b2,Algoma Airways,,AGG,ALGOMA
+b09187fc-f376-4f85-95e4-b60259c46d1c,Centurion Air Cargo,,CWC,CHALLENGE CARGO
+daac4d8f-b0b3-40bd-ad4a-bb7307ddbcc6,Leeward Islands Air Transport,,LIA,LIAT
+ec3208a9-44e4-4e49-8ebb-fea4f196d0a3,Aviation Services,,AVQ,Inc.
+a22e1a7e-08f4-4b69-a36c-322c4e1a33e4,Air Caraïbes,,FWI,FRENCH WEST
+faf9604a-a157-4ccc-96bb-ff48f0b0d20a,Deer Jet,,DER,DEER JET
+03d32bb9-1e32-4901-a5e6-2972e54a6f6d,Florida Jet Service,,FJS,FLORIDAJET
+638355e4-09e3-441d-aa67-80c715f17617,Qa Aviation,,QAV,
+9a740fcd-be16-4817-9bb4-9b36b4cced42,Onur Air,,OHY,ONUR AIR
+ea276c36-3bc9-4907-902b-b874ab5e1e7a,Andes Lineas Aereas,,ANS,AEROANDES
+705bb2d6-087b-4521-bd32-c50ffeaf3fc2,Volotea,,VOE,VOLOTEA
+0e52195d-591a-4b80-9177-cb5acd6e4c8d,Us Helicopter,,USH,US-HELI
+17b53f5b-b465-4aa8-9efb-e8c90fdde510,Western Airlines,,WAL,WESTERN
+4b6c0ecb-0058-4ab2-9024-dcd04c406c58,Buffalo Express Airlines,,BRX,BUFF EXPRESS
+caa34518-d655-4fa5-b9a2-13998a61651c,Precision Air,,PRF,PRECISION AIR
+ed35658f-4d3c-4010-a82d-a42c47ed184e,Resort Air,,RST,RESORT AIR
+fd30fba7-2572-4298-afdb-825d72ff9e8c,Michelin Air Services,,BIB,
+67564eef-d9e8-4016-b171-cea8856b710b,Fiji Airways,,FJI,PACIFIC
+a731cf2d-4b9e-4ac4-9a8a-e329e5f3ad61,Airasia India,,IAD,ARIYA
+7ba7398f-e5b4-478e-bb58-54b15fb9f1a6,Avia Jaynar,,SAP,TOBOL
+8137dab9-83b0-4545-92a3-5d73f7f88563,Fly One,,FI5,
+391cd490-2e3e-4aab-97bd-71ce00a5ada2,Aerolineas Sol,,SOD,ALSOL
+7b285318-b3de-46a2-8c7d-398e1c4dd107,Pegasus Aviation,,PEV,PEGAVIATION
+110c37bd-d149-4aae-a417-1785caabb125,Murray Air,,MUA,MURRAY AIR
+76bc6cd4-2c12-441c-9ba6-6b4891e5dcd3,Skyservice Business Aviation,,SYB,
+825751d0-e3c5-4051-990b-4ddc3b92f331,Hisky,,HYS,
+99072429-b725-4d3a-9cfd-e6216487911a,Dswa,,RSK,REDSKIN
+dfeb18ec-7f4d-4407-9792-fd27b0f2b09f,Execujet Middle East,,EJO,MIDJET
+b1fce216-7901-4d98-a720-6fe80eb4e201,Globeair,,GAC,DREAM TEAM
+f5483147-40b0-4f40-bf21-3b0aa508ad36,Nomad Aviation,,NMD,NOMAD AIR
+ef98730e-327d-4cfb-9bfb-b92e7ece1a1f,Crown Airways,,CRO,CROWN AIRWAYS
+add27066-4dfa-491a-bd9b-129afabcd974,Golden Air,,GAO,GOLDEN
+9bff2f72-9f79-44ea-ac34-30a9b23ef462,Easy Link Aviation Services,,FYE,FLYME
+c19fba2b-8a73-4d8b-a8be-d572009d12b2,Ocean Air,,BCN,BLUE OCEAN
+f6b06477-9158-4685-9863-cb265c1137ef,Miniliner,,MNL,MINILINER
+b1f79419-6796-4766-a2a5-3e3b430ccdff,Norestair,,NRT,NORESTAIR
+0981e599-c5d5-434e-9fe4-4744622ad03e,Eagle Aero,,ICR,ICARUS FLIGHTS
+8b3846f6-72cf-41cd-9c76-9c490dbb4094,Cma Cgm Air Cargo,,ABB,Air Belgium
+982c1a59-26b2-4e5a-bb3b-8d9ea7279da3,Rainbow Air Us,,RNY,Rainbow Air
+7a2c5ee9-9f2f-4505-a74a-4818a7d54e76,Hawk Air,,HKR,AIR HAW
+4fc95e2d-4fa3-453d-9fb4-32f432b66ccd,Martinaire,,MRA,MARTEX
+e35cee6b-b7cf-44bf-ab06-d219ec9e6062,Executive Turbine Aviation,,TEA,TRAVELMAX
+8e77043b-5a68-4f1a-81ee-d7895c508fa6,Air Kbz,,KBZ,Air KBZ
+15d71f03-fb84-4497-8a8d-d00dc7770606,Baltic Jet Aircompany,,BJC,BALTIC JET
+a99e5498-d298-4cd9-888f-e9c951092279,Komsomolsk-on-amur Air Enterprise,,KNM,KNAAPO
+75b0b976-3ef6-48c9-a824-5fc3690cf65e,Conair Aviation,,CRC,CONAIR-CANADA
+2ba8abff-e2c1-405e-a365-f18c56a1f232,Discovery Airways,,DVA,DISCOVERY AIRWAYS
+0a9e1a59-73cc-4dba-9944-adea70278981,Air Service Liege (asl),,BNJ,
+2e2089a8-0d35-4c08-9ace-01be13874c30,East Midlands Helicopters,,CTK,COSTOCK
+5d6c935e-06e1-4ca1-aee8-1a316b5fbd2f,Uraiavia,,URV,URAI
+d25504c6-ec8b-4484-8541-3086f3329274,Lukoil-avia,,LUK,LUKOIL
+8ff33c7e-b22d-4df2-b9e1-6c9240d5fc51,Oriental Air Bridge,,NGK,ORIENTAL BRIDGE
+d8ceaeab-a3e4-412c-a521-dc9dc0e5ce9d,Windrose Air,,QGA,QUADRIGA
+1c1cb5ee-eeb2-4e86-ba3a-8732442673cf,Tropical Airways,,TBG,
+18c06fce-cbe7-47f4-8aa5-f353f18ad6a3,Malaysia Airlines,,MAS,MALAYSIAN
+6db5b7e2-ffd5-4cf8-873f-c60923cc26da,Argo,,RGO,ARGOS
+3dae7c5b-a00b-4d0d-82f6-54a44a71e4bb,Aerologic,,LDL,
+2560a6aa-6b65-4a7d-a66b-03296943f9b8,Tui Fly Belgique,,JAF,BEAUTY
+8e459a53-f4f4-4995-98ae-edf4db90909d,Slovak Air Force,,SQF,SLOVAK AIRFORCE
+32ab8fc8-8b82-40e0-a90e-9eb78607246b,Sky King,,SGB,SONGBIRD
+a9f65723-2e20-465b-9f7e-377db3f9ede8,Eclipse Aviation,,EJT,ECLIPSE JET
+4431c4b5-9e02-419d-b0f5-140a7073d5ea,Corporate Aviation Services,,CKE,CHECKMATE
+6add4ca8-4af7-4952-8871-930e4406525e,Suburban Air Freight,,SUB,SUB AIR
+6e31158d-d02a-4ce9-bbe6-69cc48c753a4,Airfast Indonesia,,AFE,AIRFAST
+8473fee2-eac8-4b6b-816b-21bb262f1aa0,Air West,,AWT,AIR WEST
+188b38d9-4160-491a-b9a8-a9b5bb99112f,El Al Israel Airlines,,ELY,ELAL
+c46138ef-90f9-4be6-bd7a-97a6c3f2b4d1,Industrias Titan Sa,,ITN,TITANLUX
+8bcffbec-a8a9-4dc9-b587-4e54d3ab040b,Cityline Hungary,,CNB,CITYHUN
+0438302a-4eaa-4839-a7d8-dfad75291368,Luxaviation S.a. - Luxembourg,,LXA,RED LION
+7ea1b472-fbe5-4a85-8567-2218a6d3b0b9,Bar Xh Air,,BXH,PALLISER
+57290d4b-665a-4b81-a689-7fbaaef27003,Global Aviation And Services Group,,GAK,AVIAGROUP
+851409ca-632b-4f93-a717-ba614712a258,Lacsa,,LRC,LACSA
+62389cdf-49a5-4167-b6a9-a719acf9396c,Air Busan,,ABL,AIR BUSAN
+f59118f4-2c5f-4fb1-9aa5-5f4f0bcfe3b3,All Charter Limited,,BLA,ALL CHARTER
+8edd5975-e5e9-4153-bfa1-c35c6c977f27,Avies,,AIA,AVIES
+bda6e47a-6a69-41db-a551-7b96e2392f9f,Sky Tours,,SKE,SKYISLE
+3ef53658-d258-4906-aa1b-e0b19ae59b34,Thai Vietjet Air,,TVJ,THAIVIET JET
+34b1e07e-933c-45a6-acd3-9e6d2cd126d2,Iraqi Airways,,IAW,IRAQI
+4d67fced-2c66-44b8-9e32-9b624564ace7,Aerosmith Aviation,,JPR,JASPER
+58ce3631-5abc-47d9-a0bd-f467c7da4ad0,Crownair,,CRW,REGAL
+6675d904-1e82-4d11-adc7-72b6e46c514c,Tampa,,TPA,TAMPA
+8c1fe74c-e57a-4c10-8744-b48b440840ca,Samson Aviation,,SHL,SAMSON
+7e316b9b-fe2d-492e-92f3-97d6c972a4d2,Blue1,,BLF,BLUEFIN
+ec15ed5f-1407-46ba-9dd1-df2f77440813,Ixair,,IXR,X-BIRD
+38e98c97-5dff-4ed0-bae8-1ac2a6006ae6,Gibson Aviation,,NTC,NIGHT CHASE
+c922a2d4-64fc-477b-b68f-1db3df561823,Kent Aviation,,KAH,DEKAIR
+1c897c3f-b7dc-4862-b02c-921a4ac21608,Juneyao Airlines,,DKH,JUNEYAO AIRLINES
+80a85a10-2d49-4717-8d3f-549356fd9e30,Pan Europeenne Air Service,,PEA,
+33dc2a08-5fff-4ba8-8b82-3a397df17f1b,L J Aviation,,LJY,ELJAY
+e841c74e-34a1-44e1-af45-6902543a68e7,Corendon Airlines Europe,,CXI,TOURISTIC
+44802eb7-7152-418a-84f9-325f7dc1e9d7,Air Taxi,,HAT,TAXI BIRD
+41008a91-7c2b-4888-b83c-9ad58ea5ced6,Flightline,,FLT,FLIGHTLINE
+e7e6bab9-9404-46a2-909b-c02c7f22487d,Getjet Airlines,,GJT,BANJET
+8d03dabf-5c7c-4fb4-8f10-04cc4e0ab907,Med-view Airlines,,MEV,
+79ac79f4-ce71-4367-8b9a-bc43cd90643e,Air Indus,,AI0,AIPL
+07a2c530-4c14-4b85-a98a-f5559632ec03,Boutique Air,,BTQ,BOUTIQUE
+a54cf9f7-3ec3-4d14-8113-f0d9e9c08213,Germania,,GMI,GERMANIA
+21856507-a148-4294-b726-334477ff3a38,Chc Helikopter Service As - Norway,,HKS,HELIBUS
+9971d34c-310d-4caa-9298-cad83173329e,Airasia X,,XAX,XANADU
+cd53ab2b-2e33-4e59-b5f2-c74eb3805ffe,Golden Myanmar Airlines,,GMR,GOLDEN MYANMAR
+8efd3bcd-6301-443c-97af-1b842d8db07c,Katekavia,,KTK,KATEKAVIA
+1877c1e6-e533-4cbe-b1b2-72be03231e5d,Syrian Arab Airlines,,SYR,SYRIANAIR
+1bd2cf6f-fdcb-4366-ba29-4bb3e7a5868a,Ross Aviation,,NRG,ENERGY
+ed8f5859-13e7-4212-b67c-40c1e1b090e1,Seco International,,SIJ,
+76e14c2d-4c75-48df-9487-8126ca4e6929,Air Charter Scotland Limited - United Kingdom,,EDC,SALTIRE
+f60afda0-8915-44eb-8e55-a8990caf5dda,Spicejet,,SEJ,SPICEJET
+13eb603d-15a7-4f9c-bfaa-7ee520f07c2b,Cargolux Italia,,ICV,CARGO MED
+fb0dbd9b-66af-45e9-9afc-b189a0d7721c,Mexicana De Aviaci,,MXA,MEXICANA
+6177a8f4-3dbd-40c8-8e8a-6cf03fcaa117,Oman Royal Flight,,ORF,OMAN
+1610a251-35b7-47a4-8c67-5269f193c3b3,Pb Air,,PBA,PEEBEE AIR
+0802feea-11b1-4ac7-9dcf-6039e651a4c7,Jonair,,JON,JOHNSONSAIR
+9cafa757-88d8-4a6b-b7b4-bcf4f85223dc,Aircraft Management And Consulting,,AMQ,AMEX
+8a7f7a32-be37-4304-b761-22acbc762a44,Lydd Air,,LYD,LYDDAIR
+38318ec2-f2c2-4173-bab1-08402dff8463,Latam Cargo,,LCO,LAN CARGO
+663f25d3-ca87-48c5-af13-425ff3fbf78c,Air Rarotonga,,RAR,
+1e15504a-c9ba-48fb-9df0-af78ab0d0862,Challenge Airlines,,FRH,
+38e70035-ca2f-4f62-80f1-c75c7cf59575,Skyup Airlines,,SQP,SKYUP
+b5a5165c-a8e2-4c73-953e-8da4dc2cc95c,Chc Helicopters Netherlands,,HNL,MAPLELEAF
+4e685d02-1c0f-4fd0-a9b1-7d7dc91f52d6,Kazaviaspas,,KZS,SPAKAZ
+4089d4ce-2cdd-456a-b369-8e7e5e7f8106,Nz Police,,PLC,SPECIAL
+44ed2981-ac3f-4c5c-8bab-a08a3b6d29c4,Mega Global Air,,MEG,
+448fb3bc-3cf6-4cc9-bc5f-6357afff206b,Private Flight,,N/A,
+fb1f4454-4a02-4a51-9dc9-1ef4b5325461,Sata International,,RZO,AIR AZORES
+24d8429c-47b1-471a-8f68-3e13e7694d6d,Swiss Air-ambulance,,SAZ,SWISS AMBULANCE
+25397879-da1b-4145-ad9e-fdf6eb5b79cf,Nepal Airlines,,RNA,ROYAL NEPAL
+45b8d483-fafb-4088-96d6-792a87e5e825,Kam Air,,KMF,KAMGAR
+4473416e-e8ec-4100-bead-9a990f7e940e,Air Canada Express,,JZA,JAZZ
+230a7ef8-d62f-4ac0-9ee6-4eedf943c721,Dhl Aero Expreso,,DAE,YELLOW
+cd4f7374-3a4f-4bde-83e3-7aeb30fbc79b,Manta Air,,MAV,Maldivo
+aae00618-e11e-4cf4-bec2-1a285631f756,Bylina Joint-stock Company,,BYL,BYLINA
+32c6393b-a5ae-42b4-b881-3845667fb2d7,Peruvian Navy,,INP,
+ecd19832-4645-435c-9427-6e0a29918644,Js1-rb Partnership,,JS1-RB Partnership,
+c1ebedd3-9458-49d6-96d8-40e7cbab8ec9,Aurora,,SHU,SATAIR
+ed54f74c-98a2-4d5b-9c47-ca75eeaf3211,Aero K,,EOK,AEROHANGUK
+a8d26a2d-aad6-42f9-a192-4132f4e132fa,Network Aviation Services,,NET,NETWORK
+00e9109b-710c-401c-8645-1eb69a2bc889,Grixona,,GXA,GRIXONA
+eee8fbfa-81eb-4bd7-b396-a46ecd21b578,Aerogem Cargo,,GCK,AEROGEM
+5e1c2348-8716-4afa-8ef6-ccf4b13af10a,Perimeter Aviation,,PAG,PERIMETER
+b6d4e977-68c6-4e65-b7b4-d8e3506fb86b,Air Serbia,,ASL,AIR SERBIA
+a4bf6d2a-f6fd-43db-b933-84c4387b0247,Cygnus Air,,RGN,CYGNUS AIR
+462d5034-f8db-4594-ac3e-26d73ba19282,Shar Ink,,UGP,SHARINK
+5c1b1941-adf3-464a-a98b-868d76d49dd4,Air Djibouti,,DJU,AIR DJIB
+c7504b88-d427-4621-b835-ac0dfd1fc9e4,Airwork,,AWK,AIRWORK
+60f64415-4107-4c6d-9a07-6d272cf3b243,Helicap,,HLC,HELICAP
+537e98e5-5306-44dd-b27a-10058c2a20af,Chengdu Airlines,,UEA,HIBISCUS CITY
+39546c22-4e16-41b8-8cc7-9e5052d9af5c,Swift Air (interstate Equipment Leasing),,SWQ,SWIFTFLIGHT
+83e9f17d-0530-4abd-adf3-11acd2de9370,Eurojet Italia,,ERJ,JET ITALIA
+d91d551f-fe81-41f6-a297-8ee3398373a7,Clark Aviation,,CLK,CLARKAIR
+7abe464b-983c-41a9-bfd1-d9282b2ef7f6,Swiss Jet,,SJT,SWISS JET
+b4277142-37b3-4b93-8c9e-88810ba5215c,Air Urga,,URG,URGA
+5f85e257-0526-40f5-82a2-49f1ceee2823,Canadian North,,MPE,EMPRESS
+ea3c66e2-25eb-474c-8980-91b29cf3cfe7,Casino Airline,,CSO,CASAIR
+a931d8cc-195a-44a3-8186-4725e5438dba,Air Atlantique,,AAG,ATLANTIC
+07184c1c-8023-4e94-98e6-e228cedd8246,Winair,,WNA,WINAIR
+1814d51e-c4d6-4003-98eb-0a228621cae0,Azov Avia Airlines,,AZV,AZOV AVIA
+0287d359-7c79-4e26-ae8f-ab4882c374c4,Blue Air,,BMS,BLUE MESSANGER
+451cf137-8d29-44d5-a473-6fd8376a84a5,Bangkok Airways,,BKP,BANGKOK AIR
+3fed27c3-b8e1-4604-bd62-957d730ff64c,Worldwide Aviation Services,,WWS,
+a815bb2e-0b4c-4a07-aac2-a136734b3932,Focus Air,,FKS,FOCUS
+63eb7963-25cf-4d34-ab50-714cdc5c5a39,Alba Servizi Aerotrasporti,,AFQ,ALBA
+f088092b-9212-40de-a1cd-4afc52aeff6a,Aero Vip,,AOG,AVIP
+0772501d-bbc6-454d-9db4-76945ded4953,Aero Business Charter,,GBJ,GLOBAL JET
+284237ad-6cad-43a2-9baf-12263d26de85,Alpine Air Express,,AIP,ALPINE AIR
+655fedf1-2fa1-428b-b64d-27cef83b9421,Northern Jet Management,,NTX,NORTAX
+e4611688-28bf-4f9b-8feb-d83c527c9e13,Jetcall,,JCL,
+9a978940-d6cd-42fe-a421-40500ada7ddc,Western Global Airlines,,WGN,WESTERN GLOBAL
+aa0b8cd3-da1f-4ca7-900a-bb2391df836a,Tianjin Airlines,,GCR,BO HAI
+75bdae7f-28ba-4c27-a1ae-90c61785876d,Auckland Regional Rescue Helicopter Trust,,WPR,WESTPAC RESCUE
+25e8e76a-69e9-4584-b85e-53c8d1b2a711,Cebu Pacific,,CEB,CEBU
+181adaaa-4c32-4b4f-80e3-5e7fd9fd3d92,Sky Capital Cargo,,442,Sky Capital
+25c0f311-95d4-4640-8627-c072937f00fd,Empire Airlines,,CFS,EMPIRE AIR
+76f0908f-4b85-41f3-8cd9-42ac3a0922db,Orion-x,,OIX,ORIONIX
+afffdf0a-7f0e-4b7d-961e-f89cc22fdc9c,Jim Hankins Air Service,,HKN,HANKINS
+248c284d-aec6-4685-904e-f0f6b9fff441,Blue Square Aviation,,BSG,
+4eb356cc-5307-4c89-9a45-7f98b2457703,Estafeta Carga Aerea,,ESF,
+e5a638aa-a184-4903-9b27-2a8f3d2c8537,Marsland Aviation,,MSL,MARSLANDAIR
+cf056db1-262c-4392-aee4-f4d70593eb8f,Avanti Air,,ATV,AVANTI AIR
+4d60707e-85f5-4cd5-a421-6560acb6cdfb,Twin Cities Air Service,,TCY,TWIN CITY
+4a253ab3-d38a-4f85-8519-43ceb57a77b2,Butte Aviation,,PPS,PIPESTONE
+aac386b0-0313-4971-9db3-587287c3632f,Sky Jet,,SWY,SWISSLINK
+190f3ced-5bbf-4d27-8b1c-72d75b7b38ff,Meridian,,POV,AIR POLTAVA
+20f4b571-a4ed-4dee-812f-eea75677eeb5,Helicentre Coventry,,COV,HELICENTRE
+94774ac5-d317-4936-ad04-3be14d33fdbc,Air Madagascar,,MDG,AIR MADAGASCAR
+efac743e-a68f-42d0-b47f-533d0e0307d7,British Airways Shuttle Flights - United Kingdom,,SHT,SPEEDBIRD
+4f57419b-4388-409b-bd15-ba893ec71e5a,Tuifly Gmbh - Germany,,TUI,
+1ad2831c-af57-4981-a3e4-b7cd19295ddd,Streamline Aviation,,SSW,STREAMLINE
+deefe12d-276a-445d-8007-2888e6ff944d,Century Aviation,,URY,CENTURY AVIA
+569acb66-f1c8-41f8-94dd-f480b3d2e179,Brazilian Navy Aviation,,MBR,BRAZILIAN NAVY
+c073a8f5-6c3c-41e7-b3fd-9cecf4867094,Air Satellite,,ASJ,SATELLITE
+0b1a0408-3d57-46fd-92d3-caff81929ea7,Alsair,,LSR,ALSAIR
+371d3501-e2df-4c83-bb94-e6b81b7b8bd9,Babcock Scandinavian Airambulance,,DFL,
+6b2ce205-c1e5-4bda-9c3d-8a4b07f745a5,Pimichikamac Air,,MKS,MIKISEW
+44efd229-e578-4885-9ecd-62f2755d7cf5,Royal Flying Doctor Service,,FD,FLYDOC
+82ebac79-ba80-4f74-9181-d4552cf15b54,Starbow,,IKM,GHANA SURVEY
+7901554e-5ca8-4c61-bf82-40f379c9e48e,Hi-jet Helicopter Services,,HHS,HIJET
+566cd4eb-e593-41cb-a799-5be366e23207,Eurocopter,,ECF,EUROCOPTER
+15a2b145-01cf-40a6-adbd-558423942966,Global Jet Austria Gmbh - Austria,,GLJ,GLOBAL AUSTRIA
+14ffb4aa-d3ee-4a78-ab37-22f9d1b148d9,Robin Hood Aviation,,RHA,Sherwood
+40e7d607-2320-40ed-ba16-9c3686f0c357,Executive Aviation Services,,JTR,JESTER
+d8b47b38-97a3-4287-8651-ad98b86d23b8,Pineapple Air,,PNP,PINEAPPLE AIR
+154342b4-5679-499e-af59-0e1e23898dca,Us Department Of Justice,,DOJ,JUSTICE
+f82a56b6-b5cb-4ff5-95cf-198546da219a,Raven Air,,RVN,RAVEN U-S
+014cd1c2-067f-4d01-9f48-437a3c73628b,Phoenix Air Transport,,PPG,PAPAGO
+f8811363-37fe-4e98-86a2-2657a438883f,Airpac Airlines,,APC,Inc.
+e22931bb-0249-40ad-bcdc-f811582dad8f,Elite Airways,,MNU,MAINER
+f491b512-e92f-425c-9b23-89a77445e3c9,Meridian Aviation,,DSL,DIESEL
+58619866-8bee-4f58-83db-e02b2d103555,Sharp Airlines,,SHA,SHARP
+2d2d6c9f-5bee-46d4-afe1-089051d14631,Suncoast Aviation,,SNT,SUNCOAST
+222cd32e-09bd-4ad0-943d-625ea7e8012d,Iberia Express,,IBS,IBEREXPRESS
+1c238796-fe64-4f44-afe4-98908cc87432,Meridian Jsc,,MDN,
+1d7bfe1b-87f7-4e24-93de-9d66bfbc4c33,Rusjet,,RSJ,
+1979ec10-951a-4caa-847a-807ed26b0d96,Million Air,,OXO,MILL AIR
+87c4aa02-a94a-4f09-901b-242e6067bb28,Air Class,,ASS,S.A. de C.V.
+a7ce69a8-6e1d-4cf9-b9ff-3f105d6cd13e,Executive Air Charter,,EAC,EXECAIR
+202ed700-6ab2-4580-8244-c1bc80a7806e,Capital Airlines Beijing,,CBJ,
+0412d6df-d398-46d5-8eb5-9d6b25ab7780,Foxair,,FXR,WILDFOX
+3302fc49-2bfc-4066-9b42-e536c6ae146c,Skyways,,SYA,LINEAS CARDINAL
+16add879-5b9b-4a95-8e0b-f9b0902a58a0,Maryland State Police,,TRP,TROOPER
+d3adcb47-0af4-4faf-b8c6-b3ebcef21eef,General Motors,,GMC,GENERAL MOTORS
+3140e8e3-5a6f-4bb3-957b-a52f392ca626,Oklahoma Department Of Public Safety,,OKL,OKLAHOMA
+2a597737-2640-44ad-beae-683fcd031096,Uk Hems,,HLE,HELIMED
+fb77fbea-a6b1-4834-8581-694638403b2a,Execcent Air,,ECA,EUROCYPRIA
+f4067b04-f14b-47ae-bcea-37007f0c4a3e,Newfoundland Labrador Air Transport,,NLT,NALAIR
+c99983bc-bbca-4466-9c02-2d5a2ccf7c58,Heron Luftfahrt,,HRN,
+834ff2d4-4402-4871-b069-d83e73c88670,Dat Danish Air Transport,,DTR,DANISH
+a0d9dc72-5ef9-4994-ac15-d6073cfae9d2,Challenge Aviation,,CHS,CHALLENGE AVIATION
+9e7578cf-c51d-4771-973e-fd2a1ef8c405,Kuban Airlines,,KIL,AIR KUBAN
+dd7746de-9d3b-4866-b6d2-03982ea65c55,North-west Air Company,,NWC,
+1a26966c-fa4d-4294-8dee-97b6e7f7949c,Air Pegasus,,PPL,
+14999e2e-4545-40bd-a788-4c890277ca6d,Missionair,,MSN,MISIONAIR
+3f499bdf-0623-45a7-b14d-c52a5bacaf0d,Almasria Universal Airlines,,LMU,ALMASRIA
+969e585e-ff24-4419-b0d5-658d33fe3f53,Leisure Air,,LWD,LEISURE WORLD
+ab917330-a765-44d2-896d-8a3ae4e559b2,Aravco Ltd.,,ARV,ARAVCO
+95cdf768-8d31-40c2-be28-97ff576e8a12,Channel Island Aviation,,CHN,CHANNEL
+964f8810-8ee3-4815-9f0b-4d09b79fc11f,Elidolomiti,,EDO,ELIDOLOMITI
+bfb5a1d9-420c-4bb7-9f36-fdbc49a4800f,Tasman Cargo Airlines,,TMN,TASMAN
+59ee60ee-17c7-4110-9098-a2f410f19f95,Safat Airlines,,IRV,SAFAT AIR
+574cb193-048c-4954-b2fe-eeccfdf359dc,Sky Lease Cargo,,KYE,
+43774d0e-6530-4ee7-a307-cdf941d4ba1c,Pionair Australia,,SFZ,PIONAIR
+205b4c60-99dd-44de-bc34-0c8a60fbd377,Palestinian Airlines,,PNW,PALESTINIAN
+5bc6c147-294b-4909-beb9-f30f6c7245d4,Air Travel Corp.,,ATH,AIR TRAVEL
+a3b8b042-6f7b-4d50-abed-e1a5ee27f45e,Asecna,,XKX,
+b1baa688-421b-4a07-90b2-89e8806334e1,Luxembourg Air Ambulance S.a. - Luxembourg,,LRQ,
+af350357-545f-440e-a13f-c038ab22a865,Chalair Aviation,,CLG,CHALLAIR
+f702baa2-e08e-44cb-8932-3187765f1047,Air Georgia,,GRG,AIR GEORGIA
+efd5481c-a28e-4f58-ba45-a39fc156b4ce,Kuwait Airways,,KAC,KUWAITI
+f865075d-5ac2-49bd-bb1f-79e766113c1a,Oasis International Airlines,,AAN,AMSTEL
+83b40adb-239e-4bf7-a1ad-ecd8ae2ca1f4,Arkia Israel Airlines,,AIZ,ARKIA
+16f5430a-5a90-4242-a904-c6d2531069c0,Air One,,ADH,HERON
+c4bfb2fa-13cd-426e-b074-d47a6846996d,Jettime,,JTD,JETTIME
+e57714fe-6868-407b-a3d1-62d8335585c9,Equaflight Service,,EKA,EQUAFLIGHT
+4d0bca2b-6b3e-4f32-a796-0f144a31d067,White,,WHT,YOUNG SKY
+045874aa-fd9b-4bac-810a-0bc226cc1bb0,Africa One,,AZL,SKY AFRICA
+aa0eac10-2b9e-47cd-9b22-6057481526b5,Batik Air,,BTK,BATIK
+5737e2a0-d159-4963-8e0b-53b2859f49df,Air Moldova,,MLD,AIR MOLDOVA
+55a0689c-7492-40a1-9ac9-625a4da71fa6,Noordzee Helikopters Vlaanderen,,NHX,EVO
+60f67a62-36a9-4d30-b0e8-8bff076bdf62,Buryat Airlines Aircompany,,BUN,BURAL
+1b3ec255-66f7-49df-96c0-1db5ddb4f95d,Adria Airways,,ADR,ADRIA
+5addbe8e-d060-40bf-91ca-86b2b12bc069,Air Alpha,,DBA,DOUBLE-A
+85c439cc-ec89-44dd-ab7f-81fdd024edf3,Phillips Air,,BCH,BEACHBALL
+98057ec6-8af3-4c40-8b8d-af7ae96469bc,Aero Charter,,GLT,GASLIGHT
+8044eda3-66f0-4958-bd49-06060d39ce30,Star Flyer,,SFJ,STARFLYER
+51b2460d-9adb-4f5e-ad9e-6e6ef85fe477,Western Air,,WST,WESTERN BAHAMAS
+24cd25b8-d0be-44ef-949b-e55884f507a2,Air Malta,,AMC,AIR MALTA
+828a9043-af6e-44bc-a4a8-fcc99fd01267,Island Link,,ILC,
+ee45c007-d2f6-4dd9-ae92-a689743b64a8,Air Archipels,,RHL,ARCHIPELS
+319932fc-a55b-4ed1-bf01-48956031fba9,Israir,,ISR,ISRAIR
+ab7d5cda-c615-477f-a303-a00252182aff,Shaheen Air International,,SAI,SHAHEEN AIR
+0668e246-d8f2-4ddc-afb7-efea3a847491,Martin Aviation Services,,XMA,
+591270fc-9515-4c71-be4a-325458b7df97,Richards Aviation,,RVC,RIVER CITY
+ac36f77d-2ca8-4d25-8225-40d16e75939c,Tango Bravo,,HTO,HELI TANGO
+bd60eb49-819b-4604-b58b-a813baa7124f,Gainjet Ireland Ltd,,GJI,GAINSTAR
+f46306f6-9401-411a-8ef6-733db5e8209e,Heli-air-monaco,,MCM,HELI AIR
+9e6be7d3-dffa-4e3d-a1e1-b596f1e347ff,Abc Bedarfsflug Gmbh T/a Fly Tyrol - Austria,,FTY,FLY TYROL
+b4e82bf4-c60b-43b8-b0aa-aec5fb0c8f7d,Latvian Air Force,,LAF,LATVIAN AIRFORCE
+7cb4d1a3-435d-40a2-aad1-749075c0d891,Yamal Airlines,,LLM,YAMAL
+f79fa7a5-423b-42c4-a690-d0d3e02963a3,Aero Contractors,,NIG,AEROLINE
+c5534353-9fc0-4bd0-923d-945f941c6b50,Solinair,,SOP,SOLINAIR
+19f44589-6ac8-40b2-a567-10cb0b3cdd8c,Royal Air Force (raf),,RFR,RAFAIR
+dce5216d-b6b4-48c2-b17b-740e22814aed,Emperor Aviation,,EMM,
+2cb1a48f-f802-4981-8dff-f7640a40cf52,Ds Design,,FHY,FREE BIRD
+d09af406-ee4f-4e38-8c70-af295d12dc35,Aerokuzbass,,NKZ,NOVOKUZNETSK
+405c331b-d2a2-41d1-95e1-ed9a0e07644f,British Antarctic Survey,,BAN,PENGUIN
+2686aa1d-a949-4b0c-8e03-237ddb9424bf,Air Pink,,PNK,AIRPINK
+71544987-8dab-4139-9453-1650eeceba07,Regional Air Services,,REG,REGIONAL SERVICES
+db305cfc-8693-4ed0-95a3-b4d7f98a1b45,Air India Express,,AXB,EXPRESS INDIA
+451347eb-f69a-4347-aca1-0f3d9234cdf2,Jetsmart Argentina,,JES,JAY-ESS AVIATION
+28c2f0b1-5238-4b07-9d01-a26c26935c31,Avcon Jet S.r.l. - San Marino,,VAJ,
+76a864b7-f236-4699-b2a5-c1b98c89af3e,South West Air,,SWC,SAINT CLAIR
+c1624a02-eadb-487d-a4ce-87363112b015,Aeronexus Corp,,ARN,
+7cacf32a-cf18-47b8-a0db-ffa32958195a,German Airways,,GER,GERMAN EAGLE
+c1eded89-b7d8-49b5-9f5c-7cb36be662e4,Air Arabia Maroc,,MAC,ARABIA MAROC
+e7c5c842-1fc0-42a4-937c-7f2de9ae0deb,Easy Charter,,LOL,
+74f23fd1-99f5-4459-a08e-39f2236470b5,Babcock Mission Critical Services Offshore Ltd. - United Kingdom,,BND,BOND
+99145e3b-9ef4-4048-86d5-d66dddbc4fa4,Thomas Cook Airlines,,TCX,KESTREL
+4144cf3d-f094-4c88-a4e9-5d7ccff216ea,Tag Aviation,,FPG,TAG AVIATION
+3d91bd3d-ecd3-42a3-bde2-1f4269cd6ab2,China Southern Airlines,,CXN,CHINA SOUTHERN
+edae7bc1-0a17-40e9-a959-ffaaee6a691f,Morningstar Air Express,,MAL,MORNINGSTAR
+9f3f5830-d92f-4f0e-94b1-79b0d75e8bcf,Air Dolomiti,,DLA,DOLOMITI
+4aa95781-d4f7-40e4-8dff-d8d46e35c973,Tunisair Express,,TUX,TULPA
+f4fcfc7a-d3e9-46d9-b1c7-1e8e8a2d6649,Elite Jets,,EJD,ELITE DUBAI
+8ec2dbd7-c91c-4d6d-8da1-0fc7b2a7f956,Gb Airlink,,GBX,ISLAND TIGER
+beeec5f7-fe9a-483b-ab90-5d6d56cc30d2,Boliviana De Aviación,,BOV,BOLIVIANA
+9c013ff4-e497-4422-8f81-afa12c0e9ee6,Heliworks,,HLW,HELIWORKS
+c1816379-a8b6-4930-9f87-cfa132378e6e,Xiamen Airlines,,CXA,XIAMEN AIR
+400515c8-8a7c-46f3-84ae-1ff97247c81d,Ruili Airlines,,RLH,SENDI
+77f26c9d-900e-43b8-878a-6892f4a808ec,Deraya Air Taxi,,DRY,DERAYA
+5793d498-1e33-41b6-bee3-7ff0e3e4d82a,Rwandair Express,,RWD,RWANDAIR
+dbc1a8b5-b376-40f7-9b5a-aafc4f5a9f87,Air Jetsul,,AJU,AIRJETSUL
+9d869fe1-ce74-4766-8bd1-8a2f3c61b768,Arrow Aviation Ltd.,,ARO,ARROW
+8d9117db-130b-4f38-8373-0580a4fc1467,Nizhnevartovskavia,,NVK,VARTOSKAVIA
+10467b21-8991-4d3b-ba0d-0477c728bfca,Korea Express Air,,KEA,
+fd8d349d-37d3-4266-9293-b9747522b67b,Empresa Aerocaribbean,,CRN,AEROCARIBBEAN
+1bb1a8bd-ba06-4f3c-99e5-150701671abf,Air Special,,ASX,AIRSPEC
+cd031518-d644-415c-bce6-6679286ef930,Bh Air,,BGH,BALKAN HOLIDAYS
+3a33623a-00b8-4b05-929f-907528fa5185,Euroatlantic Airways,,MMZ,EUROATLANTIC
+2eae0f53-5d02-4955-85b8-cc503b4f9262,Luxaviation Germany,,LXG,Luxaviation Germany
+7b272f28-7011-4975-82f1-83da8abe8eda,Chabahar Airlines,,IRU,CHABAHAR
+7730a082-a4b8-4357-8c5b-41aad9671581,Enter Air,,ENT,ENTER
+5c9f6370-511e-4945-9bd1-9c943ba9c32e,Bioflight A/s - Denmark,,BIO,
+3ec8cd8a-597e-4ccc-bd61-5c6cf6a33bec,Zenith Aviation Ltd. - United Kingdom,,BZE,BRAZIL AIR
+bc3d7ba5-ad25-4394-9df8-bc167668b87a,Acm Air Charter,,BVR,BAVARIAN
+aa52f2a7-1112-4430-9d47-6d3d32d145f9,Aerocardal,,CDA,CARDAL
+5e2c35ed-59f8-4e55-9c1c-d0ccc3409a4c,Thai Airasia X,,TAX,EXPRESS WING
+1fb4c0e7-5bbb-4efd-ac6e-4535918dd3b5,Midwest Aviation,,NIT,NIGHTTRAIN
+e231e9f1-fa5f-455d-a305-badbcc62a9d7,Fresh Air,,FRR,FRESH AIR
+c5c0aefc-3ff9-4c9d-ae52-1fcb9b43acea,Northland Aviation,,KOE,KOKEE
+76621b56-b2d2-41b2-8539-a94b21980d76,Stobart Air,,STK,STOBART
+73a27e07-9316-4829-8161-8564d4257048,Servicio Aéreo Regional Regair,,RER,REGAIR
+e529f5fa-3309-44b1-9ec9-6372ffa09972,Air Japan,,AJX,AIR JAPAN
+495d7673-28de-4a41-b9b9-8408bb2a38dd,Azur Air Ukraine,,UTN,TRANS-ULGII
+227cc068-f24e-4726-8c15-aec81f9c4515,Aeropostal,,ALV,ALVEN
+a010affd-0750-47a2-9a62-49b37fe03464,Southern Airways,,SOU,SOUTHERN EXPRESS
+e6fc97d2-d4e4-477f-946e-712a261fd05a,Air Tahoma,,HMA,TAHOMA
+7c037114-15d7-4e44-b505-1793cc7ef3fa,Norse Air Charter,,NRX,NORSE AIR
+36f2f366-4c61-443b-9f98-723ddff3a0d7,Premium Jet Ag,,PJZ,
+78fa71f9-3ab8-4598-894c-65dececdcbd3,Sunset Aviation - Llc - United States Of America,,TWY,
+d475296a-795f-479e-9640-3bb25f72c2fd,Goldeck-flug,,GDK,GOLDECK FLUG
+7819e72d-09bb-4e7a-b809-4574c2ac76e0,Sirio,,SIO,SIRIO
+7c80ccfb-4fb7-404a-a9c5-096363ff93a5,Aero Rent Jsc,,NRO,AEROMASTER
+ce33695f-4532-4fd3-971f-eff7704a7c93,Mng Airlines,,MNB,BLACK SEA
+cb730029-5e59-4955-8637-8f8a63d35b94,Agrolet-mci,,AGZ,AGROLET
+e269c9d0-38e4-419a-afd2-50ac3f6597ca,Transnorthern,,TNV,TRANSNORTHERN
+c0ca86d6-0b41-4663-89e3-8f926fa68cbd,Real Aviation,,RLV,REAL
+4a8f1cb5-a13e-45e9-ba2e-4a825c670045,Bond Air Services,,RHD,RED HEAD
+a722c535-a587-4ade-a03f-f925938ec001,Kata Transportation,,KTV,KATAVIA
+4980aa67-0f08-4788-8d85-942d7ee3d873,Uzbekistan Airways,,UZB,UZBEK
+2e2ca9ec-c639-487f-98b2-8a307962a071,Aero Nova,,OVA,AERONOVA
+af246fa5-b49f-4720-ab3b-0aac9a74be5d,Shell Aircraft,,SHE,SHELL
+718230e2-ae39-468b-b8df-fb4f8d73a281,Falwell Aviation,,FAW,FALWELL
+572f892a-c37f-4bdc-a820-28cae7b29ef4,Ac Insat-aero,,IAE,
+30e4cfda-a093-41f8-aecb-3f79eb8fd815,Tri-mg Intra Asia Airlines,,TMG,TRILINES
+7ee09b34-b26a-4d1c-a5da-0872fef57022,Lawrence Aviation,,LAR,LAWRENCE
+ed648195-16bd-441f-9324-362f8a3fcbbf,Speed Aviation,,SPT,SPEED AVIATION
+d527d4ba-67d1-4428-b41e-1adba4affbf1,Aurora Aviation,,AUU,Inc.
+dfd9bb56-3747-4c78-83d0-8d3b5001c86b,Fly Alpha,,bfx,
+63313f26-c890-4b69-8380-14577b6f1a21,Flying Group Luxembourg,,FYL,
+521f2bf0-5a92-4b82-ad5d-813223b43121,Norwegian Air Sweden,,NSZ,
+19127541-0f08-4839-a010-d61913e78129,Kvadro Aero,,QVR,PEGASO
+6d46c70f-9cf4-46e3-8d36-c10182ea27f0,Alliance Air,,LLR,ALLIED
+d396e10b-bd33-4f30-a472-34044533ee03,Olympic Aviation,,OLY,OLAVIA
+6a60a432-0ef3-4916-95df-15936126957a,Regional Air,,RIL,
+09e71f05-d6b6-4bba-aced-0c95415edffc,Air Charter Services,,CHR,ZAIRE CHARTER
+1ffdc485-f6f6-43e4-a8d2-ce9375d22180,North American Jet Charter Group,,NAJ,JET GROUP
+bd56de61-2724-4896-875e-1c084f53cfa9,Buzz,,BUZ,
+99310630-fbe2-4418-beef-2717d99c2fc4,Breeze Ltd,,BRE,AVIABREEZE
+ca83e011-085b-463a-911d-bb53dd435789,North West Geomatics,,PTO,PHOTO
+9ff93b13-f2df-47ac-b340-b14340dca023,Frisia Luftverkehr Norddeich,,FLN,ILIAS
+820eb3bd-44f6-461d-ab66-8c38e4e6e4ab,Tlc Air,,TLS,TEALSY
+d642fd08-e821-4729-ba45-344c0cc351e1,Transportes Aereos Regionales (tar),,LCT,STELLAIR
+ef8e8182-dc3f-4883-aea1-570593611f9e,Parsons Airways Northern,,FAP,
+a96b62c1-04bc-4c46-a7dd-9e5a8c3bdc20,Fujairah Aviation Centre,,FUJ,FUJAIRAH
+aab2ae38-253c-424e-a135-38174e233db6,Aero Vodochody,,AOD,AERO CZECH
+2a31b44d-9922-4ad7-a8bb-bf4c11ccb8c6,Silver Cloud Air,,SCR,SILVER CLOUD
+7c559054-c179-4e63-9d9d-1886180f33bb,Rectimo Air Transports,,RTO,RACCOON
+78d06aed-7154-47b7-b84d-5ee4cd9f274e,Plus Ultra Lineas Aereas,,PUE,PUELCHE
+ef9da993-e147-4cca-8520-cd3aca94e83c,Solent Flight,,SFU,SAINTS
+fdb6f87b-430f-4ad6-894a-ee9ab59d8e57,Air Roberval,,RBV,AIR ROBERVAL
+bbc31874-358d-4cd2-9fd9-787b9cc2098f,Gain Jet Aviation,,GNJ,HERCULES JET
+b14deb15-eaaa-4dcb-8929-c161941b4c0a,Tar Heel Aviation,,THC,TARHEEL
+94483ad2-d36e-44d5-a54b-a9b40a302126,Pascan Aviation,,PSC,PASCAN
+b0a09995-1220-4ef3-ad00-b0b0bd34d39d,Conviasa,,VCV,CONVIASA
+d1d316a0-a11e-4be2-b319-cccb498b0839,Aero Dynamics,,DYN,AERO DYNAMIC
+4b5554fc-d60d-4cc1-948b-e05e919d410b,Ukraine Air Enterprise,,UKN,ENTERPRISE UKRAINE
+ef75d84a-3046-47f6-bc98-b406863aee29,Nakheel Aviation,,NKL,NAKHEEL
+0320bfb2-d60c-4272-b96c-79fe854ead6c,Rada Airlines,,RDA,
+100659ce-baa0-4701-a4b6-6204780d6f7a,Air Wanganui Commuter,,MDK,
+17a65dcf-c132-47df-a905-ac39e3638bd3,Chantilly Air,,WML,MARLIN
+4cfee802-ddef-4a20-9868-0236fa3bbf43,Asia Pacific Airlines,,MGE,MAGELLAN
+81c57efd-c843-4f46-a164-3f028c5e4b49,Aero Personal,,PNL,AEROPERSONAL
+4fe8812a-89bc-4fa8-8f1f-de0f6ed7762f,Taftan Airlines,,SBT,TAFTAN
+7e34d4cb-e6b9-4fe5-ab8b-3b21c3ef3266,Jetflite,,JEF,JETFLITE
+6f1c4c0d-c4d2-467e-9b6f-0833ad9c068b,Canadian Helicopters,,CDN,CANADIAN
+e54183cc-012a-44f1-8f63-75437a9204f7,Aerolineas Ejecutivas,,LET,MEXEJECUTIV
+510db852-eb9c-4ca9-9495-5e9003f5de91,Private,,-,-
+bf764a3a-c0aa-46bf-8034-29f0d1b44ad9,Smartlynx Airlines,,ART,SMART LYNX
+4a58f916-e228-4d1f-998c-6ff2cef76206,Turkish Air Force,,HVK,TURKISH AIRFORCE
+8961379c-2790-428f-82e2-f54bdbc4105b,Dhl International,,DHX,DILMUN
+a279bc7f-ccac-4804-9e70-fe78a1c6c2a0,Prt Aviation,,PRP,PRONTO
+f7fa558a-5987-4e0a-bf38-90a5458bae28,Tamir Airways,,TMI,TAMIRWAYS
+34c97920-0b5e-4c85-95f5-26aaa56b5bdb,Samaritan Air Service,,HLO,HALO
+20ecee03-35ce-47f0-8ea7-39b541229290,Pannon Air Service,,PHU,PANNON
+e5da8e24-c5f5-4b47-b0a4-9e17b52232ef,Gp Express Airlines Inc. - United States Of America,,GPE,REGIONAL EXPRESS
+fef4917e-76b9-475d-ba80-0afb17967b4c,Ukraine International Airlines,,AUI,UKRAINE INTERNATIONAL
+07f25833-e566-4ffc-ab7e-2924935ed041,72 Squadron,,Rrr,ASCOT
+255f0bb1-f0d0-4236-bb90-470b82fbea70,Avion Express,,NVD,NORDVIND
+5ee64bcf-1f20-4bf2-bf05-fb87a2ab0c43,Pakistan International Airlines,,PIA,PAKISTAN
+9d70c5d6-1556-4ddf-8bc7-0b8a4bdf244f,Kirov Air Enterprise,,KTA,VYATKA-AVIA
+82519df7-2936-438a-8096-04d77d44cc9c,Civil Aviation Authority,,CIA,CALIMERA
+da4c083d-1ff8-4cd1-b0bc-61e8470bbb8d,Rvl Aviation,,REV,
+1d050615-99e6-4c84-af00-a05d4107633c,Bowman Aviation,,BMN,BOWMAN
+0ec81dee-f0d5-4727-81c4-df00f7b43f58,Canaryfly,,CNF,
+bcfa6e8a-dde6-4269-a238-b36e6c523646,Link Airways Of Australia,,LAW,
+0577e2d1-9ef2-4bbf-a046-ab221e457ae3,Coast Air,,CST,COAST CENTER
+f1d9fb46-5bf6-4f3e-83b9-b6724536252d,Solomon Airlines,,SOL,SOLOMON
+a9453fda-b99a-40e6-ba63-241ee733146d,Polo Aviation,,CUK,CHUKKA
+5c2de673-69fb-4e4d-b70c-4cc89691e149,Skyward Aviation,,SGK,SKYWARD
+6de39314-4168-4a6c-9f05-f8130416abbe,Croatian Air Force,,HRZ,CROATIAN AIRFORCE
+d155e0bd-5431-497e-ad47-ed3746350a29,Jetcorp,,UEJ,JETCORP
+def5abfb-8a60-419a-b02d-074d45c1739d,Sriwijaya Air,,SJY,SRIWIJAYA
+92339331-8333-4448-8554-a73997532f99,Austrian Air Force,,ASF,AUSTRIAN AIRFORCE
+4758f521-80d7-44f6-abe3-c3ac953f5474,Air Xpress,,ARX,Inc.
+7053e14e-b3db-43a3-9b4a-7c91c3622bb6,Air Intersalonika,,NSK,INTERSALONIKA
+4a8ac465-84f9-4e58-92f1-9dd03fa0a52b,Cavok Airlines,,CVK,CARGO LINE
+d90387df-a354-49c4-9f23-b3515b90bcc7,Valan International Cargo Charter,,VLA,NALAU
+3e0bcc11-b457-451b-88f7-38cc1aaf716a,Charlie Hammonds Flying Service,,HMD,HAMMOND
+0c439bcd-03e2-4af9-9f52-88d896edeeae,Compania Helicopteros Del Sureste,,HSE,HELISURESTE
+297d46dc-b289-4611-9759-07c593fff6c8,Alba Star - S.a. D/b/a Alba Star.es - Spain,,LAV,
+37532434-2a97-4ab7-86b7-992efa26f1ad,Vietnam Airlines,,HVN,VIET NAM AIRLINES
+ca485d8f-5289-4498-b2a7-16fa37322799,Lindsay Aviation,,LSY,LINDSAY AIR
+261f142f-86c9-4f4e-9a8b-e4f11f583680,Russian Sky Airlines,,ESL,RADUGA
+5eec73fe-dccc-4a53-8ee6-0a863abb136e,Nordstar,,TYA,
+9e82c0cb-4d95-48f1-9046-3af1672c995f,State Air Company Berkut,,BEC,
+b3993c15-6966-4e5d-8044-7a49f3f405ce,Aerodyne,,ADY,AERODYNE
+5856f52c-2dcb-4c56-a814-adb3a755e3af,Four Winds Aviation,,WDS,WINDS
+029ac05f-7ded-41d9-8199-5cf48d526e6b,Irs Airlines,,LVB,SILVERBIRD
+8a5070d4-e188-4a1b-a920-be7fd1360931,Viajes Ejecutivos Mexicanos,,VJM,VIAJES MEXICANOS
+5a19c2c9-0df1-49a7-9d97-ca2663bc60cc,Air Ghana,,GHN,AIR GHANA
+8931d570-83ff-40c0-a594-b7dd70bc5d71,Flight West Airlines,,FWQ,
+6e9576bc-7cd7-4140-abac-2c6195cda5f5,West Wind Aviation,,WEW,WESTWIND
+3139e7b7-fdef-4879-b7a5-ec3c13458ff7,Sideral Linhas Aereas Ltda,,SID,SIDERAL
+cb7d412d-bf6c-480f-bf6f-7610525b6801,Solar Cargo,,OLC,SOLARCARGO
+f0508b74-dd0a-43e2-ab7b-1855429496aa,Interaviatrans,,IVT,INTERAVIA
+860b3266-6e1c-40c6-8eb1-64916766e490,World2fly,,WFL,
+5bfea70a-4685-4030-b525-28d31cba4945,Nobil Air,,NBL,NOBIL AIR
+7fb9379e-ad8f-45a9-bf27-f245a07c5aa0,Biman Bangladesh Airlines,,BBC,BANGLADESH
+413994a4-ee86-478e-b8be-ccbb81885e5a,Hangar 8,,HGR,HANG
+c8b59671-4109-423f-9252-c3c067502e02,Wataniya Airways,,KW1,
+d4f2fc13-2943-40d1-91be-211bdcfb254c,Aeronautica Militare,,IAM,Italian Airforce
+99ad2810-4f61-455a-87ef-2e53e660b0b1,Art Aviation,,OES,ART AUSTRIA
+606d4efd-5980-4797-8123-035eba2d7705,Salamair,,OMS,MAZOON
+e3df3356-77db-4db7-b924-60cabe563022,Alpliner Ag,,ALP,ALPINER
+13852e31-6e63-47a5-8d98-ff26826a14a6,Lakeland Aviation,,LKL,LAKELAND
+450e76d1-2a1a-4829-9572-fab3a8afff56,Palmer Aviation,,JSP,PALMER
+ac555ed1-cc83-47a2-b320-f2973fe7e580,Lockheed Martin Aeronautics,,CBD,CATBIRD
+f40ebc01-52c5-408c-874b-11d779e86efe,Lomas Helicopters,,LMS,LOMAS
+4fc8fe6c-fcb7-4995-939e-4540ccbddaf8,Trans Air,,MUI,MAUI
+916147a4-24fd-405f-9793-6d2676534a7b,General Airways,,GWS,GENAIR
+9039ffae-4e5a-4d72-ad46-88c8eac1bda3,Nile Air,,NIA,NILEBIRD
+a66d3a69-331c-4ac7-82f5-88671e0cbbbb,Parcelair,,APK,AIRPAK
+13d26487-63c0-4c2a-a61a-8f6b46264863,Us Air Force (usaf),,USAF,
+9d1a87d6-a974-4342-8b73-51f49c9d9bc7,Evelop Airlines,,EVE,EVELOP
+6697fa6b-f0c8-4690-af9a-6884c96eb8a8,Georgian National Airlines,,GFG,NATIONAL
+527b13f1-bc34-4a3e-9961-9f7edcaf5994,Airventure,,RVE,AIRVENTURE
+49b5f599-906f-41b2-9ea7-90758764534e,Century Aviation International,,HAI,
+8631a17d-1c5e-4984-8dcd-db0a24327f06,Air Botswana,,BOT,BOTSWANA
+30799b19-1449-487d-90f6-e909b32db641,Bamboo Airways,,BAV,Bamboo
+d2bbac84-4320-4fc2-9b8a-d77ceb0d2da1,Centavia,,CNA,
+d8ff5a5b-7f77-4093-985a-d3faa1eb260e,South East Asian Airlines,,SRQ,SEAIR
+1c6187f2-9015-424e-ad6a-eae21deb3c83,Transcontinental Air,,TCH,TRANS GULF
+d71ed102-44a2-473c-9522-777b19ba7cc5,Air X Charter,,AXY,LEGEND
+540e9283-4df4-4bdd-9739-855a8b103f82,Challenge Airlines,,CHG,SKY CHALLENGER
+bf232a3e-bbcc-44af-8095-9702a4e8b2c3,Air Marrakech Service,,MKH,AIR MARRAKECH
+d059353c-9d99-462f-831b-26e14f1761b1,Airbridge Cargo,,ABW,AIRBRIDGE CARGO
+e9f58e38-8249-49e7-94ed-f518ca642fdb,Kaiser Air,,KAI,KAISER
+fcf4efc4-e27c-4f11-a322-878c4c35cdb6,Ptarmigan Airways,,PTA,PTARMIGAN
+cd9cedbf-f625-4814-a02d-60dba6f734cf,Texas Wings,,TXW,TXW
+e6a5ce21-ec15-48a0-836c-4773c8df3972,Trans Helicoptere Service,,THZ,LYON HELIJET
+f3ea3320-05a5-4dfb-a793-d1b1d3cb39cc,Avcon Jet Malta Ltd. - Malta,,VCJ,
+d312ab06-d99c-4fd8-a99a-14e287ac5ee7,Air Panama,,PST,TURISMO REGIONAL
+169c63e3-7c7e-44a1-84d7-baca915c5512,State Of Nebraska,,NEB,NEBRASKA
+625fb8a2-9b8b-4cc7-a77f-7d53a74365ea,Vietjet Air,,VJC,VIETJET
+ed7539b3-448e-4b90-be1d-90a6b34884d6,International Business Air,,IBZ,INTERBIZ
+37fe6b21-d807-44f4-8c40-78a3d0e93a96,Avient Aviation,,SMJ,AVAVIA
+bcc1de01-6465-4a8c-bfd5-2d192cdce898,Air Tractor,,AOU,AIR TRACTOR
+7c6fc73d-920d-489d-826d-8aa222ed6a53,Air Wisconsin,,AWI,AIR WISCONSIN
+7ef561cf-77cf-4586-a880-0e167d4806c2,"Helicopteros Dominicanos, S.a",,HCP,HELI CZECH
+3859d7fa-c353-4fff-bcc5-e3f94acc5c6b,Airwing As - Norway,,NWG,NORWING
+536016d1-9d09-4b26-bc5d-be27d4223148,Rabbit-air,,RBB,RABBIT
+570dc047-f952-4ec6-bec0-9f64fc5940f6,Gavina,,GVN,GAVINA
+e4c4059a-bebf-45ab-bb21-6799f22df260,Svg Air,,SVG,Grenadines
+d1b3e57a-b83c-4722-9d4c-7a36a6e3862d,Smartlynx Airlines Estonia,,MYX,TALLINN CAT
+8a28babf-19e7-42c0-922b-ed3d06af0d35,Nasair,,NAS,NASAIRWAYS
+63a0c842-d641-4d18-b340-911b57cdc588,Chc Helicopters,,HEM,HEMS
+4dc98615-c3f9-4dfa-9032-f45cb63f6e9c,Tag Aviation (malta) Ltd - Malta,,TEU,
+1f2d4124-621e-49cd-81d1-aad68df2b0d7,St. Vincent Grenadines Air (1990),,SVD,GRENADINES
+5eecd251-7389-4d98-939f-d4f935e773cb,Wasaya Airways,,WSG,WASAYA
+19156d46-02f0-4feb-bf6d-46aae598b0d3,Spring Airlines,,CQH,AIR SPRING
+bbbb0a89-3353-486a-9116-c059b624e1c0,Turtle Airways,,TLT,TURTLE
+1ef9ec8e-632e-4243-83dc-93b6f2122829,Southern Air Charter,,SOA,
+bbd61d33-0e54-48b1-8316-44b87468421b,Air Taxi And Charter International,,IBJ,
+c3eb2d69-2f18-42d9-a6c3-4eb4e62858d0,East Coast Jets,,ECJ,EASTCOAST JET
+64141960-59a5-4be2-a64f-2f5fa80d168f,Aero Club De Portugal,,CLP,CLUB PORTUGAL
+2947e334-becd-4afc-a798-77dc659a3aa6,Air Libya Tibesti,,TLR,AIR LIBYA
+9118d435-1366-466b-a6bd-4f0f761960cc,Gullivair,,GBG,
+f30b375e-8511-445a-8644-52f78b37f70e,Air Guyane,,GUY,GREEN BIRD
+33569534-c11f-484b-b242-97b434024d4a,Thai Airasia,,AIQ,THAI ASIA
+be24cd14-8ca4-4b5b-8301-7b69229faf6b,Firefly,,FFM,FIREFLY
+5a064802-8414-41d2-bd9c-a9821f66a7b8,Eclair Aviation,,ECC,ECLAIR
+49d6b4bf-17cd-469a-8734-68b71d1692b0,Cirrus Air,,NTS,NITE STAR
+435453fa-818e-4c44-87c3-6a713d98b6a6,Hendell Aviation Oy,,HDL,
+2a7bb74d-f269-45fa-b307-2d2718f39291,Ju-air,,JUR,JUNKERS
+d0070e17-ade1-463e-b696-36e25a1932db,Helijet,,JBA,HELIJET
+fca0ff25-bbe9-4229-b40d-4c71e1189d52,Skydrift,,SDL,SKYDRIFT
+188e5347-eb68-40ca-ae6a-a126ddddef43,Drf Luftrettung,,CHX,
+a1432da3-13c4-44e4-8dc6-47eacb064be4,Latcharter,,LTC,LATCHARTER
+e9c03030-3bda-4bc5-9112-0c95d6c6cf24,Fedex Feeder,,MTN,MOUNTAIN
+43006168-826f-4988-a0f0-446f62979107,Cairo Air Transport Company,,CCE,
+eaeb8ea9-3fe1-4ac2-9ccf-19c437d074dc,Rebus,,REB,REBUS
+2ed5b36e-6bb0-417d-b157-65839719e829,Flight-ops International,,KLO,KLONDIKE
+54402938-bc24-4340-8d60-7790affc1196,Globus,,GLP,
+70eb8679-9534-41e6-b3b5-7bf8b7a1edee,Aroostook Aviation,,PXX,PINE STATE
+2a26d8d7-3937-402f-af5f-f61986505832,Albinati Aeronautics,,LUC,ALBINATI
+dafc36c6-20d8-4349-9b80-cc2820556d0c,Sas Scandinavian Airlines Ireland,,SZS,
+1b2cf4c9-ff79-4ac5-9038-c309202b5c1c,Act Havayollari,,RUN,CARGO TURK
+e019638e-fde7-4c8b-8da6-037d9e5c615c,Jet Airways,,JAI,JET AIRWAYS
+ae161331-c1b7-4497-8345-2ea5d653c0ef,Laudamotion Executive Gmbh - Austria,,LDX,
+f0b2e1f6-bca9-4ebc-9183-5d621688b02e,Bombardier Aerospace,,BBA,BANAIR
+f94ad011-ef20-4a9b-b007-8572df3e9d5c,Transportes Aereos Tauro,,TAU,TRANSTAURO
+743d6cf9-d528-4b10-a770-9a8520e074da,Eastern Air Lines,,EAL,EASTERN
+219a1fab-1c61-4102-8052-75df5a9c78ad,Air Umbria,,UMB,AIR UMBRIA
+ea429ad1-1f3d-4718-acb2-7c9961d438c4,Csa Czech Airlines,,SSZ,SPECSAVERS
+68b01630-3c50-4f57-8a22-8d1a26ee4965,G5 Executive,,EXH,BATMAN
+0a4510f4-dfa4-41e7-bb18-89b1025a161a,Kosmos Airlines,,KSM,KOSMOS
+c722650a-835f-47b4-8f62-b3684f764908,Icelandic Coast Guard,,ICG,ICELAND COAST
+43afbdfa-4b37-4fd5-a04e-9e43202c853a,Vostok Airlines,,VTK,VOSTOK
+50ba05dd-f14d-4326-97ca-3f96da9a832a,Ford Motor Company,,FOB,FORDAIR
+5a236672-c210-4d1f-8603-2a2909e604ee,Air 500,,BRM,BOOMERANG
+ad9a9d90-9954-44c9-b013-f63779795627,Best Air,,BST,TUNCA
+dd540cfd-c72e-4a6c-85bf-30c49426d162,King Aviation,,KNG,KING
+863cd226-f6a6-438c-ae4e-a4496c65a591,G & L Aviation,,GML,GEEANDEL
+5096e4c6-6d50-4033-815c-57cb5e603c28,Transportacion Aerea Del Mar De Cortes,,MCT,TRANS CORTES
+1fe33d31-db69-4781-9064-dc9e7879f16f,Blackbird Air Charter A/s - Denmark,,BBB,BLACKBIRD
+11044bb9-4253-4ec0-a9a1-4dbca45e0f47,Norwegian Air International,,IBK,NORTRANS
+f41700dc-440e-456c-924e-afc78be5c4b9,Medavia Company,,MDM,MEDAVIA
+3cd87441-1144-47ed-8ac2-f89c2061d6a5,Amc Aviation,,AMV,
+9b676eae-e507-4038-b8f9-5e67ac072c25,Transavia Holland,,TRA,TRANSAVIA
+801e5e80-03c0-48be-8eff-f449e7ae7a3b,Perm Airlines,,PGP,PERM AIR
+ea3c5bd7-12a3-404a-a55b-6ce139727683,Air Armenia,,ARR,AIR ARMENIA
+9646f575-5215-426c-a272-2c203145336f,Avcon Jet,,AOJ,ASTERIX
+3bac3802-3589-4390-8cff-b211564239ac,Champagne Airlines,,CPH,CHAMPAGNE
+4fe2ea40-91ac-4b67-92ef-34117c51cf91,Meteorological Research Flight,,MET,METMAN
+aef19149-fcc7-43c3-938c-dae91b599aa8,Elysian Airlines,,GIE,
+cea924b7-b7ea-4f6f-a575-9212ce0403e9,Wizz Air Abu Dhabi,,WAZ,
+05105437-c7ea-4307-aae7-2ab1beb762ee,Hillwood Airways,,HWA,Hillwood
+400cab00-9e00-4b8e-969d-b595d09b773b,"Concierge U Ltd, London",,JCO,
+2070910d-89e2-4317-a0f0-189643e24098,Babcock Scandinavian Air Ambulance As,,BNO,
+29c1ef52-a11b-4452-aa9c-f1fcb4b55945,International Air Services,,IAX,INTERAIR SERVICES
+de7835f5-d044-4fe5-992d-c76518556824,E-aviation,,EFD,EVER FLIGHT
+2f2e4d70-daaf-4490-a597-b66c4e8b65d4,Polizeifliegerstaffel Nordrhein-westfalen,,NRW,HUMMEL
+4863bf36-6ca1-4b77-a873-6479ee585493,Transportes Aereos Don Carlos Ltda. - Chile,,DCL,DON CARLOS
+f7b7d7c6-7b92-4b13-9c14-4d567f0da243,Joy Air,,JOY,JOY AIR
+6d0af860-a9fd-4a9f-985b-4015506f3c37,Airblue,,ABQ,PAKBLUE
+1caabdfb-491d-44ef-aa5e-b4c605b70da5,French Bee,,FBU,
+4b077c68-f3ce-4315-8096-23a660acba40,Independence Air,,IDE,INDEPENDENCE AIR
+a664c685-774e-42aa-991b-414d27788524,Cirrus,,RRU,HELICIRRUS
+252e51cd-1e56-4315-9488-a14ec3a5763a,U.s. Department Of The Interior,,DOI,INTERIOR
+ee1a7bea-b73b-418f-8278-b00c0eb818d1,Commodore Aviation,,GAR,
+3c87d07a-d7a6-44f5-989b-e0c0f184fe8e,Koralblue Airlines,,KBR,KORAL BLUE
+d9d6bf9d-29d0-4a64-8efe-0dc63ec93dc9,Singapore Airlines Cargo,,SQC,SINGCARGO
+1a05a4c6-b660-4e55-b209-093b6ec38d8b,Labrador Airways,,LAL,LAB AIR
+e740e462-a5ff-45ab-a143-87cdbf6682b4,D&k Aviation,,DNK,DIRECT JET
+50df5546-2db4-4d77-becf-a7f13de80e13,Dix Aviation,,DIX,DIX FLIGHT
+f0b96132-27a6-4f64-8b4d-8d1b86949161,Samples Ryan,,MJF,
+da140838-2a41-4c40-85dd-7f3bff44043f,Volga Aviaexpress,,WLG,GOUMRAK
+65afd509-79dd-4de2-a8f6-64231391567e,Ciaf Leasing,,CIL,CECIL
+df43f8a9-7bdc-4307-8dea-faa04a29b624,Universal Jet Rental De Mexico,,UJR,UNIVERSAL JET
+6138dbc4-1c63-4e11-b105-ace24cea7b28,Yellow Wings Air Services,,ELW,YELLOW WINGS
+6facf878-12a1-403a-b2a8-ccad7334ac5f,Atran Cargo Airlines,,VAS,ATRAN
+3f9d3329-22a6-4f6f-afdf-d7457749aec5,Instituto Cartografico De Cataluna,,ICC,CARTO
+5b957b1a-8d2d-4958-a081-6de01edf9b54,Norlandair,,FNA,NORLAND
+97c50645-656a-4993-8a85-34aef7f0cf03,Blue Jet,,BLJ,BLUEWAY
+7d3d811f-1d1f-44f5-ae4b-6efe2b585b1c,Yak Service,,AKY,YAK-SERVICE
+710659e6-de21-49b9-bdac-b8b770d4c613,M & N Aviation,,JNH,JONAH
+f4d7e07b-31a3-406b-8f8d-e62cba12e19d,Aquila Air,,CNH,CHENANGO
+3ba5303f-8ebe-4cf0-aa9b-fd9357bf3e87,Htt Group Ltd,,PTI,PRIVATAIR
+46ef36cc-017e-479c-89be-c5b1e5985447,Itali Airlines,,ACL,ITALI
+277b6849-ac5d-4915-b578-af0eb0ea29e9,Air Inuit,,AIE,AIR INUIT
+56cff617-daae-4b06-8e07-3a1c60e7d5cf,Novajet,,NOJ,Novajet
+d35f4efe-5597-4731-a9ce-584973c2536e,Aero-rey,,REY,AEROREY
+81508f3a-b356-4276-896d-1e3d0b5e8b0f,Raytheon Aircraft Company,,RTN,RAYTHEON
+bd0dfceb-b28f-4872-ac42-162746c3d0c9,Indonesia Air Transport,,IDA,INTRA
+afc1e262-a11f-4622-a1a0-fac93f063971,Air China Cargo,,CAO,AIRCHINA FREIGHT
+63200269-6812-4e80-ad26-0600fa24cadb,Kush Air,,KUH,
+55ca0ac7-8946-4981-ada5-c8d117d14646,Amber Air,,GNT,GINTA
+ed8ab1d6-465c-4753-a35f-0acb5167145f,"Enac, 31 Toulouse",,SFA,SEFA
+bae69f91-218b-4224-8aae-aca3b26a0ff4,Cayman Airways,,CAY,CAYMAN
+a161b5b1-5e34-4b61-8cb8-49d403717850,Widerøe,,WIF,WIDEROE
+33e50437-5fdd-4e42-a08f-e558820f0c7f,Awesome Aviation Pty Ltd,,ASM,AWESOME
+ad71fbc0-d453-496a-9ad4-9c6f3515972d,Foster Aviation,,FSA,FOSTER-AIR
+2e11861d-212f-440b-9a0c-8f0bc2cadec9,Skymark Airlines,,SKY,SKYMARK
+0c435a28-6799-4b63-af60-16ff0120315e,Aigle Azur,,AAF,AIGLE AZUR
+6a63e2aa-41da-4eea-9841-f41f02adf2a5,Northstar Aviation,,NSS,NORTHSTAR
+09b46472-0152-409f-9a4b-85119f947596,Travelair,,TLV,PAJAROS
