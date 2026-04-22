@@ -18,6 +18,7 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
                 .IsRequired()
                 .HasMaxLength(20);
 
+            builder.Property(a => a.IataCode).HasMaxLength(10);
             builder.Property(a => a.IcaoCode).HasMaxLength(10);
             builder.Property(a => a.Callsign).HasMaxLength(50);
         }

@@ -18,7 +18,10 @@ namespace SkyScan.Core.Entities.AirLine
         [StringLength(20)]
         public string HotlineNumber { get; set; }
 
-        [StringLength(10)]
+        [StringLength(3, MinimumLength = 2, ErrorMessage = "IATA Code must be 2-3 characters.")]
+        public string? IataCode { get; set; }
+
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "ICAO Code must be 3 characters.")]
         public string? IcaoCode { get; set; }
 
         [StringLength(50)]

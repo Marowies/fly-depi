@@ -8,13 +8,13 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Country> builder)
         {
-            builder.HasKey(c => c.CountryId);
+            builder.HasKey(c => c.CountryCode);
 
-            builder.Property(c => c.Code)
+            builder.Property(c => c.CountryCode)
                 .IsRequired()
                 .HasMaxLength(2);
 
-            builder.HasIndex(c => c.Code).IsUnique(); 
+            builder.HasIndex(c => c.CountryCode).IsUnique(); 
 
             builder.Property(c => c.Name)
                 .IsRequired()

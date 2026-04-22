@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SkyScan.Core.Entities.AirLine;
 
 namespace SkyScan.Core.Repositories_Interfaces
 {
-    public interface IFlightRepository
+    public interface IFlightRepository : IGenericRepository<Flight>
     {
+        // Add flight-specific methods here if needed
     }
 }

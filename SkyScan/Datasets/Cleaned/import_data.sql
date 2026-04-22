@@ -4,7 +4,7 @@
 -- Note: Import countries manually or use existing reference data
 
 -- Cities Import
-INSERT INTO Cities (CityId, Name, Country) VALUES
+INSERT INTO Cities (CityId, Name, CountryCode) VALUES
     ('41b77a85-3028-478c-9535-fedeb9680c74', 'Bensalem', 'US'),
     ('7873482f-43b5-4566-99a4-ecc15df1e1d1', 'Leoti', 'US'),
     ('04cdfce0-12b2-450d-bfca-80c282bd850c', 'Anchor Point', 'US'),

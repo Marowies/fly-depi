@@ -1,0 +1,164 @@
+@model SkyScan.Presentation.Models.FlightResultsViewModel
+@{
+    ViewData["Title"] = "Flight Results";
+}
+
+<div class="animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="mb-0 fw-bold">
+                @Model.OriginCity <span class="text-white-50 small">(@Model.OriginIata)</span> 
+                <span class="text-info mx-2">→</span> 
+                @Model.DestinationCity <span class="text-white-50 small">(@Model.DestinationIata)</span>
+            </h3>
+            <p class="text-white-50 mb-0">@Model.Flights.Count() flights found for @Model.DepartureDate.ToLongDateString()</p>
+        </div>
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-light dropdown-toggle rounded-pill" data-bs-toggle="dropdown">
+                Sort By: Cheapest
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark">
+                <li><a class="dropdown-item" href="#">Cheapest</a></li>
+                <li><a class="dropdown-item" href="#">Fastest</a></li>
+                <li><a class="dropdown-item" href="#">Earliest</a></li>
+            </ul>
+        </div>
+    </div>
+
+    @if (Model.Flights == null || !Model.Flights.Any())
+    {
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <svg width="64" height="64" fill="currentColor" class="text-white-50" viewBox="0 0 16 16">
+                    <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM.5 8a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0z"/>
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg>
+            </div>
+            <h4>No Flights Found</h4>
+            <p class="text-white-50">Try adjusting your dates or searching for nearby airports.</p>
+            <a asp-action="Index" class="btn btn-premium mt-3">Back to Search</a>
+        </div>
+    }
+    else
+    {
+        <div class="flight-list">
+            @foreach (var flight in Model.Flights)
+            {
+                <div class="glass-card mb-4 p-4 flight-card overflow-hidden">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center border-end border-white-10">
+                            <div class="airline-logo mb-2">
+                                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold" style="width: 50px; height: 50px;">
+                                    @flight.AirlineName.Substring(0, 1)
+                                </div>
+                            </div>
+                            <h6 class="mb-0">@flight.FlightNumber</h6>
+                            <span class="badge bg-info bg-opacity-25 text-info mt-2">@flight.AirlineName</span>
+                        </div>
+                        
+                        <div class="col-md-6 px-4">
+                            <div class="d-flex justify-content-between align-items-center text-center">
+                                <div>
+                                    <h4 class="mb-0">@flight.DepartureTime.ToString("HH:mm")</h4>
+                                    <span class="text-white-50 small">@flight.OriginAirport</span>
+                                </div>
+                                
+                                <div class="flex-grow-1 px-4 text-center position-relative">
+                                    <div class="text-white-50 small mb-1">@flight.Status</div>
+                                    <div class="flight-path"></div>
+                                    <svg width="20" height="20" fill="currentColor" class="text-info plane-icon" viewBox="0 0 16 16">
+                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                    </svg>
+                                </div>
+                                
+                                <div>
+                                    <h4 class="mb-0">@flight.ArrivalTime.ToString("HH:mm")</h4>
+                                    <span class="text-white-50 small">@flight.DestinationAirport</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 text-end border-start border-white-10">
+                            <div class="mb-2">
+                                <span class="text-white-50 small">Starting from</span>
+                                <h3 class="text-warning fw-bold mb-0">$@flight.Price</h3>
+                            </div>
+                            <a href="@flight.RedirectURL" target="_blank" class="btn btn-premium btn-sm w-100">Select Flight</a>
+                            <button class="btn btn-link text-white-50 btn-sm w-100 mt-1">Details</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Sidebar {
+    <div class="filters">
+        <h5 class="fw-bold mb-4 border-bottom border-white-10 pb-2">Filter Results</h5>
+        
+        <div class="mb-4">
+            <label class="form-label small text-uppercase text-white-50">Stops</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" checked id="stop0">
+                <label class="form-check-label" for="stop0">Non-stop</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="stop1">
+                <label class="form-check-label" for="stop1">1 Stop</label>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label small text-uppercase text-white-50">Price Range</label>
+            <input type="range" class="form-range" min="100" max="2000" id="priceRange">
+            <div class="d-flex justify-content-between small text-white-50">
+                <span>$100</span>
+                <span>$2,000</span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label small text-uppercase text-white-50">Airlines</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" checked id="air1">
+                <label class="form-check-label" for="air1">Premium Airways</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" checked id="air2">
+                <label class="form-check-label" for="air2">Celestial Jet</label>
+            </div>
+        </div>
+        
+        <button class="btn btn-outline-info w-100 btn-sm mt-3">Reset Filters</button>
+    </div>
+}
+
+@section Scripts {
+    <style>
+        .flight-path {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            width: 100%;
+            position: absolute;
+            top: 50%;
+            left: 0;
+        }
+        .plane-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            z-index: 1;
+        }
+        .border-white-10 {
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        .flight-card {
+            transition: transform 0.3s ease;
+        }
+        .flight-card:hover {
+            transform: scale(1.01);
+        }
+    </style>
+}

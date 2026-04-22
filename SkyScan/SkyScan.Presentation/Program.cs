@@ -4,6 +4,9 @@ using SkyScan.Application.Interfaces;
 using SkyScan.Infrastructure.Services;
 using SkyScan.Application.Mappings;
 using SkyScan.Presentation.Middlewares;
+using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Infrastructure.Data.Repositories_Implementations;
+
 namespace SkyScan.Presentation
 {
     public class Program
@@ -14,12 +17,24 @@ namespace SkyScan.Presentation
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddDbContext<SkyScanDbContext>(options => 
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")),
-                    ServiceLifetime.Transient);
+
+            // IMemoryCache: used to cache static reference data (e.g. airport dropdown list)
+            builder.Services.AddMemoryCache();
+
+            // DbContext should be Scoped (one per request), not Transient (wastes connection pool)
+            builder.Services.AddDbContext<SkyScanDbContext>(options =>
+                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             
             // Add AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+ 
+            // Register Repositories
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IFlightRepository, FlightRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IPriceAlertRepository, PriceAlertRepository>();
+            builder.Services.AddScoped<ISearchRepository, SearchRepository>();
+            builder.Services.AddScoped<IAirportRepository, AirportRepository>();
  
             var useMockData = builder.Configuration["FlightProviderSettings:UseMockData"] == "true";
 
@@ -35,20 +50,20 @@ namespace SkyScan.Presentation
             var app = builder.Build();
 
             // Seed Data Integration
-            using (var scope = app.Services.CreateScope())
-            {
-                try 
-                {
-                    var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
-                    var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
-                    await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
-                }
-                catch (Exception ex)
-                {
-                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred while seeding datasets.");
-                }
-            }
+            // using (var scope = app.Services.CreateScope())
+            // {
+            //     try 
+            //     {
+            //         var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
+            //         var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
+            //         await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //         logger.LogError(ex, "An error occurred while seeding datasets.");
+            //     }
+            // }
 
             // Configure the HTTP request pipeline.
             // 1. Add our Global Exception Handler at the very start of the pipeline

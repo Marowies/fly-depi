@@ -10,5 +10,6 @@ namespace SkyScan.Application.DTOs
         public DateTime ArrivalTime { get; set; }
         public decimal Price { get; set; }
         public string Status { get; set; } = string.Empty;
+        public string? RedirectURL { get; set; }
     }
 }

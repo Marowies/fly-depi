@@ -22,14 +22,14 @@ body {
 }
     /* Overall Page Setup */
     body.luxury-dark {
-        background-color: #05070a; /* Deep dark blue/black */
+        background-color: #05070a;
         font-family: 'Inter', sans-serif;
         color: #ffffff;
         margin: 0;
         overflow-x: hidden;
     }
 
-/* The background image that sits behind everything */
+/* Background image handling */
 .dynamic-bg {
     position: fixed;
     top: 0;
@@ -38,22 +38,79 @@ body {
     height: 100%;
     background-size: cover;
     background-position: center;
-    filter: brightness(0.3) blur(2px); /* Makes image dark so text is readable */
+    filter: brightness(0.4) saturate(1.2);
     z-index: -1;
+    transition: background-image 1s ease-in-out;
 }
 
-/* The Glass Effect (The most important part) */
+.dynamic-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(5, 7, 10, 0.4) 0%, rgba(5, 7, 10, 0.8) 100%);
+}
+
+/* Glassmorphism System */
 .glass-nav, .glass-card {
-    background: rgba(255, 255, 255, 0.03); /* Faint white tint */
-    backdrop-filter: blur(12px); /* Frosted glass effect */
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border */
-    border-radius: 20px; /* Rounded corners from wireframe */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-    /* Make cards pop when hovered */
-    .glass-card:hover {
-        border-color: rgba(255, 255, 255, 0.2);
-        background: rgba(255, 255, 255, 0.05);
-        transition: 0.3s ease;
-    }
+.glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Premium Inputs */
+.form-control, .form-select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 12px;
+    padding: 12px 16px;
+}
+
+.form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #38bdf8;
+    color: white;
+    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.1);
+}
+
+/* Modern Buttons */
+.btn-premium {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 14px;
+    padding: 12px 28px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-premium:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}

@@ -15,11 +15,12 @@ namespace SkyScan.Core.Entities
 
         [Required]
         [EmailAddress]
+        [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
         [StringLength(100)]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, MinimumLength = 6)]
+        [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters.")]
         public string Password { get; set; }
 
         public List<Search> Searches { get; set; } = new List<Search>();

@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Repositories Implementations\SearchRepository.cs" />
+    <Compile Remove="Data\Repositories Implementations\**" />
+    <EmbeddedResource Remove="Data\Repositories Implementations\**" />
+    <None Remove="Data\Repositories Implementations\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,10 +33,6 @@
   <ItemGroup>
     <Folder Include="Data\DataContext\DbConfigurations\" />
     <Folder Include="Services\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Data\Repositories Implementations\SearchRepository.cs" />
   </ItemGroup>
 
 </Project>

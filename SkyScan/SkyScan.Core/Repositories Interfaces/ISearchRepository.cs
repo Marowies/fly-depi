@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SkyScan.Core.Entities;
 
 namespace SkyScan.Core.Repositories_Interfaces
 {
-    public interface ISearchRepository
+    public interface ISearchRepository : IGenericRepository<Search>
     {
     }
 }

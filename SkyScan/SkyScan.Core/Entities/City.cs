@@ -16,7 +16,6 @@ namespace SkyScan.Core.Entities
         [Required]
         [StringLength(2)]
         public string CountryCode { get; set; }
-
         public Country Country { get; set; }
 
         public List<Airport> Airports { get; set; } = new List<Airport>();

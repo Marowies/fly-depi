@@ -7,11 +7,8 @@ namespace SkyScan.Core.Entities
     public class Country
     {
         [Key]
-        public Guid CountryId { get; set; }
-
-        [Required]
-        [StringLength(2)]
-        public string Code { get; set; } // Alpha-2 code
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "CountryCode must be exactly 2 characters.")]
+        public string CountryCode { get; set; } // Alpha-2 code (e.g., "US", "EG")
 
         [Required]
         [StringLength(100)]

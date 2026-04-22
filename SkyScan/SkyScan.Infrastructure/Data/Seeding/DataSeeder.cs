@@ -27,9 +27,9 @@ namespace SkyScan.Infrastructure.Data.Seeding
 
             try
             {
-                await SeedCountriesAsync(context, Path.Combine(basePath, "countries_cleaned.csv"), logger);
-                await SeedCitiesAsync(context, Path.Combine(basePath, "cities_cleaned.csv"), logger);
-                await SeedAirportsAsync(context, Path.Combine(basePath, "airports_cleaned.csv"), logger);
+                // await SeedCountriesAsync(context, Path.Combine(basePath, "countries_cleaned.csv"), logger);
+                // await SeedCitiesAsync(context, Path.Combine(basePath, "cities_cleaned.csv"), logger);
+                // await SeedAirportsAsync(context, Path.Combine(basePath, "airports_cleaned.csv"), logger);
                 await SeedAirlinesAsync(context, Path.Combine(basePath, "airlines_cleaned.csv"), logger);
                 
                 // Seed airplanes in batches because the file is huge
@@ -47,53 +47,109 @@ namespace SkyScan.Infrastructure.Data.Seeding
 
         private static async Task SeedCountriesAsync(SkyScanDbContext context, string filePath, Microsoft.Extensions.Logging.ILogger logger)
         {
-            if (await context.Countries.AnyAsync()) return;
+            logger.LogInformation("Checking Countries...");
+            var existingCodes = await context.Countries.Select(c => c.CountryCode).ToListAsync();
+            var existingSet = new HashSet<string>(existingCodes);
 
-            logger.LogInformation("Seeding Countries...");
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+            { 
+                HasHeaderRecord = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => args.Header.Trim()
+            };
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
+            csv.Context.RegisterClassMap<CountryMap>();
             
-            var records = csv.GetRecords<Country>().ToList();
-            await context.Countries.AddRangeAsync(records);
-            await context.SaveChangesAsync();
-            logger.LogInformation($"Seeded {records.Count} Countries.");
+            var records = csv.GetRecords<Country>()
+                .Where(r => !existingSet.Contains(r.CountryCode))
+                .ToList();
+
+            if (records.Any())
+            {
+                foreach (var r in records)
+                {
+                    if (string.IsNullOrWhiteSpace(r.Name)) r.Name = "Unknown Country";
+                    if (string.IsNullOrWhiteSpace(r.Continent)) r.Continent = "Unknown";
+                }
+                await context.Countries.AddRangeAsync(records);
+                await context.SaveChangesAsync();
+                logger.LogInformation($"Seeded {records.Count} new Countries.");
+            }
+            else
+            {
+                logger.LogInformation("No new Countries to seed.");
+            }
         }
 
         private static async Task SeedCitiesAsync(SkyScanDbContext context, string filePath, Microsoft.Extensions.Logging.ILogger logger)
         {
-            if (await context.Cities.AnyAsync()) return;
+            logger.LogInformation("Checking Cities...");
+            var existingCities = await context.Cities.Select(c => new { c.Name, c.CountryCode }).ToListAsync();
+            var existingSet = existingCities.Select(c => $"{c.Name.ToLower()}_{c.CountryCode.ToLower()}").ToHashSet();
 
-            logger.LogInformation("Seeding Cities...");
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+            { 
+                HasHeaderRecord = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => args.Header.Trim()
+            };
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
             
             csv.Context.RegisterClassMap<CityMap>();
             var records = csv.GetRecords<City>().ToList();
             
-            // Check if country codes exist
-            var countryCodes = (await context.Countries.Select(c => c.Code).ToListAsync()).ToHashSet();
-            var validCities = records.Where(c => countryCodes.Contains(c.CountryCode)).ToList();
+            var countryCodes = (await context.Countries.Select(c => c.CountryCode).ToListAsync()).ToHashSet();
             
-            await context.Cities.AddRangeAsync(validCities);
-            await context.SaveChangesAsync();
-            logger.LogInformation($"Seeded {validCities.Count} Cities.");
+            var newCities = records
+                .Where(c => countryCodes.Contains(c.CountryCode))
+                .Where(c => !existingSet.Contains($"{c.Name.ToLower()}_{c.CountryCode.ToLower()}"))
+                .ToList();
+            
+            if (newCities.Any())
+            {
+                foreach (var c in newCities)
+                {
+                    if (string.IsNullOrWhiteSpace(c.Name)) c.Name = "Unknown City";
+                }
+                await context.Cities.AddRangeAsync(newCities);
+                await context.SaveChangesAsync();
+                logger.LogInformation($"Seeded {newCities.Count} new Cities.");
+            }
+            else
+            {
+                logger.LogInformation("No new Cities to seed.");
+            }
         }
 
         private static async Task SeedAirportsAsync(SkyScanDbContext context, string filePath, Microsoft.Extensions.Logging.ILogger logger)
         {
-            if (await context.Airports.AnyAsync()) return;
+            logger.LogInformation("Checking Airports...");
+            var existingIds = await context.Airports.Select(a => a.AirportId).ToListAsync();
+            var existingSet = new HashSet<Guid>(existingIds);
 
-            logger.LogInformation("Seeding Airports...");
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+            { 
+                HasHeaderRecord = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => args.Header.Trim()
+            };
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
             
-            var records = csv.GetRecords<AirportCsvDto>().ToList();
+            var records = csv.GetRecords<AirportCsvDto>().Where(r => !existingSet.Contains(r.AirportId)).ToList();
             
+            if (!records.Any())
+            {
+                logger.LogInformation("No new Airports to seed.");
+                return;
+            }
+
             var cities = await context.Cities.Select(c => new { c.CityId, c.Name, c.CountryCode }).ToListAsync();
-            // Create a dictionary for super fast lookups
             var cityDict = cities.GroupBy(c => $"{c.Name.ToLower()}_{c.CountryCode.ToLower()}")
                                  .ToDictionary(g => g.Key, g => g.First().CityId);
 
@@ -108,11 +164,11 @@ namespace SkyScan.Infrastructure.Data.Seeding
                     airportEntities.Add(new Airport
                     {
                         AirportId = r.AirportId,
-                        Name = r.Name,
+                        Name = string.IsNullOrWhiteSpace(r.Name) ? "Unknown Airport" : r.Name,
                         Code = r.Code,
                         IataCode = r.IataCode,
                         IcaoCode = r.IcaoCode,
-                        Type = r.Type,
+                        Type = string.IsNullOrWhiteSpace(r.Type) ? "Unknown" : r.Type,
                         Latitude = r.Latitude,
                         Longitude = r.Longitude,
                         ElevationFt = r.ElevationFt,
@@ -125,39 +181,70 @@ namespace SkyScan.Infrastructure.Data.Seeding
                 }
             }
 
-            await context.Airports.AddRangeAsync(airportEntities);
-            await context.SaveChangesAsync();
-            logger.LogInformation($"Seeded {airportEntities.Count} Airports. Skipped {missingCities} due to unmapped cities.");
+            if (airportEntities.Any())
+            {
+                await context.Airports.AddRangeAsync(airportEntities);
+                await context.SaveChangesAsync();
+                logger.LogInformation($"Seeded {airportEntities.Count} new Airports. Skipped {missingCities} due to unmapped cities.");
+            }
         }
 
         private static async Task SeedAirlinesAsync(SkyScanDbContext context, string filePath, Microsoft.Extensions.Logging.ILogger logger)
         {
-            if (await context.Airlines.AnyAsync()) return;
+            logger.LogInformation("Checking Airlines...");
+            var existingNames = await context.Airlines.Select(a => a.Name).ToListAsync();
+            var existingSet = new HashSet<string>(existingNames.Select(n => n.ToLower()));
 
-            logger.LogInformation("Seeding Airlines...");
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+            { 
+                HasHeaderRecord = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => args.Header.Trim()
+            };
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
             
             var records = csv.GetRecords<Airline>().ToList();
+            var newAirlines = new List<Airline>();
+
             foreach(var r in records)
             {
+                if (existingSet.Contains(r.Name.ToLower())) continue;
+
+                if (string.IsNullOrWhiteSpace(r.HotlineNumber)) r.HotlineNumber = "N/A";
                 if (r.IcaoCode != null && r.IcaoCode.Length > 10) r.IcaoCode = r.IcaoCode.Substring(0, 10);
                 if (r.Callsign != null && r.Callsign.Length > 50) r.Callsign = r.Callsign.Substring(0, 50);
                 if (r.Name != null && r.Name.Length > 100) r.Name = r.Name.Substring(0, 100);
+
+                newAirlines.Add(r);
+                existingSet.Add(r.Name.ToLower());
             }
 
-            await context.Airlines.AddRangeAsync(records);
-            await context.SaveChangesAsync();
-            logger.LogInformation($"Seeded {records.Count} Airlines.");
+            if (newAirlines.Any())
+            {
+                await context.Airlines.AddRangeAsync(newAirlines);
+                await context.SaveChangesAsync();
+                logger.LogInformation($"Seeded {newAirlines.Count} new Airlines.");
+            }
+            else
+            {
+                logger.LogInformation("No new Airlines to seed.");
+            }
         }
 
         private static async Task SeedAirplanesAsync(SkyScanDbContext context, string filePath, Microsoft.Extensions.Logging.ILogger logger)
         {
-            if (await context.Airplanes.AnyAsync()) return;
-
-            logger.LogInformation("Seeding Airplanes...");
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture) { HasHeaderRecord = true };
+            logger.LogInformation("Checking Airplanes...");
+            // For large datasets, we check existence batch by batch to avoid loading millions of IDs into memory
+            
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture) 
+            { 
+                HasHeaderRecord = true,
+                HeaderValidated = null,
+                MissingFieldFound = null,
+                PrepareHeaderForMatch = args => args.Header.Trim()
+            };
             using var reader = new StreamReader(filePath);
             using var csv = new CsvReader(reader, config);
             
@@ -169,6 +256,7 @@ namespace SkyScan.Infrastructure.Data.Seeding
 
             foreach (var r in csv.GetRecords<Airplane>())
             {
+                // Basic cleanup
                 if (r.Icao24 != null && r.Icao24.Length > 20) r.Icao24 = r.Icao24.Substring(0, 20);
                 if (r.Registration != null && r.Registration.Length > 20) r.Registration = r.Registration.Substring(0, 20);
                 if (r.Model != null && r.Model.Length > 100) r.Model = r.Model.Substring(0, 100);
@@ -183,23 +271,52 @@ namespace SkyScan.Infrastructure.Data.Seeding
 
                 if (batch.Count >= batchSize)
                 {
-                    await context.Airplanes.AddRangeAsync(batch);
-                    await context.SaveChangesAsync();
+                    // Check which ones in this batch already exist
+                    var batchIds = batch.Select(b => b.AirplaneId).ToList();
+                    var existingIds = await context.Airplanes.Where(a => batchIds.Contains(a.AirplaneId)).Select(a => a.AirplaneId).ToListAsync();
+                    var existingSet = new HashSet<Guid>(existingIds);
+
+                    var newInBatch = batch.Where(b => !existingSet.Contains(b.AirplaneId)).ToList();
+
+                    if (newInBatch.Any())
+                    {
+                        await context.Airplanes.AddRangeAsync(newInBatch);
+                        await context.SaveChangesAsync();
+                        total += newInBatch.Count;
+                    }
+                    
                     context.ChangeTracker.Clear();
-                    total += batch.Count;
                     batch.Clear();
-                    logger.LogInformation($"Seeded {total} Airplanes...");
+                    logger.LogInformation($"Processed a batch. Seeded {total} new Airplanes so far...");
                 }
             }
 
             if (batch.Any())
             {
-                await context.Airplanes.AddRangeAsync(batch);
-                await context.SaveChangesAsync();
-                total += batch.Count;
+                var batchIds = batch.Select(b => b.AirplaneId).ToList();
+                var existingIds = await context.Airplanes.Where(a => batchIds.Contains(a.AirplaneId)).Select(a => a.AirplaneId).ToListAsync();
+                var existingSet = new HashSet<Guid>(existingIds);
+                var newInBatch = batch.Where(b => !existingSet.Contains(b.AirplaneId)).ToList();
+
+                if (newInBatch.Any())
+                {
+                    await context.Airplanes.AddRangeAsync(newInBatch);
+                    await context.SaveChangesAsync();
+                    total += newInBatch.Count;
+                }
             }
 
-            logger.LogInformation($"Successfully seeded total {total} Airplanes.");
+            logger.LogInformation($"Successfully seeded total {total} new Airplanes.");
+        }
+    }
+
+    public sealed class CountryMap : ClassMap<Country>
+    {
+        public CountryMap()
+        {
+            Map(m => m.CountryCode).Name("Code");
+            Map(m => m.Name).Name("Name");
+            Map(m => m.Continent).Name("Continent");
         }
     }
 

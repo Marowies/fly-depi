@@ -13,7 +13,7 @@ namespace SkyScan.Core.Entities.AirLine
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
-        [Range(0, 1000000)]
+        [Range(0.01, 1000000, ErrorMessage = "Price must be greater than zero.")]
         public decimal Price { get; set; }
 
         [Required]
@@ -22,6 +22,7 @@ namespace SkyScan.Core.Entities.AirLine
         [StringLength(100)]
         public string? LuggageDescription { get; set; }
 
+        [Range(0, 100, ErrorMessage = "Luggage weight must be between 0 and 100 (Kg).")]
         public double? LuggageWeight { get; set; }
 
         public bool HasFood { get; set; } = false;

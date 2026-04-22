@@ -21,7 +21,7 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
             builder.HasOne(c => c.Country)
                 .WithMany(co => co.Cities)
                 .HasForeignKey(c => c.CountryCode)
-                .HasPrincipalKey(co => co.Code)
+                .HasPrincipalKey(co => co.CountryCode)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

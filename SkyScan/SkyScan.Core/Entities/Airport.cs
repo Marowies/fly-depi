@@ -17,10 +17,10 @@ namespace SkyScan.Core.Entities
         [StringLength(10)]
         public string Code { get; set; }
 
-        [StringLength(10)]
+        [StringLength(3, MinimumLength = 3, ErrorMessage = "IATA Code must be 3 characters.")]
         public string? IataCode { get; set; }
 
-        [StringLength(10)]
+        [StringLength(4, MinimumLength = 4, ErrorMessage = "ICAO Code must be 4 characters.")]
         public string? IcaoCode { get; set; }
 
         [StringLength(50)]
