@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace SkyScan.Infrastructure.Migrations
+namespace SkyScan.Infrastructure.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -168,6 +168,39 @@ namespace SkyScan.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Searches",
+                columns: table => new
+                {
+                    SearchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    OriginCityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DestinationCityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Searches", x => x.SearchId);
+                    table.ForeignKey(
+                        name: "FK_Searches_Cities_DestinationCityId",
+                        column: x => x.DestinationCityId,
+                        principalTable: "Cities",
+                        principalColumn: "CityId");
+                    table.ForeignKey(
+                        name: "FK_Searches_Cities_OriginCityId",
+                        column: x => x.OriginCityId,
+                        principalTable: "Cities",
+                        principalColumn: "CityId");
+                    table.ForeignKey(
+                        name: "FK_Searches_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Flights",
                 columns: table => new
                 {
@@ -210,39 +243,6 @@ namespace SkyScan.Infrastructure.Migrations
                         column: x => x.TripId,
                         principalTable: "Trips",
                         principalColumn: "TripId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Searches",
-                columns: table => new
-                {
-                    SearchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TimeStamp = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OriginAirportId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DestinationAirportId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Searches", x => x.SearchId);
-                    table.ForeignKey(
-                        name: "FK_Searches_Airports_DestinationAirportId",
-                        column: x => x.DestinationAirportId,
-                        principalTable: "Airports",
-                        principalColumn: "AirportId");
-                    table.ForeignKey(
-                        name: "FK_Searches_Airports_OriginAirportId",
-                        column: x => x.OriginAirportId,
-                        principalTable: "Airports",
-                        principalColumn: "AirportId");
-                    table.ForeignKey(
-                        name: "FK_Searches_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -302,7 +302,8 @@ namespace SkyScan.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Airports_IataCode",
                 table: "Airports",
-                column: "IataCode");
+                column: "IataCode")
+                .Annotation("SqlServer:Include", new[] { "Name", "CityId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Airports_IcaoCode",
@@ -356,14 +357,14 @@ namespace SkyScan.Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Searches_DestinationAirportId",
+                name: "IX_Searches_DestinationCityId",
                 table: "Searches",
-                column: "DestinationAirportId");
+                column: "DestinationCityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Searches_OriginAirportId",
+                name: "IX_Searches_OriginCityId",
                 table: "Searches",
-                column: "OriginAirportId");
+                column: "OriginCityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Searches_UserId",

@@ -49,21 +49,21 @@ namespace SkyScan.Presentation
 
             var app = builder.Build();
 
-            // Seed Data Integration
-            // using (var scope = app.Services.CreateScope())
-            // {
-            //     try 
-            //     {
-            //         var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
-            //         var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
-            //         await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            //         logger.LogError(ex, "An error occurred while seeding datasets.");
-            //     }
-            // }
+            //// Seed Data Integration
+            //using (var scope = app.Services.CreateScope())
+            //{
+            //    try
+            //    {
+            //        var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
+            //        var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
+            //        await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            //        logger.LogError(ex, "An error occurred while seeding datasets.");
+            //    }
+            //}
 
             // Configure the HTTP request pipeline.
             // 1. Add our Global Exception Handler at the very start of the pipeline

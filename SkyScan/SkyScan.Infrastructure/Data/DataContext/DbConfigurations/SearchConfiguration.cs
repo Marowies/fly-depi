@@ -18,14 +18,14 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(s => s.OriginAirport)
+            builder.HasOne(s => s.OriginCity)
                 .WithMany()
-                .HasForeignKey(s => s.OriginAirportId)
+                .HasForeignKey(s => s.OriginCityId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(s => s.DestinationAirport)
+            builder.HasOne(s => s.DestinationCity)
                 .WithMany()
-                .HasForeignKey(s => s.DestinationAirportId)
+                .HasForeignKey(s => s.DestinationCityId)
                 .OnDelete(DeleteBehavior.NoAction);
         }
     }

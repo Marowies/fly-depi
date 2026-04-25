@@ -8,7 +8,7 @@ using SkyScan.Infrastructure.Data.Data_Sources;
 
 #nullable disable
 
-namespace SkyScan.Infrastructure.Migrations
+namespace SkyScan.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(SkyScanDbContext))]
     partial class SkyScanDbContextModelSnapshot : ModelSnapshot
@@ -269,6 +269,8 @@ namespace SkyScan.Infrastructure.Migrations
 
                     b.HasIndex("IataCode");
 
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("IataCode"), new[] { "Name", "CityId" });
+
                     b.HasIndex("IcaoCode");
 
                     b.ToTable("Airports");
@@ -354,10 +356,10 @@ namespace SkyScan.Infrastructure.Migrations
                     b.Property<DateTime>("DepartureDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("DestinationAirportId")
+                    b.Property<Guid>("DestinationCityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("OriginAirportId")
+                    b.Property<Guid>("OriginCityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("TimeStamp")
@@ -371,9 +373,9 @@ namespace SkyScan.Infrastructure.Migrations
 
                     b.HasKey("SearchId");
 
-                    b.HasIndex("DestinationAirportId");
+                    b.HasIndex("DestinationCityId");
 
-                    b.HasIndex("OriginAirportId");
+                    b.HasIndex("OriginCityId");
 
                     b.HasIndex("UserId");
 
@@ -526,15 +528,15 @@ namespace SkyScan.Infrastructure.Migrations
 
             modelBuilder.Entity("SkyScan.Core.Entities.Search", b =>
                 {
-                    b.HasOne("SkyScan.Core.Entities.Airport", "DestinationAirport")
+                    b.HasOne("SkyScan.Core.Entities.City", "DestinationCity")
                         .WithMany()
-                        .HasForeignKey("DestinationAirportId")
+                        .HasForeignKey("DestinationCityId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SkyScan.Core.Entities.Airport", "OriginAirport")
+                    b.HasOne("SkyScan.Core.Entities.City", "OriginCity")
                         .WithMany()
-                        .HasForeignKey("OriginAirportId")
+                        .HasForeignKey("OriginCityId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
@@ -544,9 +546,9 @@ namespace SkyScan.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DestinationAirport");
+                    b.Navigation("DestinationCity");
 
-                    b.Navigation("OriginAirport");
+                    b.Navigation("OriginCity");
 
                     b.Navigation("User");
                 });

@@ -10,6 +10,7 @@ namespace SkyScan.Presentation.Controllers
     public class FlightController : Controller
     {
         private readonly IAirportRepository _airportRepository;
+        private readonly ISearchRepository _searchRepository;
         private readonly IFlightProviderService _flightProviderService;
         private readonly IMemoryCache _cache;
 
@@ -63,16 +64,13 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Use indexed single-row lookups instead of loading the whole table
-            var originAirportTask = _airportRepository.GetByIataAsync(origin);
-            var destAirportTask   = _airportRepository.GetByIataAsync(destination);
-            var flightsTask       = _flightProviderService.SearchFlightsAsync(origin, destination, departureDate);
-
-            // Run DB lookups and API call concurrently
-            await Task.WhenAll(originAirportTask, destAirportTask, flightsTask);
-
-            var originAirport = originAirportTask.Result;
-            var destAirport   = destAirportTask.Result;
+            // Run DB lookups sequentially to avoid DbContext concurrency issues
+            // (DbContext cannot execute multiple queries at the exact same time on the same instance)
+            var originAirport = await _airportRepository.GetByIataAsync(origin);
+            var destAirport   = await _airportRepository.GetByIataAsync(destination);
+            
+            // API call can run independently
+            var flightsTask = await _flightProviderService.SearchFlightsAsync(origin, destination, departureDate);
 
             var viewModel = new FlightResultsViewModel
             {
@@ -97,13 +95,13 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!_cache.TryGetValue(AirportCacheKey, out List<SelectListItem>? cachedItems) || cachedItems == null)
             {
-                var airports = await _airportRepository.GetDropdownItemsAsync();
+                var cities = await _airportRepository.GetCityDropdownItemsAsync();
 
-                cachedItems = airports.Select(a => new SelectListItem
+                cachedItems = cities.Select(c => new SelectListItem
                 {
-                    Value = a.IataCode,
-                    Text  = $"{a.CityName} - {a.AirportName} ({a.IataCode})"
-                }).ToList();
+                    Value = c.CityId.ToString(),
+                    Text  = $"{c.CityName}"
+                }).OrderBy(c => c.Text).ToList();
 
                 _cache.Set(AirportCacheKey, cachedItems, AirportCacheDuration);
             }

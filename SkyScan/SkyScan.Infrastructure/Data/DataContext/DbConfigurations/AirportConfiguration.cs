@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SkyScan.Core.Entities;
+using System.Reflection.Emit;
 
 namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
 {
@@ -8,6 +9,9 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Airport> builder)
         {
+            builder.HasIndex(a => new { a.IataCode })
+                   .IncludeProperties(a => new { a.Name, a.CityId });
+
             builder.HasKey(a => a.AirportId);
 
             builder.Property(a => a.Name)

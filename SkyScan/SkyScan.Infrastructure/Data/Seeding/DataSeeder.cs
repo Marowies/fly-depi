@@ -27,9 +27,9 @@ namespace SkyScan.Infrastructure.Data.Seeding
 
             try
             {
-                // await SeedCountriesAsync(context, Path.Combine(basePath, "countries_cleaned.csv"), logger);
-                // await SeedCitiesAsync(context, Path.Combine(basePath, "cities_cleaned.csv"), logger);
-                // await SeedAirportsAsync(context, Path.Combine(basePath, "airports_cleaned.csv"), logger);
+                await SeedCountriesAsync(context, Path.Combine(basePath, "countries_cleaned.csv"), logger);
+                await SeedCitiesAsync(context, Path.Combine(basePath, "cities_cleaned.csv"), logger);
+                await SeedAirportsAsync(context, Path.Combine(basePath, "airports_cleaned.csv"), logger);
                 await SeedAirlinesAsync(context, Path.Combine(basePath, "airlines_cleaned.csv"), logger);
                 
                 // Seed airplanes in batches because the file is huge
