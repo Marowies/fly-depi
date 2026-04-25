@@ -79,7 +79,7 @@ namespace SkyScan.Presentation.Controllers
                 OriginCity      = originAirport?.City?.Name ?? origin,
                 DestinationCity = destAirport?.City?.Name ?? destination,
                 DepartureDate   = departureDate,
-                Flights         = flightsTask.Result
+                Flights         = flightsTask
             };
 
             return View(viewModel);
