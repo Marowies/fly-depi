@@ -1,0 +1,260 @@
+@model SkyScan.Presentation.Models.FlightResultsViewModel
+@{
+    ViewData["Title"] = "Flight Results";
+}
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h3 class="mb-0 fw-bold text-primary">
+                @Model.OriginCity 
+                <span class="text-secondary mx-2">→</span> 
+                @Model.DestinationCity 
+            </h3>
+            <p class="text-secondary mb-0">@Model.Flights.Count() flights found for @Model.DepartureDate.ToLongDateString()</p>
+        </div>
+        <div>
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="SortByRadio" id="SortCheapest" autocomplete="off" onchange="sortFlights('Cheapest')" checked>
+                <label class="btn btn-outline btn-sm" for="SortCheapest">Cheapest</label>
+
+                <input type="radio" class="btn-check" name="SortByRadio" id="SortFastest" autocomplete="off" onchange="sortFlights('Fastest')">
+                <label class="btn btn-outline btn-sm" for="SortFastest">Fastest</label>
+
+                <input type="radio" class="btn-check" name="SortByRadio" id="SortBest" autocomplete="off" onchange="sortFlights('Best')">
+                <label class="btn btn-outline btn-sm" for="SortBest">Best</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Sidebar Filters -->
+    <div class="col-md-3">
+        <div class="card-surface p-4 sticky-top" style="top: 20px;">
+            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Filter Results</h5>
+            
+            <!-- Stops Filter -->
+            <fieldset class="mb-4">
+                <legend class="form-label small text-uppercase text-secondary fw-bold fs-6">Stops</legend>
+                <div class="form-check">
+                    <input class="form-check-input filter-checkbox" type="checkbox" value="0" id="stop0" checked>
+                    <label class="form-check-label" for="stop0">Non-stop</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input filter-checkbox" type="checkbox" value="1" id="stop1" checked>
+                    <label class="form-check-label" for="stop1">1 Stop</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input filter-checkbox" type="checkbox" value="2" id="stop2" checked>
+                    <label class="form-check-label" for="stop2">2+ Stops</label>
+                </div>
+            </fieldset>
+
+            <!-- Price Range Filter -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-label small text-uppercase text-secondary fw-bold mb-0" for="priceSlider">Max Price</label>
+                    <span class="text-primary fw-bold price" id="priceLabel">$@Math.Ceiling(Model.MaxPrice)</span>
+                </div>
+                <input type="range" class="form-range" id="priceSlider" 
+                       min="@Math.Floor(Model.MinPrice)" 
+                       max="@Math.Ceiling(Model.MaxPrice)" 
+                       value="@Math.Ceiling(Model.MaxPrice)"
+                       aria-valuenow="@Math.Ceiling(Model.MaxPrice)"
+                       aria-valuemin="@Math.Floor(Model.MinPrice)"
+                       aria-valuemax="@Math.Ceiling(Model.MaxPrice)"
+                       aria-label="Filter by maximum price">
+                <div class="d-flex justify-content-between small text-secondary price">
+                    <span>$@Math.Floor(Model.MinPrice)</span>
+                    <span>$@Math.Ceiling(Model.MaxPrice)</span>
+                </div>
+            </div>
+
+            <!-- Airlines Filter -->
+            <fieldset class="mb-4">
+                <legend class="form-label small text-uppercase text-secondary fw-bold fs-6">Airlines</legend>
+                @foreach (var airline in Model.UniqueAirlines)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input airline-checkbox" type="checkbox" value="@airline" id="air_@airline.Replace(" ", "")" checked>
+                        <label class="form-check-label text-truncate w-100" for="air_@airline.Replace(" ", "")">@airline</label>
+                    </div>
+                }
+            </fieldset>
+            
+            <button class="btn btn-outline w-100 btn-sm text-secondary" onclick="resetFilters()">Reset Filters</button>
+        </div>
+    </div>
+
+    <!-- Main Results List -->
+    <div class="col-md-9">
+        <div id="FlightResultsContainer">
+            @foreach (var flight in Model.Flights)
+            {
+                <div class="card-surface mb-3 p-3 flight-card" 
+                     data-price="@flight.Price" 
+                     data-stops="@flight.Stops" 
+                     data-airline="@flight.AirlineName"
+                     data-duration="@flight.Duration.TotalMinutes"
+                     data-score="@( ((double)flight.Price * 0.6) + (flight.Duration.TotalMinutes * 0.4) )">
+                    
+                    <!-- Top row: Airline & Badge -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 24px; height: 24px; font-size: 10px; font-weight:bold;">
+                                @flight.AirlineName.Substring(0, 1)
+                            </div>
+                            <span class="small fw-bold text-secondary">@flight.AirlineName</span>
+                        </div>
+                        <div class="best-badge-container d-none">
+                            <span class="badge-best">Best Value</span>
+                        </div>
+                    </div>
+
+                    <!-- Main Data Row -->
+                    <div class="row align-items-center">
+                        <!-- Times -->
+                        <div class="col-md-3">
+                            <div class="fs-5 fw-bold time text-primary">@flight.DepartureTime.ToString("HH:mm") <span class="text-secondary small">→</span> @flight.ArrivalTime.ToString("HH:mm")</div>
+                            <div class="small text-secondary iata-code">@flight.OriginAirport — @flight.DestinationAirport</div>
+                        </div>
+                        
+                        <!-- Duration & Stops -->
+                        <div class="col-md-3 text-center">
+                            <div class="small fw-bold duration">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m</div>
+                            <div class="small text-secondary">
+                                @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} stop{(flight.Stops > 1 ? "s" : "")}")
+                            </div>
+                        </div>
+
+                        <!-- Price & Action -->
+                        <div class="col-md-6 d-flex justify-content-end align-items-center">
+                            <div class="text-end me-4">
+                                <div class="fs-4 fw-bold price text-primary">$@flight.Price.ToString("N0")</div>
+                                <div class="small text-secondary">Round trip per traveler</div>
+                            </div>
+                            <a href="@flight.RedirectURL" class="btn btn-primary px-4">Select</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+            <div id="NoResultsMessage" class="card-surface p-5 text-center" style="display:none;">
+                <h5 class="text-danger fw-bold">No flights match these filters</h5>
+                <p class="text-secondary">Try adjusting your range or airline preferences.</p>
+                <button class="btn btn-outline" onclick="resetFilters()">Clear all filters</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let filterTimeout = null;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceSlider = document.getElementById('priceSlider');
+            const priceLabel = document.getElementById('priceLabel');
+            
+            // Initial sort to highlight best if chosen
+            sortFlights('Cheapest');
+
+            const applySimulatedDelay = () => {
+                const container = document.getElementById('FlightResultsContainer');
+                const cards = container.querySelectorAll('.flight-card');
+                
+                // Skeleton state
+                cards.forEach(c => { if(c.style.display !== 'none') c.classList.add('skeleton'); c.style.opacity = '0.5'; });
+                
+                clearTimeout(filterTimeout);
+                filterTimeout = setTimeout(() => {
+                    applyFilters();
+                    cards.forEach(c => { c.classList.remove('skeleton'); c.style.opacity = '1'; });
+                }, 80); // <100ms simulated backend filter
+            };
+
+            priceSlider.addEventListener('input', function() {
+                priceLabel.textContent = `$${this.value}`;
+                this.setAttribute('aria-valuenow', this.value);
+                applySimulatedDelay();
+            });
+
+            document.querySelectorAll('.filter-checkbox, .airline-checkbox').forEach(cb => {
+                cb.addEventListener('change', applySimulatedDelay);
+            });
+        });
+
+        function applyFilters() {
+            const maxPrice = parseFloat(document.getElementById('priceSlider').value);
+            const allowedStops = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => parseInt(cb.value));
+            const allowedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked')).map(cb => cb.value);
+            
+            const cards = document.querySelectorAll('.flight-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const price = parseFloat(card.dataset.price);
+                const stops = parseInt(card.dataset.stops);
+                const airline = card.dataset.airline;
+
+                const priceMatch = price <= maxPrice;
+                const stopsMatch = allowedStops.includes(stops >= 2 ? 2 : stops);
+                const airlineMatch = allowedAirlines.includes(airline);
+                
+                if (priceMatch && stopsMatch && airlineMatch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('NoResultsMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        function resetFilters() {
+            const slider = document.getElementById('priceSlider');
+            slider.value = slider.max;
+            document.getElementById('priceLabel').textContent = `$${slider.max}`;
+            slider.setAttribute('aria-valuenow', slider.max);
+            
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            
+            // Re-apply immediately
+            applyFilters();
+        }
+
+        function sortFlights(option) {
+            const container = document.getElementById('FlightResultsContainer');
+            const cards = Array.from(container.querySelectorAll('.flight-card'));
+            const noResults = document.getElementById('NoResultsMessage');
+            
+            cards.forEach(c => {
+                c.classList.add('skeleton'); 
+                c.style.opacity = '0.5';
+                c.querySelector('.best-badge-container').classList.add('d-none');
+            });
+
+            setTimeout(() => {
+                cards.sort((a, b) => {
+                    if (option === 'Cheapest') return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                    if (option === 'Fastest') return parseFloat(a.dataset.duration) - parseFloat(b.dataset.duration);
+                    if (option === 'Best') return parseFloat(a.dataset.score) - parseFloat(b.dataset.score);
+                    return 0;
+                });
+
+                cards.forEach((card, index) => {
+                    container.insertBefore(card, noResults);
+                    card.classList.remove('skeleton');
+                    card.style.opacity = '1';
+
+                    // Show badge on the top card if "Best" is selected
+                    if (option === 'Best' && index === 0) {
+                        card.querySelector('.best-badge-container').classList.remove('d-none');
+                    }
+                });
+            }, 80); // <100ms UI sort indication
+        }
+    </script>
+}

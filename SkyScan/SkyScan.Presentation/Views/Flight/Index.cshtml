@@ -1,0 +1,390 @@
+@model SkyScan.Presentation.Models.FlightSearchViewModel
+@{
+    ViewData["Title"] = "Search Flights";
+}
+
+<div class="mb-4">
+    <h2 class="mb-1 fw-bold text-primary">Flight Search</h2>
+    <p class="text-secondary mb-0">Strictly validated, high-performance itinerary comparison.</p>
+</div>
+
+<div class="mb-4">
+    <div class="btn-group" role="group" aria-label="Trip Type">
+        <input type="radio" class="btn-check" name="TripTypeRadio" id="OneWay" value="OneWay" checked onchange="handleTripTypeChange('OneWay')">
+        <label class="btn btn-outline" for="OneWay">One-way</label>
+
+        <input type="radio" class="btn-check" name="TripTypeRadio" id="RoundTrip" value="RoundTrip" onchange="handleTripTypeChange('RoundTrip')">
+        <label class="btn btn-outline" for="RoundTrip">Round-trip</label>
+
+        <input type="radio" class="btn-check" name="TripTypeRadio" id="MultiWay" value="MultiWay" onchange="handleTripTypeChange('MultiWay')">
+        <label class="btn btn-outline" for="MultiWay">Multi-city</label>
+    </div>
+</div>
+
+<form asp-action="Search" method="post" id="searchForm" novalidate>
+    <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
+
+    <!-- Standard Search -->
+    <div id="StandardSearch" class="row g-3 mb-4">
+        <div class="col-md-5">
+            <label class="form-label small fw-bold text-secondary">Origin</label>
+            <div class="position-relative">
+                <input type="text" id="OriginInput" class="form-control autocomplete-input" placeholder="City or Airport" autocomplete="off" role="combobox" aria-expanded="false" required>
+                <input type="hidden" asp-for="OriginCity" id="OriginId">
+                <div class="input-spinner" id="OriginSpinner"></div>
+                <button type="button" class="clear-btn" id="OriginClear" aria-label="Clear origin" onclick="clearInput('Origin')">&times;</button>
+                <div class="suggestion-box" id="OriginSuggestions" role="listbox"></div>
+                <div class="invalid-feedback">Please select a valid airport from the list.</div>
+            </div>
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end justify-content-center pb-1">
+            <button type="button" class="btn btn-outline p-2" onclick="swapDestinations()" aria-label="Swap origin and destination">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            </button>
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label small fw-bold text-secondary">Destination</label>
+            <div class="position-relative">
+                <input type="text" id="DestInput" class="form-control autocomplete-input" placeholder="City or Airport" autocomplete="off" role="combobox" aria-expanded="false" required>
+                <input type="hidden" asp-for="DestinationCity" id="DestId">
+                <div class="input-spinner" id="DestSpinner"></div>
+                <button type="button" class="clear-btn" id="DestClear" aria-label="Clear destination" onclick="clearInput('Dest')">&times;</button>
+                <div class="suggestion-box" id="DestSuggestions" role="listbox"></div>
+                <div class="invalid-feedback">Please select a valid airport from the list.</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label small fw-bold text-secondary">Departure Date</label>
+            <input asp-for="DepartureDate" type="date" id="DepDate" class="form-control tabular-data" required min="@DateTime.Now.ToString("yyyy-MM-dd")" onchange="validateDates()" />
+            <div class="invalid-feedback" id="DepDateError">Invalid date.</div>
+        </div>
+
+        <div class="col-md-3" id="ReturnDateCol" style="display:none;">
+            <label class="form-label small fw-bold text-secondary">Return Date</label>
+            <input asp-for="ReturnDate" type="date" id="RetDate" class="form-control tabular-data" min="@DateTime.Now.ToString("yyyy-MM-dd")" onchange="validateDates()" />
+            <div class="invalid-feedback">Date must be after departure.</div>
+        </div>
+        
+        <div class="col-md-3">
+            <label class="form-label small fw-bold text-secondary">Travelers</label>
+            <select asp-for="Adults" class="form-select">
+                <option value="1">1 Adult</option>
+                <option value="2">2 Adults</option>
+                <option value="3">3 Adults</option>
+                <option value="4">4 Adults</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label small fw-bold text-secondary">Cabin Class</label>
+            <select asp-for="CabinClass" class="form-select">
+                <option value="economy">Economy</option>
+                <option value="premium">Premium Economy</option>
+                <option value="business">Business Class</option>
+                <option value="first">First Class</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Multi-city Search -->
+    <div id="MultiCitySearch" style="display:none;" class="mb-4">
+        <div id="MultiCityLegsContainer"></div>
+        <button type="button" class="btn btn-outline btn-sm mt-2" id="AddLegBtn" onclick="addMultiCityLeg()">
+            + Add another flight
+        </button>
+    </div>
+
+    <div class="mt-4 pt-3 border-top">
+        <button type="submit" class="btn btn-primary px-5 py-2">
+            Search Flights
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Mock data dictionary mapping CityName/IATA to Guid from _airportRepository.GetCityDropdownItemsAsync()
+        // In reality, this data should come from the /api/search/cities endpoint. We'll simulate it.
+        const mockAirports = @Html.Raw(Json.Serialize(Model.CitiesWithAirports));
+        
+        let multiCityLegCount = 0;
+        const MAX_LEGS = 5;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupAutocomplete('OriginInput', 'OriginId', 'OriginSuggestions', 'OriginSpinner', 'OriginClear');
+            setupAutocomplete('DestInput', 'DestId', 'DestSuggestions', 'DestSpinner', 'DestClear');
+            
+            addMultiCityLeg();
+            addMultiCityLeg();
+
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                }
+            });
+        });
+
+        function handleTripTypeChange(type) {
+            document.getElementById('TripTypeHidden').value = type;
+            const standardSearch = document.getElementById('StandardSearch');
+            const multiCitySearch = document.getElementById('MultiCitySearch');
+            const returnDateCol = document.getElementById('ReturnDateCol');
+
+            if (type === 'MultiWay') {
+                standardSearch.style.display = 'none';
+                multiCitySearch.style.display = 'block';
+            } else {
+                standardSearch.style.display = 'flex';
+                multiCitySearch.style.display = 'none';
+                returnDateCol.style.display = (type === 'RoundTrip') ? 'block' : 'none';
+            }
+        }
+
+        function addMultiCityLeg() {
+            if (multiCityLegCount >= MAX_LEGS) return;
+            const container = document.getElementById('MultiCityLegsContainer');
+            const index = multiCityLegCount++;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const legHtml = `
+                <div class="row g-2 mb-3 align-items-end multi-leg" id="Leg_${index}">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Origin</label>
+                        <div class="position-relative">
+                            <input type="text" id="MC_Origin_${index}_Input" class="form-control autocomplete-input" placeholder="City or Airport" required>
+                            <input type="hidden" name="MultiCityLegs[${index}].OriginCity" id="MC_Origin_${index}_Id">
+                            <div class="input-spinner" id="MC_Origin_${index}_Spinner"></div>
+                            <button type="button" class="clear-btn" id="MC_Origin_${index}_Clear" onclick="clearInput('MC_Origin_${index}')">&times;</button>
+                            <div class="suggestion-box" id="MC_Origin_${index}_Suggestions"></div>
+                            <div class="invalid-feedback">Select valid airport.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Destination</label>
+                        <div class="position-relative">
+                            <input type="text" id="MC_Dest_${index}_Input" class="form-control autocomplete-input" placeholder="City or Airport" required>
+                            <input type="hidden" name="MultiCityLegs[${index}].DestinationCity" id="MC_Dest_${index}_Id">
+                            <div class="input-spinner" id="MC_Dest_${index}_Spinner"></div>
+                            <button type="button" class="clear-btn" id="MC_Dest_${index}_Clear" onclick="clearInput('MC_Dest_${index}')">&times;</button>
+                            <div class="suggestion-box" id="MC_Dest_${index}_Suggestions"></div>
+                            <div class="invalid-feedback">Select valid airport.</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-bold text-secondary">Date</label>
+                        <input type="date" name="MultiCityLegs[${index}].DepartureDate" id="MC_Date_${index}" class="form-control tabular-data mc-date" value="${today}" min="${today}" onchange="validateDates()" required>
+                        <div class="invalid-feedback">Date must be after previous leg.</div>
+                    </div>
+                    <div class="col-md-1">
+                        ${index > 1 ? `<button type="button" class="btn btn-outline text-danger w-100" onclick="removeLeg(${index})">&times;</button>` : ''}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', legHtml);
+            
+            setupAutocomplete(`MC_Origin_${index}_Input`, `MC_Origin_${index}_Id`, `MC_Origin_${index}_Suggestions`, `MC_Origin_${index}_Spinner`, `MC_Origin_${index}_Clear`);
+            setupAutocomplete(`MC_Dest_${index}_Input`, `MC_Dest_${index}_Id`, `MC_Dest_${index}_Suggestions`, `MC_Dest_${index}_Spinner`, `MC_Dest_${index}_Clear`);
+
+            document.getElementById('AddLegBtn').disabled = (multiCityLegCount >= MAX_LEGS);
+        }
+
+        function removeLeg(index) {
+            document.getElementById(`Leg_${index}`).remove();
+            multiCityLegCount--;
+            document.getElementById('AddLegBtn').disabled = false;
+            validateDates();
+        }
+
+        // Simulating the backend Trie autocomplete
+        function setupAutocomplete(inputId, hiddenId, boxId, spinnerId, clearId) {
+            const input = document.getElementById(inputId);
+            const hidden = document.getElementById(hiddenId);
+            const box = document.getElementById(boxId);
+            const spinner = document.getElementById(spinnerId);
+            const clearBtn = document.getElementById(clearId);
+            let timeout = null;
+
+            input.addEventListener('input', function() {
+                const query = this.value.toLowerCase();
+                clearBtn.style.display = query.length > 0 ? 'block' : 'none';
+                
+                // Reset hidden ID immediately when arbitrary typing occurs
+                hidden.value = '';
+                input.classList.remove('is-invalid');
+
+                clearTimeout(timeout);
+                if (query.length < 2) { 
+                    box.style.display = 'none'; 
+                    spinner.style.display = 'none';
+                    return; 
+                }
+
+                spinner.style.display = 'block';
+
+                timeout = setTimeout(() => {
+                    // Simulate sub-100ms API call
+                    const results = mockAirports.filter(a => a.text.toLowerCase().includes(query)).slice(0, 8);
+                    
+                    if (results.length > 0) {
+                        box.innerHTML = results.map((item, idx) => `
+                            <div class="suggestion-item" role="option" id="${inputId}-opt-${idx}" onclick="selectCity('${inputId}', '${hiddenId}', '${boxId}', '${item.value}', '${item.text}')">
+                                <div>
+                                    <span class="fw-bold">${item.text}</span>
+                                </div>
+                            </div>
+                        `).join('');
+                        box.style.display = 'block';
+                        input.setAttribute('aria-expanded', 'true');
+                    } else { 
+                        box.style.display = 'none'; 
+                        input.setAttribute('aria-expanded', 'false');
+                    }
+                    spinner.style.display = 'none';
+                }, 80); // <100ms
+            });
+
+            // Handle Blur with arbitrary text check
+            input.addEventListener('blur', () => { 
+                setTimeout(() => { 
+                    box.style.display = 'none'; 
+                    input.setAttribute('aria-expanded', 'false');
+                    
+                    // Strict validation: if input has text but no hidden ID is set, it's invalid arbitrary text
+                    if (input.value.trim().length > 0 && !hidden.value) {
+                        input.classList.add('is-invalid');
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                }, 200); 
+            });
+
+            // Keyboard navigation
+            input.addEventListener('keydown', function(e) {
+                const items = box.querySelectorAll('.suggestion-item');
+                if (items.length === 0 || box.style.display === 'none') return;
+                
+                let active = box.querySelector('.active');
+                let activeIdx = Array.from(items).indexOf(active);
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (active) active.classList.remove('active');
+                    activeIdx = (activeIdx + 1) % items.length;
+                    items[activeIdx].classList.add('active');
+                    input.setAttribute('aria-activedescendant', items[activeIdx].id);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (active) active.classList.remove('active');
+                    activeIdx = (activeIdx - 1 + items.length) % items.length;
+                    items[activeIdx].classList.add('active');
+                    input.setAttribute('aria-activedescendant', items[activeIdx].id);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (active) {
+                        active.click();
+                    }
+                } else if (e.key === 'Escape') {
+                    box.style.display = 'none';
+                }
+            });
+        }
+
+        window.selectCity = function(inputId, hiddenId, boxId, cityId, cityName) {
+            const input = document.getElementById(inputId);
+            input.value = cityName;
+            document.getElementById(hiddenId).value = cityId;
+            document.getElementById(boxId).style.display = 'none';
+            input.classList.remove('is-invalid');
+            input.setAttribute('aria-expanded', 'false');
+        }
+
+        window.clearInput = function(prefix) {
+            document.getElementById(`${prefix}Input`).value = '';
+            document.getElementById(`${prefix}Id`).value = '';
+            document.getElementById(`${prefix}Input`).classList.remove('is-invalid');
+            document.getElementById(`${prefix}Clear`).style.display = 'none';
+            document.getElementById(`${prefix}Input`).focus();
+        }
+
+        function swapDestinations() {
+            const originInput = document.getElementById('OriginInput');
+            const originId = document.getElementById('OriginId');
+            const destInput = document.getElementById('DestInput');
+            const destId = document.getElementById('DestId');
+
+            const tempName = originInput.value; const tempId = originId.value;
+            originInput.value = destInput.value; originId.value = destId.value;
+            destInput.value = tempName; destId.value = tempId;
+            
+            // Re-validate if needed
+            if (originInput.value && !originId.value) originInput.classList.add('is-invalid');
+            else originInput.classList.remove('is-invalid');
+
+            if (destInput.value && !destId.value) destInput.classList.add('is-invalid');
+            else destInput.classList.remove('is-invalid');
+        }
+
+        function validateDates() {
+            let isValid = true;
+            const tripType = document.getElementById('TripTypeHidden').value;
+
+            if (tripType === 'RoundTrip') {
+                const dep = new Date(document.getElementById('DepDate').value);
+                const retInput = document.getElementById('RetDate');
+                const ret = new Date(retInput.value);
+
+                if (retInput.value && ret < dep) {
+                    retInput.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    retInput.classList.remove('is-invalid');
+                }
+            } else if (tripType === 'MultiWay') {
+                const dates = Array.from(document.querySelectorAll('.mc-date'));
+                let prevDate = null;
+                
+                dates.forEach(input => {
+                    const current = new Date(input.value);
+                    if (prevDate && current < prevDate) {
+                        input.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                    if (input.value) prevDate = current;
+                });
+            }
+            return isValid;
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const tripType = document.getElementById('TripTypeHidden').value;
+
+            if (tripType !== 'MultiWay') {
+                const originId = document.getElementById('OriginId').value;
+                const destId = document.getElementById('DestId').value;
+                
+                if (!originId) { document.getElementById('OriginInput').classList.add('is-invalid'); isValid = false; }
+                if (!destId) { document.getElementById('DestInput').classList.add('is-invalid'); isValid = false; }
+            } else {
+                const inputs = document.querySelectorAll('#MultiCityLegsContainer .autocomplete-input');
+                const hiddens = document.querySelectorAll('#MultiCityLegsContainer input[type="hidden"]');
+                
+                for(let i=0; i<inputs.length; i++) {
+                    if (!hiddens[i].value) {
+                        inputs[i].classList.add('is-invalid');
+                        isValid = false;
+                    }
+                }
+            }
+
+            if (!validateDates()) isValid = false;
+
+            return isValid;
+        }
+    </script>
+}
