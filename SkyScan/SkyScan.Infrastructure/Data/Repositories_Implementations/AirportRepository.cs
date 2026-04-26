@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using SkyScan.Application.DTOs;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Data.Data_Sources;
@@ -16,18 +15,14 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         {
         }
 
-        /// <inheritdoc/>
         public async Task<IEnumerable<Airport>> GetAllWithDetailsAsync()
         {
             return await _dbSet
                 .Include(a => a.City)
-                .ThenInclude(c => c.Country)
                 .AsNoTracking()
                 .ToListAsync();
         }
 
-        /// <inheritdoc/>
-        /// Uses the IataCode index for an O(log n) lookup — never loads the full table.
         public async Task<Airport?> GetByIataAsync(string iataCode)
         {
             return await _dbSet
@@ -38,13 +33,13 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
         public async Task<IEnumerable<(Guid CityId, string CityName)>> GetCityDropdownItemsAsync()
         {
-            var uniqueCities = await _context.Cities
+            var cities = await _context.Cities
                 .Where(c => c.Airports.Any())
-                .Select(c => new { c.CityId, CityName = c.Name })
+                .Select(c => new { c.CityId, c.Name })
                 .AsNoTracking()
                 .ToListAsync();
 
-            return uniqueCities.Select(c => (c.CityId, c.CityName));
+            return cities.Select(c => (c.CityId, c.Name));
         }
     }
 }

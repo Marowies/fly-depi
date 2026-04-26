@@ -15,18 +15,8 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         {
         }
 
-        public async Task<IEnumerable<Flight>> SearchFlightsAsync(string originCityIata, string destinationCityIata, DateTime departureDate)
+        public async Task<IEnumerable<Flight>> SearchFlightsAsync(Guid originCityId, Guid destinationCityId, DateTime departureDate)
         {
-            var originCityId = await _context.Airports
-                .Where(a => a.IataCode == originCityIata)
-                .Select(a => a.CityId)
-                .FirstOrDefaultAsync();
-
-            var destinationCityId = await _context.Airports
-                .Where(a => a.IataCode == destinationCityIata)
-                .Select(a => a.CityId)
-                .FirstOrDefaultAsync();
-
             return await _dbSet
                 .Include(f => f.Airline)
                 .Include(f => f.Airplane)
@@ -43,10 +33,10 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<IEnumerable<Flight>> GetLowestPriceFlightsAsync(int count = 5)
         {
             return await _dbSet
-                .Include(f => f.DepartureAirport).ThenInclude(a => a.City).ThenInclude(c => c.Country)
-                .Include(f => f.ArrivalAirport).ThenInclude(a => a.City).ThenInclude(c => c.Country)
+                .Include(f => f.Airline)
+                .Include(f => f.DepartureAirport).ThenInclude(a => a.City)
+                .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
                 .Include(f => f.Tickets)
-                .Where(f => f.Tickets.Any())
                 .OrderBy(f => f.Tickets.Min(t => t.Price))
                 .Take(count)
                 .AsNoTracking()
@@ -55,14 +45,11 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
         public async Task<IEnumerable<Flight>> GetFlightsAroundTheWorldAsync(int count = 5)
         {
-            // Example implementation for around the world: 
-            // Just picking flights randomly or distinct diverse destinations that are cheap.
             return await _dbSet
-                .Include(f => f.DepartureAirport).ThenInclude(a => a.City).ThenInclude(c => c.Country)
-                .Include(f => f.ArrivalAirport).ThenInclude(a => a.City).ThenInclude(c => c.Country)
-                .Include(f => f.Tickets)
-                .Where(f => f.Tickets.Any() && f.DepartureTime > DateTime.UtcNow)
-                .OrderBy(r => Guid.NewGuid()) // Random shuffle
+                .Include(f => f.Airline)
+                .Include(f => f.DepartureAirport).ThenInclude(a => a.City)
+                .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
+                .OrderBy(x => Guid.NewGuid()) // Random selection
                 .Take(count)
                 .AsNoTracking()
                 .ToListAsync();

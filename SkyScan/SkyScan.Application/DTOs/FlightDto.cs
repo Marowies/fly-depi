@@ -9,6 +9,8 @@ namespace SkyScan.Application.DTOs
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public decimal Price { get; set; }
+        public int Stops { get; set; } = 0; // 0 for direct
+        public TimeSpan Duration => ArrivalTime - DepartureTime;
         public string Status { get; set; } = string.Empty;
         public string? RedirectURL { get; set; }
     }

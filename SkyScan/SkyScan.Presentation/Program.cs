@@ -47,7 +47,17 @@ namespace SkyScan.Presentation
                 builder.Services.AddHttpClient<IFlightProviderService, AviationStackFlightService>();
             }
 
+            builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
+            builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();
+
             var app = builder.Build();
+
+            // Warm up the In-Memory Search Index
+            using (var scope = app.Services.CreateScope())
+            {
+                var searchService = scope.ServiceProvider.GetRequiredService<ILocationSearchService>();
+                await searchService.InitializeAsync();
+            }
 
             //// Seed Data Integration
             //using (var scope = app.Services.CreateScope())

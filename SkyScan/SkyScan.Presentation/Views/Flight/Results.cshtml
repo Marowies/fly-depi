@@ -14,151 +14,282 @@
             <p class="text-white-50 mb-0">@Model.Flights.Count() flights found for @Model.DepartureDate.ToLongDateString()</p>
         </div>
         <div class="btn-group">
-            <button type="button" class="btn btn-outline-light dropdown-toggle rounded-pill" data-bs-toggle="dropdown">
+            <button id="currentSort" type="button" class="btn btn-outline-light dropdown-toggle rounded-pill" data-bs-toggle="dropdown">
                 Sort By: Cheapest
             </button>
             <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item" href="#">Cheapest</a></li>
-                <li><a class="dropdown-item" href="#">Fastest</a></li>
-                <li><a class="dropdown-item" href="#">Earliest</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="sortFlights('Cheapest')">Cheapest</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="sortFlights('Fastest')">Fastest</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="sortFlights('Earliest')">Earliest</a></li>
             </ul>
         </div>
     </div>
 
-    @if (Model.Flights == null || !Model.Flights.Any())
-    {
-        <div class="text-center py-5">
-            <div class="mb-4">
-                <svg width="64" height="64" fill="currentColor" class="text-white-50" viewBox="0 0 16 16">
-                    <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM.5 8a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0z"/>
-                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                </svg>
-            </div>
-            <h4>No Flights Found</h4>
-            <p class="text-white-50">Try adjusting your dates or searching for nearby airports.</p>
-            <a asp-action="Index" class="btn btn-premium mt-3">Back to Search</a>
-        </div>
-    }
-    else
-    {
-        <div class="flight-list">
-            @foreach (var flight in Model.Flights)
-            {
-                <div class="glass-card mb-4 p-4 flight-card overflow-hidden">
-                    <div class="row align-items-center">
-                        <div class="col-md-3 text-center border-end border-white-10">
-                            <div class="airline-logo mb-2">
-                                <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold" style="width: 50px; height: 50px;">
-                                    @flight.AirlineName.Substring(0, 1)
-                                </div>
-                            </div>
-                            <h6 class="mb-0">@flight.FlightNumber</h6>
-                            <span class="badge bg-info bg-opacity-25 text-info mt-2">@flight.AirlineName</span>
-                        </div>
-                        
-                        <div class="col-md-6 px-4">
-                            <div class="d-flex justify-content-between align-items-center text-center">
-                                <div>
-                                    <h4 class="mb-0">@flight.DepartureTime.ToString("HH:mm")</h4>
-                                    <span class="text-white-50 small">@flight.OriginAirport</span>
-                                </div>
-                                
-                                <div class="flex-grow-1 px-4 text-center position-relative">
-                                    <div class="text-white-50 small mb-1">@flight.Status</div>
-                                    <div class="flight-path"></div>
-                                    <svg width="20" height="20" fill="currentColor" class="text-info plane-icon" viewBox="0 0 16 16">
-                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
-                                    </svg>
-                                </div>
-                                
-                                <div>
-                                    <h4 class="mb-0">@flight.ArrivalTime.ToString("HH:mm")</h4>
-                                    <span class="text-white-50 small">@flight.DestinationAirport</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 text-end border-start border-white-10">
-                            <div class="mb-2">
-                                <span class="text-white-50 small">Starting from</span>
-                                <h3 class="text-warning fw-bold mb-0">$@flight.Price</h3>
-                            </div>
-                            <a href="@flight.RedirectURL" target="_blank" class="btn btn-premium btn-sm w-100">Select Flight</a>
-                            <button class="btn btn-link text-white-50 btn-sm w-100 mt-1">Details</button>
-                        </div>
+    <div class="row">
+        <!-- Sidebar Filters -->
+        <div class="col-md-3">
+            <div class="glass-card p-4 sticky-top" style="top: 20px;">
+                <h5 class="fw-bold mb-4 border-bottom border-white-10 pb-2">Filter Results</h5>
+                
+                <!-- Stops Filter -->
+                <div class="mb-4">
+                    <label class="form-label small text-uppercase text-white-50 fw-bold">Stops</label>
+                    <div class="form-check custom-checkbox">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="0" id="stop0" checked>
+                        <label class="form-check-label" for="stop0">Non-stop</label>
+                    </div>
+                    <div class="form-check custom-checkbox">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="1" id="stop1" checked>
+                        <label class="form-check-label" for="stop1">1 Stop</label>
+                    </div>
+                    <div class="form-check custom-checkbox">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="2" id="stop2" checked>
+                        <label class="form-check-label" for="stop2">2+ Stops</label>
                     </div>
                 </div>
-            }
+
+                <!-- Price Range Filter -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <label class="form-label small text-uppercase text-white-50 fw-bold mb-0">Max Price</label>
+                        <span class="text-warning fw-bold" id="priceLabel">$@Model.MaxPrice</span>
+                    </div>
+                    <input type="range" class="form-range" id="priceSlider" 
+                           min="@Math.Floor(Model.MinPrice)" 
+                           max="@Math.Ceiling(Model.MaxPrice)" 
+                           value="@Math.Ceiling(Model.MaxPrice)">
+                    <div class="d-flex justify-content-between small text-white-50">
+                        <span>$@Math.Floor(Model.MinPrice)</span>
+                        <span>$@Math.Ceiling(Model.MaxPrice)</span>
+                    </div>
+                </div>
+
+                <!-- Flight Times -->
+                <div class="mb-4">
+                    <label class="form-label small text-uppercase text-white-50 fw-bold">Departure Time</label>
+                    <div class="time-grid">
+                        <button class="btn btn-outline-light btn-sm time-btn" data-window="Morning">
+                            <span class="d-block small">06-12</span>
+                            <span class="tiny">AM</span>
+                        </button>
+                        <button class="btn btn-outline-light btn-sm time-btn" data-window="Afternoon">
+                            <span class="d-block small">12-18</span>
+                            <span class="tiny">PM</span>
+                        </button>
+                        <button class="btn btn-outline-light btn-sm time-btn" data-window="Evening">
+                            <span class="d-block small">18-00</span>
+                            <span class="tiny">PM</span>
+                        </button>
+                        <button class="btn btn-outline-light btn-sm time-btn" data-window="Night">
+                            <span class="d-block small">00-06</span>
+                            <span class="tiny">AM</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Airlines Filter -->
+                <div class="mb-4">
+                    <label class="form-label small text-uppercase text-white-50 fw-bold">Airlines</label>
+                    @foreach (var airline in Model.UniqueAirlines)
+                    {
+                        <div class="form-check custom-checkbox">
+                            <input class="form-check-input airline-checkbox" type="checkbox" value="@airline" id="air_@airline" checked>
+                            <label class="form-check-label text-truncate w-100" for="air_@airline">@airline</label>
+                        </div>
+                    }
+                </div>
+                
+                <button class="btn btn-outline-info w-100 btn-sm" onclick="resetFilters()">Reset All Filters</button>
+            </div>
         </div>
-    }
+
+        <!-- Main Results List -->
+        <div class="col-md-9">
+            <div id="FlightResultsContainer">
+                @foreach (var flight in Model.Flights)
+                {
+                    <div class="glass-card mb-4 p-4 flight-card animate-fade-in" 
+                         data-price="@flight.Price" 
+                         data-stops="@flight.Stops" 
+                         data-airline="@flight.AirlineName"
+                         data-dep-hour="@flight.DepartureTime.Hour"
+                         data-duration="@flight.Duration.TotalMinutes">
+                        <div class="row align-items-center">
+                            <div class="col-md-3 text-center border-end border-white-10">
+                                <div class="airline-logo mb-2">
+                                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center text-white fw-bold shadow-sm" style="width: 50px; height: 50px;">
+                                        @flight.AirlineName.Substring(0, 1)
+                                    </div>
+                                </div>
+                                <h6 class="mb-0 text-white fw-bold">@flight.FlightNumber</h6>
+                                <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 mt-2">@flight.AirlineName</span>
+                            </div>
+                            
+                            <div class="col-md-6 px-4">
+                                <div class="d-flex justify-content-between align-items-center text-center">
+                                    <div class="time-block">
+                                        <h4 class="mb-0 text-white fw-bold">@flight.DepartureTime.ToString("HH:mm")</h4>
+                                        <span class="text-white-50 small">@flight.OriginAirport</span>
+                                    </div>
+                                    
+                                    <div class="flex-grow-1 px-4 text-center position-relative">
+                                        <div class="text-white-50 small mb-1">
+                                            @(flight.Stops == 0 ? "Direct" : $"{flight.Stops} Stop(s)")
+                                        </div>
+                                        <div class="flight-path"></div>
+                                        <svg width="20" height="20" fill="currentColor" class="text-info plane-icon" viewBox="0 0 16 16">
+                                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                        </svg>
+                                        <div class="mt-1 small text-white-50">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m</div>
+                                    </div>
+                                    
+                                    <div class="time-block">
+                                        <h4 class="mb-0 text-white fw-bold">@flight.ArrivalTime.ToString("HH:mm")</h4>
+                                        <span class="text-white-50 small">@flight.DestinationAirport</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 text-end border-start border-white-10">
+                                <div class="mb-3">
+                                    <span class="text-white-50 small">Final Price</span>
+                                    <h3 class="text-warning fw-bold mb-0">$@flight.Price.ToString("N0")</h3>
+                                </div>
+                                <a href="@flight.RedirectURL" class="btn btn-premium w-100 shadow-sm">Select</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+                <div id="NoResultsMessage" class="text-center py-5" style="display:none;">
+                    <div class="mb-4">
+                        <svg width="64" height="64" fill="currentColor" class="text-white-50" viewBox="0 0 16 16"><path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM.5 8a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>
+                    </div>
+                    <h4>No flights match your filters</h4>
+                    <p class="text-white-50">Try broadening your search criteria.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-@section Sidebar {
-    <div class="filters">
-        <h5 class="fw-bold mb-4 border-bottom border-white-10 pb-2">Filter Results</h5>
-        
-        <div class="mb-4">
-            <label class="form-label small text-uppercase text-white-50">Stops</label>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" checked id="stop0">
-                <label class="form-check-label" for="stop0">Non-stop</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="stop1">
-                <label class="form-check-label" for="stop1">1 Stop</label>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label small text-uppercase text-white-50">Price Range</label>
-            <input type="range" class="form-range" min="100" max="2000" id="priceRange">
-            <div class="d-flex justify-content-between small text-white-50">
-                <span>$100</span>
-                <span>$2,000</span>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <label class="form-label small text-uppercase text-white-50">Airlines</label>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" checked id="air1">
-                <label class="form-check-label" for="air1">Premium Airways</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" checked id="air2">
-                <label class="form-check-label" for="air2">Celestial Jet</label>
-            </div>
-        </div>
-        
-        <button class="btn btn-outline-info w-100 btn-sm mt-3">Reset Filters</button>
-    </div>
-}
-
 @section Scripts {
+    <script>
+        let filterTimeout = null;
+        let selectedWindows = new Set();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceSlider = document.getElementById('priceSlider');
+            const priceLabel = document.getElementById('priceLabel');
+            
+            // Debounced Filter Update
+            const debouncedFilter = () => {
+                clearTimeout(filterTimeout);
+                filterTimeout = setTimeout(applyFilters, 150);
+            };
+
+            priceSlider.addEventListener('input', function() {
+                priceLabel.textContent = `$${this.value}`;
+                debouncedFilter();
+            });
+
+            document.querySelectorAll('.filter-checkbox, .airline-checkbox').forEach(cb => {
+                cb.addEventListener('change', debouncedFilter);
+            });
+
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const window = this.dataset.window;
+                    if (selectedWindows.has(window)) {
+                        selectedWindows.delete(window);
+                        this.classList.remove('btn-info', 'text-dark');
+                        this.classList.add('btn-outline-light');
+                    } else {
+                        selectedWindows.add(window);
+                        this.classList.remove('btn-outline-light');
+                        this.classList.add('btn-info', 'text-dark');
+                    }
+                    debouncedFilter();
+                });
+            });
+        });
+
+        function applyFilters() {
+            const maxPrice = parseFloat(document.getElementById('priceSlider').value);
+            const allowedStops = Array.from(document.querySelectorAll('.filter-checkbox:checked')).map(cb => parseInt(cb.value));
+            const allowedAirlines = Array.from(document.querySelectorAll('.airline-checkbox:checked')).map(cb => cb.value);
+            
+            const cards = document.querySelectorAll('.flight-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const price = parseFloat(card.dataset.price);
+                const stops = parseInt(card.dataset.stops);
+                const airline = card.dataset.airline;
+                const hour = parseInt(card.dataset.depHour);
+
+                const priceMatch = price <= maxPrice;
+                const stopsMatch = allowedStops.includes(stops >= 2 ? 2 : stops);
+                const airlineMatch = allowedAirlines.includes(airline);
+                
+                let timeMatch = selectedWindows.size === 0;
+                if (!timeMatch) {
+                    if (selectedWindows.has('Morning') && hour >= 6 && hour < 12) timeMatch = true;
+                    if (selectedWindows.has('Afternoon') && hour >= 12 && hour < 18) timeMatch = true;
+                    if (selectedWindows.has('Evening') && hour >= 18 && hour < 24) timeMatch = true;
+                    if (selectedWindows.has('Night') && (hour >= 0 && hour < 6)) timeMatch = true;
+                }
+
+                if (priceMatch && stopsMatch && airlineMatch && timeMatch) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('NoResultsMessage').style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+
+        function resetFilters() {
+            document.getElementById('priceSlider').value = document.getElementById('priceSlider').max;
+            document.getElementById('priceLabel').textContent = `$${document.getElementById('priceSlider').max}`;
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            selectedWindows.clear();
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('btn-info', 'text-dark');
+                btn.classList.add('btn-outline-light');
+            });
+            applyFilters();
+        }
+
+        function sortFlights(option) {
+            const container = document.getElementById('FlightResultsContainer');
+            const cards = Array.from(container.querySelectorAll('.flight-card'));
+            
+            cards.sort((a, b) => {
+                if (option === 'Cheapest') return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                if (option === 'Fastest') return parseFloat(a.dataset.duration) - parseFloat(b.dataset.duration);
+                if (option === 'Earliest') return parseInt(a.dataset.depHour) - parseInt(b.dataset.depHour);
+                return 0;
+            });
+
+            cards.forEach(card => container.appendChild(card));
+            document.getElementById('currentSort').textContent = `Sort By: ${option}`;
+        }
+    </script>
     <style>
-        .flight-path {
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            left: 0;
-        }
-        .plane-icon {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(90deg);
-            z-index: 1;
-        }
-        .border-white-10 {
-            border-color: rgba(255, 255, 255, 0.1) !important;
-        }
-        .flight-card {
-            transition: transform 0.3s ease;
-        }
-        .flight-card:hover {
-            transform: scale(1.01);
-        }
+        .flight-path { height: 2px; background: rgba(255, 255, 255, 0.1); width: 100%; position: absolute; top: 50%; left: 0; }
+        .plane-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(90deg); z-index: 1; }
+        .border-white-10 { border-color: rgba(255, 255, 255, 0.1) !important; }
+        .flight-card { transition: all 0.3s ease; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .flight-card:hover { transform: translateY(-3px); border-color: rgba(13, 202, 240, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .time-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .time-btn { padding: 8px 4px; border-radius: 8px; transition: all 0.2s; }
+        .tiny { font-size: 0.6rem; text-transform: uppercase; opacity: 0.7; }
+        .custom-checkbox .form-check-input { background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+        .custom-checkbox .form-check-input:checked { background-color: #0dcaf0; border-color: #0dcaf0; }
+        .btn-premium { background: linear-gradient(45deg, #0dcaf0, #0d6efd); border: none; color: white; font-weight: bold; }
+        .btn-premium:hover { background: linear-gradient(45deg, #0bacce, #0b5ed7); color: white; transform: scale(1.05); }
     </style>
 }

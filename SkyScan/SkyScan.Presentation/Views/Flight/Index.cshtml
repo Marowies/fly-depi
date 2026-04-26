@@ -16,63 +16,94 @@
         </div>
     </div>
 
-    <form asp-action="Search" method="post" class="row g-4">
-        <div class="col-md-5">
-            <label class="form-label text-white-50 small text-uppercase fw-bold">Departure From</label>
-            <div class="input-group">
-                <span class="input-group-text bg-transparent border-0 text-info">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </span>
-                <select asp-for="OriginCity" asp-items="Model.CitiesWithAirports" class="form-select border-start-0" required>
-                    <option value="">Select Departure City...</option>
+    <div class="trip-type-selector mb-4">
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="TripType" id="OneWay" value="OneWay" checked onchange="handleTripTypeChange('OneWay')">
+            <label class="btn btn-outline-info px-4" for="OneWay">One-way</label>
+
+            <input type="radio" class="btn-check" name="TripType" id="RoundTrip" value="RoundTrip" onchange="handleTripTypeChange('RoundTrip')">
+            <label class="btn btn-outline-info px-4" for="RoundTrip">Round-trip</label>
+
+            <input type="radio" class="btn-check" name="TripType" id="MultiWay" value="MultiWay" onchange="handleTripTypeChange('MultiWay')">
+            <label class="btn btn-outline-info px-4" for="MultiWay">Multi-city</label>
+        </div>
+    </div>
+
+    <form asp-action="Search" method="post" id="searchForm">
+        <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
+
+        <!-- Standard Search (One-way / Round-trip) -->
+        <div id="StandardSearch" class="row g-4 animate-fade-in">
+            <div class="col-md-5">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Departure From</label>
+                <div class="input-group position-relative">
+                    <span class="input-group-text bg-transparent border-0 text-info">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </span>
+                    <input type="text" id="OriginCityName" class="form-control border-start-0 city-typeahead" placeholder="Enter departure city..." autocomplete="off">
+                    <input type="hidden" asp-for="OriginCity" id="OriginCityId">
+                    <div class="suggestion-box shadow-lg" id="OriginSuggestions"></div>
+                </div>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end justify-content-center pb-2 swap-container">
+                <button type="button" class="btn btn-outline-info rounded-circle p-2 swap-btn" onclick="swapDestinations()">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                </button>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Arrival At</label>
+                <div class="input-group position-relative">
+                    <span class="input-group-text bg-transparent border-0 text-warning">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    </span>
+                    <input type="text" id="DestinationCityName" class="form-control border-start-0 city-typeahead" placeholder="Enter destination city..." autocomplete="off">
+                    <input type="hidden" asp-for="DestinationCity" id="DestinationCityId">
+                    <div class="suggestion-box shadow-lg" id="DestinationSuggestions"></div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Departure Date</label>
+                <input asp-for="DepartureDate" type="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="col-md-3" id="ReturnDateCol" style="display:none;">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Return Date</label>
+                <input asp-for="ReturnDate" type="date" class="form-control" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Travelers</label>
+                <select asp-for="Adults" class="form-select">
+                    <option value="1">1 Adult</option>
+                    <option value="2">2 Adults</option>
+                    <option value="3">3 Adults</option>
+                    <option value="4">4 Adults</option>
                 </select>
             </div>
-            <span asp-validation-for="OriginCity" class="text-danger small"></span>
+
+            <div class="col-md-3">
+                <label class="form-label text-white-50 small text-uppercase fw-bold">Cabin Class</label>
+                <select asp-for="CabinClass" class="form-select">
+                    <option value="economy">Economy</option>
+                    <option value="premium">Premium Economy</option>
+                    <option value="business">Business Class</option>
+                    <option value="first">First Class</option>
+                </select>
+            </div>
         </div>
 
-        <div class="col-md-2 d-flex align-items-end justify-content-center pb-2">
-            <button type="button" class="btn btn-outline-info rounded-circle p-2 swap-btn" onclick="swapDestinations()">
-                <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+        <!-- Multi-city Search -->
+        <div id="MultiCitySearch" style="display:none;" class="animate-fade-in">
+            <div id="MultiCityLegsContainer">
+                <!-- Multi-city legs will be injected here -->
+            </div>
+            <button type="button" class="btn btn-outline-info mt-3" onclick="addMultiCityLeg()">
+                <svg width="20" height="20" fill="currentColor" class="me-2"><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                Add Another Flight
             </button>
-        </div>
-
-        <div class="col-md-5">
-            <label class="form-label text-white-50 small text-uppercase fw-bold">Arrival At</label>
-            <div class="input-group">
-                <span class="input-group-text bg-transparent border-0 text-warning">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                </span>
-                <select asp-for="DestinationCity" asp-items="Model.CitiesWithAirports" class="form-select border-start-0" required>
-                    <option value="">Select Destination City...</option>
-                </select>
-            </div>
-            <span asp-validation-for="DestinationCity" class="text-danger small"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label text-white-50 small text-uppercase fw-bold">Departure Date</label>
-            <input asp-for="DepartureDate" type="date" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
-            <span asp-validation-for="DepartureDate" class="text-danger small"></span>
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label text-white-50 small text-uppercase fw-bold">Travelers</label>
-            <select class="form-select">
-                <option value="1">1 Adult</option>
-                <option value="2">2 Adults</option>
-                <option value="3">3 Adults</option>
-                <option value="4">Family (2+2)</option>
-            </select>
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label text-white-50 small text-uppercase fw-bold">Cabin Class</label>
-            <select class="form-select">
-                <option value="economy">Economy</option>
-                <option value="premium">Premium Economy</option>
-                <option value="business">Business Class</option>
-                <option value="first">First Class</option>
-            </select>
         </div>
 
         <div class="col-12 mt-5">
@@ -88,23 +119,156 @@
 
 @section Scripts {
     <script>
-        function swapDestinations() {
-            const origin = document.getElementById('OriginCity');
-            const dest = document.getElementById('DestinationCity');
-            const temp = origin.value;
-            origin.value = dest.value;
-            dest.value = temp;
+        let multiCityLegCount = 0;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTypeahead('OriginCityName', 'OriginCityId', 'OriginSuggestions');
+            setupTypeahead('DestinationCityName', 'DestinationCityId', 'DestinationSuggestions');
             
-            // Add a little animation class
+            // Add initial legs for multi-city
+            addMultiCityLeg();
+            addMultiCityLeg();
+
+            document.getElementById('searchForm').addEventListener('submit', function(e) {
+                const tripType = document.getElementById('TripTypeHidden').value;
+                if (tripType === 'MultiWay') return; // Handled differently if needed
+
+                const originId = document.getElementById('OriginCityId').value;
+                const destId = document.getElementById('DestinationCityId').value;
+                
+                if (!originId || !destId) {
+                    e.preventDefault();
+                    alert('Please select valid cities from the suggestions.');
+                }
+            });
+        });
+
+        function handleTripTypeChange(type) {
+            document.getElementById('TripTypeHidden').value = type;
+            const standardSearch = document.getElementById('StandardSearch');
+            const multiCitySearch = document.getElementById('MultiCitySearch');
+            const returnDateCol = document.getElementById('ReturnDateCol');
+
+            if (type === 'MultiWay') {
+                standardSearch.style.display = 'none';
+                multiCitySearch.style.display = 'block';
+            } else {
+                standardSearch.style.display = 'flex';
+                multiCitySearch.style.display = 'none';
+                returnDateCol.style.display = (type === 'RoundTrip') ? 'block' : 'none';
+            }
+        }
+
+        function addMultiCityLeg() {
+            const container = document.getElementById('MultiCityLegsContainer');
+            const index = multiCityLegCount++;
+            
+            const legHtml = `
+                <div class="row g-3 mb-3 p-3 rounded bg-white bg-opacity-5 align-items-end multi-city-leg animate-fade-in" id="Leg_${index}">
+                    <div class="col-md-4">
+                        <label class="form-label text-white-50 small">Origin</label>
+                        <div class="input-group position-relative">
+                            <input type="text" id="Multi_Origin_${index}_Name" class="form-control city-typeahead" placeholder="From...">
+                            <input type="hidden" name="MultiCityLegs[${index}].OriginCity" id="Multi_Origin_${index}_Id">
+                            <div class="suggestion-box" id="Multi_Origin_${index}_Suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-white-50 small">Destination</label>
+                        <div class="input-group position-relative">
+                            <input type="text" id="Multi_Dest_${index}_Name" class="form-control city-typeahead" placeholder="To...">
+                            <input type="hidden" name="MultiCityLegs[${index}].DestinationCity" id="Multi_Dest_${index}_Id">
+                            <div class="suggestion-box" id="Multi_Dest_${index}_Suggestions"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label text-white-50 small">Date</label>
+                        <input type="date" name="MultiCityLegs[${index}].DepartureDate" class="form-control" value="${new Date().toISOString().split('T')[0]}">
+                    </div>
+                    <div class="col-md-1">
+                        ${index > 1 ? `<button type="button" class="btn btn-outline-danger w-100" onclick="removeLeg(${index})">
+                            <svg width="16" height="16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+                        </button>` : ''}
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', legHtml);
+            
+            setupTypeahead(`Multi_Origin_${index}_Name`, `Multi_Origin_${index}_Id`, `Multi_Origin_${index}_Suggestions`);
+            setupTypeahead(`Multi_Dest_${index}_Name`, `Multi_Dest_${index}_Id`, `Multi_Dest_${index}_Suggestions`);
+        }
+
+        function removeLeg(index) {
+            document.getElementById(`Leg_${index}`).remove();
+        }
+
+        function setupTypeahead(inputName, hiddenId, suggestionBoxId) {
+            const input = document.getElementById(inputName);
+            const hidden = document.getElementById(hiddenId);
+            const box = document.getElementById(suggestionBoxId);
+            let timeout = null;
+
+            input.addEventListener('input', function() {
+                clearTimeout(timeout);
+                const query = this.value;
+                if (query.length < 2) { box.style.display = 'none'; return; }
+
+                timeout = setTimeout(async () => {
+                    const response = await fetch(`/api/search/cities?q=${encodeURIComponent(query)}`);
+                    const data = await response.json();
+                    
+                    if (data.length > 0) {
+                        box.innerHTML = data.map(item => `
+                            <div class="suggestion-item d-flex justify-content-between align-items-center" 
+                                 onclick="selectCity('${inputName}', '${hiddenId}', '${suggestionBoxId}', '${item.cityId}', '${item.displayName}')">
+                                <div><span class="fw-bold text-white">${item.displayName}</span><span class="text-white-50 small ms-2">${item.countryCode}</span></div>
+                                ${item.rank === 1 ? '<span class="badge bg-info text-dark">HUB</span>' : ''}
+                            </div>
+                        `).join('');
+                        box.style.display = 'block';
+                    } else { box.style.display = 'none'; }
+                }, 150);
+            });
+
+            input.addEventListener('blur', () => { setTimeout(() => { box.style.display = 'none'; }, 200); });
+        }
+
+        function selectCity(inputName, hiddenId, suggestionBoxId, cityId, cityName) {
+            document.getElementById(inputName).value = cityName;
+            document.getElementById(hiddenId).value = cityId;
+            document.getElementById(suggestionBoxId).style.display = 'none';
+        }
+
+        function swapDestinations() {
+            const originName = document.getElementById('OriginCityName');
+            const originId = document.getElementById('OriginCityId');
+            const destName = document.getElementById('DestinationCityName');
+            const destId = document.getElementById('DestinationCityId');
+
+            const tempName = originName.value; const tempId = originId.value;
+            originName.value = destName.value; originId.value = destId.value;
+            destName.value = tempName; destId.value = tempId;
+            
             const btn = document.querySelector('.swap-btn');
             btn.classList.add('rotate-180');
             setTimeout(() => btn.classList.remove('rotate-180'), 500);
         }
     </script>
     <style>
-        .rotate-180 {
-            transform: rotate(180deg);
-            transition: transform 0.5s ease;
+        .suggestion-box {
+            position: absolute; top: 100%; left: 0; right: 0;
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem;
+            margin-top: 0.5rem; z-index: 1000; display: none;
+            max-height: 250px; overflow-y: auto;
         }
+        .suggestion-item { padding: 0.75rem 1rem; cursor: pointer; transition: all 0.2s ease; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .suggestion-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .suggestion-item:last-child { border-bottom: none; }
+        .rotate-180 { transform: rotate(180deg); transition: transform 0.5s ease; }
+        .city-typeahead { background: rgba(255, 255, 255, 0.05) !important; color: white !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; }
+        .city-typeahead:focus { background: rgba(255, 255, 255, 0.1) !important; border-color: #0dcaf0 !important; box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25); }
+        .btn-check:checked + .btn-outline-info { background-color: #0dcaf0; color: #1e293b; border-color: #0dcaf0; box-shadow: 0 0 15px rgba(13, 202, 240, 0.4); }
+        .multi-city-leg { border-left: 3px solid #0dcaf0; }
     </style>
 }

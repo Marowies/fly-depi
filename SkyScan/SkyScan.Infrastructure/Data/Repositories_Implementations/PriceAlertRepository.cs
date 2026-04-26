@@ -18,8 +18,8 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<IEnumerable<PriceAlert>> GetPriceAlertsByUserIdAsync(Guid userId)
         {
             return await _dbSet
-                .Include(p => p.Trip)
-                .Where(p => p.UserId == userId)
+                .Include(a => a.Trip)
+                .Where(a => a.UserId == userId)
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -27,9 +27,9 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<IEnumerable<PriceAlert>> GetAlertsTriggeredByPriceAsync(Guid tripId, decimal newPrice)
         {
             return await _dbSet
-                .Include(p => p.User)
-                .Include(p => p.Trip)
-                .Where(p => p.TripId == tripId && p.TargetPrice >= newPrice)
+                .Include(a => a.User)
+                .Include(a => a.Trip)
+                .Where(a => a.TripId == tripId && a.TargetPrice >= newPrice)
                 .AsNoTracking()
                 .ToListAsync();
         }
