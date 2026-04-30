@@ -20,10 +20,7 @@ namespace SkyScan.Presentation.Controllers
         private const string AirportCacheKey = "airports_dropdown";
         private static readonly TimeSpan AirportCacheDuration = TimeSpan.FromHours(6);
 
-        public FlightController(
-            IAirportRepository airportRepository,
-            IFlightProviderService flightProviderService,
-            IMemoryCache cache)
+        public FlightController(IAirportRepository airportRepository,IFlightProviderService flightProviderService,IMemoryCache cache)
         {
             _airportRepository = airportRepository;
             _flightProviderService = flightProviderService;
@@ -46,20 +43,11 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Debug: Log validation errors to console
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Property: {state.Key}, Error: {error.ErrorMessage}");
-                    }
-                }
-                
                 model.CitiesWithAirports = await GetCachedAirportDropdownAsync();
                 return View("Index", model);
             }
 
-            // Map to our Search Request DTO
+            // Map to Search Request DTO
             var searchRequest = new FlightSearchRequestDto
             {
                 TripType = model.TripType,

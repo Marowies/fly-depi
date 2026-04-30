@@ -8,6 +8,7 @@ namespace SkyScan.Core.Repositories_Interfaces
     public interface ISearchRepository : IGenericRepository<Search>
     {
         Task<IEnumerable<Search>> GetRecentSearchesByUserIdAsync(Guid userId, int count = 5);
-        Task<IEnumerable<Search>> GetTopTrendingSearchesAsync(int count = 5);
+
+        Task<IEnumerable<Tuple<City, City>>> GetTopTrendingSearchesAsync(int count = 5);
     }
 }

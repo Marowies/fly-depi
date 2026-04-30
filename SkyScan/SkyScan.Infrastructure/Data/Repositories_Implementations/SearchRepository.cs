@@ -27,7 +27,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Search>> GetTopTrendingSearchesAsync(int count = 5)
+        public async Task<IEnumerable<Tuple<City, City>>> GetTopTrendingSearchesAsync(int count = 5)
         {
             var topSearchGroup = await _dbSet
                 .GroupBy(s => new { s.OriginCityId, s.DestinationCityId })
@@ -36,16 +36,23 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .Take(count)
                 .ToListAsync();
 
-            var trendingSearches = new List<Search>();
-            foreach(var item in topSearchGroup)
+            List<Tuple<City, City>> routeList = new List<Tuple<City, City>>();
+            Tuple<City, City> route;
+            foreach (var item in topSearchGroup)
             {
-                var search = await _dbSet
-                    .Include(s => s.OriginCity)
-                    .Include(s => s.DestinationCity)
-                    .FirstOrDefaultAsync(s => s.OriginCityId == item.OriginCityId && s.DestinationCityId == item.DestinationCityId);
-                if (search != null) trendingSearches.Add(search);
+                City originCity = _context.Cities.FirstOrDefault(C => C.CityId == item.OriginCityId);
+                City destenationCity = _context.Cities.FirstOrDefault(C => C.CityId == item.DestinationCityId);
+                if (originCity != null && destenationCity != null)
+                {
+                    route = new Tuple<City, City>(originCity, destenationCity);
+                    routeList.Add(route);
+                }
+                else
+                {
+                    return new List<Tuple<City, City>>();
+                }
             }
-            return trendingSearches;
+            return routeList;
         }
     }
 }
