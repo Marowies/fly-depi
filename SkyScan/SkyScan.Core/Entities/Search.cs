@@ -15,9 +15,9 @@ namespace SkyScan.Core.Entities
         public DateTime DepartureDate { get; set; }
         public Guid OriginCityId { get; set; }
         public Guid DestinationCityId { get; set; }
-        public City OriginCity { get; set; }
-        public City DestinationCity { get; set; }
+        public City? OriginCity { get; set; }
+        public City? DestinationCity { get; set; }
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
     }
 }

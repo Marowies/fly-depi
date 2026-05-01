@@ -1,30 +1,51 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 using SkyScan.Application.DTOs;
-using SkyScan.Application.Interfaces;
+using FluentValidation;
 using SkyScan.Core.Constants;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Presentation.Models;
+using SkyScan.Application.Interfaces;
 
 namespace SkyScan.Presentation.Controllers
 {
     public class FlightController : Controller
     {
         private readonly IAirportRepository _airportRepository;
+<<<<<<< Updated upstream
         private readonly ISearchRepository _searchRepository;
         private readonly IFlightProviderService _flightProviderService;
+=======
+        private readonly IFlightRepository _flightRepository;
+>>>>>>> Stashed changes
         private readonly IMemoryCache _cache;
+        private readonly ILogger<FlightController> _logger;
+        private readonly IValidator<FlightSearchRequestDto> _validator;
+        private readonly IFlightFilteringService _filteringService;
 
         // Airport dropdown is static reference data — cache for 6 hours
         private const string AirportCacheKey = "airports_dropdown";
         private static readonly TimeSpan AirportCacheDuration = TimeSpan.FromHours(6);
 
+<<<<<<< Updated upstream
         public FlightController(IAirportRepository airportRepository,IFlightProviderService flightProviderService,IMemoryCache cache)
+=======
+        public FlightController(
+            IAirportRepository airportRepository,
+            IFlightRepository flightRepository,
+            IMemoryCache cache,
+            ILogger<FlightController> logger,
+            IValidator<FlightSearchRequestDto> validator,
+            IFlightFilteringService filteringService)
+>>>>>>> Stashed changes
         {
             _airportRepository = airportRepository;
-            _flightProviderService = flightProviderService;
             _cache = cache;
+            _logger = logger;
+            _validator = validator;
+            _filteringService = filteringService;
         }
 
         [HttpGet]
@@ -90,20 +111,36 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction("Index");
             }
 
+<<<<<<< Updated upstream
             // For now, redirect standard searches to Results page
             // Multi-city results page can be implemented similarly
+=======
+            var validationResult = await _validator.ValidateAsync(searchRequest);
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError("", error.ErrorMessage);
+                }
+                model.CitiesWithAirports = allCities;
+                return View("Index", model);
+            }
+
+>>>>>>> Stashed changes
             return RedirectToAction("Results", new
             {
                 origin      = model.OriginCity,
                 destination = model.DestinationCity,
                 date        = model.DepartureDate.ToString("yyyy-MM-dd"),
-                tripType    = model.TripType.ToString()
+                tripType    = model.TripType.ToString(),
+                returnDate  = model.ReturnDate?.ToString("yyyy-MM-dd")
             });
         }
 
         [HttpGet]
-        public async Task<IActionResult> Results(string origin, string destination, string date, string tripType = "OneWay")
+        public async Task<IActionResult> Results(string origin, string destination, string date, string tripType = "OneWay", [FromQuery] FlightFilterCriteriaDto? criteria = null)
         {
+            criteria ??= new FlightFilterCriteriaDto();
             if (!DateTime.TryParse(date, out DateTime departureDate))
             {
                 return RedirectToAction("Index");
@@ -112,7 +149,7 @@ namespace SkyScan.Presentation.Controllers
             // Backend Validation: Verify that the submitted IDs are valid GUIDs and exist in the DB
             if (!Guid.TryParse(origin, out Guid originId) || !Guid.TryParse(destination, out Guid destId))
             {
-                Console.WriteLine($"Results Debug: Parsing failed. Origin: '{origin}', Destination: '{destination}'");
+                _logger.LogWarning("Results: invalid GUID params. Origin='{Origin}' Destination='{Destination}'", origin, destination);
                 return RedirectToAction("Index");
             }
 
@@ -124,8 +161,29 @@ namespace SkyScan.Presentation.Controllers
             var destName = destCity.FirstOrDefault(c => c.CityId == destId).CityName ?? "Unknown";
             
             // Search Flights via the provider (Mock or Real)
+<<<<<<< Updated upstream
             // Note: We pass the CityId as string to the provider
             var flights = await _flightProviderService.SearchFlightsAsync(origin, destination, departureDate);
+=======
+            // Note: We now pass ALL IATA codes in the city to support city-to-city searching
+            var dbFlights = await _flightRepository.SearchFlightsAsync(originIatas!, destIatas!, departureDate);
+
+            var flightDtos = dbFlights.Select(f => new FlightDto
+            {
+                AirlineName = f.Airline?.Name ?? "Unknown",
+                FlightNumber = f.FlightNumber,
+                OriginAirport = f.DepartureAirport?.IataCode ?? f.DepartureAirport?.Code ?? "Unknown",
+                DestinationAirport = f.ArrivalAirport?.IataCode ?? f.ArrivalAirport?.Code ?? "Unknown",
+                DepartureTime = f.DepartureTime,
+                ArrivalTime = f.ArrivalTime,
+                Price = f.Tickets.Any() ? f.Tickets.Min(t => t.Price) : 0,
+                Status = "Active",
+                RedirectURL = f.RedirectURL
+            }).ToList();
+
+            // Apply Filters and Sorting
+            var filteredFlights = _filteringService.FilterAndSort(flightDtos, criteria).ToList();
+>>>>>>> Stashed changes
 
             var viewModel = new FlightResultsViewModel
             {
@@ -134,7 +192,11 @@ namespace SkyScan.Presentation.Controllers
                 OriginCity      = originName,
                 DestinationCity = destName,
                 DepartureDate   = departureDate,
+<<<<<<< Updated upstream
                 Flights         = flights
+=======
+                Flights         = filteredFlights
+>>>>>>> Stashed changes
             };
 
             return View(viewModel);

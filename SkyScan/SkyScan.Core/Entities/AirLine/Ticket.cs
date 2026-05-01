@@ -31,6 +31,6 @@ namespace SkyScan.Core.Entities.AirLine
 
         [Required]
         public Guid FlightId { get; set; }
-        public Flight Flight { get; set; }
+        public Flight? Flight { get; set; }
     }
 }

@@ -37,6 +37,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .Include(f => f.DepartureAirport).ThenInclude(a => a.City)
                 .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
                 .Include(f => f.Tickets)
+                .Where(f => f.Tickets.Any())
                 .OrderBy(f => f.Tickets.Min(t => t.Price))
                 .Take(count)
                 .AsNoTracking()

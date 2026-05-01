@@ -12,11 +12,11 @@ namespace SkyScan.Core.Entities
 
         [Required]
         public Guid UserId { get; set; }
-        public User User { get; set; }
+        public User? User { get; set; }
 
         [Required]
         public Guid TripId { get; set; }
-        public Trip Trip { get; set; }
+        public Trip? Trip { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]

@@ -11,11 +11,11 @@ namespace SkyScan.Core.Entities.AirLine
 
         [Required]
         public Guid AirlineId { get; set; }
-        public Airline Airline { get; set; }
+        public Airline? Airline { get; set; }
 
         [Required]
         public Guid AirplaneId { get; set; }
-        public Airplane Airplane { get; set; }
+        public Airplane? Airplane { get; set; }
 
         [Required]
         [StringLength(20)]
@@ -27,8 +27,8 @@ namespace SkyScan.Core.Entities.AirLine
         [Required]
         public Guid ArrivalAirportId { get; set; }
 
-        public Airport DepartureAirport { get; set; }
-        public Airport ArrivalAirport { get; set; }
+        public Airport? DepartureAirport { get; set; }
+        public Airport? ArrivalAirport { get; set; }
 
         [Required]
         public DateTime DepartureTime { get; set; }
@@ -39,7 +39,7 @@ namespace SkyScan.Core.Entities.AirLine
         public TimeSpan Duration { get { return ArrivalTime - DepartureTime; } }
 
         [Url]
-        public string RedirectURL { get; set; }
+        public string? RedirectURL { get; set; }
 
         public List<Ticket> Tickets { get; set; } = new List<Ticket>();
     }

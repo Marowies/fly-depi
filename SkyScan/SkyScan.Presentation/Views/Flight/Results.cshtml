@@ -21,8 +21,118 @@
                 <input type="radio" class="btn-check" name="SortByRadio" id="SortFastest" autocomplete="off" onchange="sortFlights('Fastest')">
                 <label class="btn btn-outline btn-sm" for="SortFastest">Fastest</label>
 
+<<<<<<< Updated upstream
                 <input type="radio" class="btn-check" name="SortByRadio" id="SortBest" autocomplete="off" onchange="sortFlights('Best')">
                 <label class="btn btn-outline btn-sm" for="SortBest">Best</label>
+=======
+            <div id="FlightResultsContainer" class="space-y-6">
+                @foreach (var flight in Model.Flights)
+                {
+                    <div class="flight-card group bg-surface-container-low hover:bg-surface-container-high transition-all duration-500 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-slate-950/50 border border-white/5"
+                         data-price="@flight.Price"
+                         data-stops="@flight.Stops"
+                         data-airline="@flight.AirlineName">
+                        <div class="flex flex-col md:flex-row items-stretch">
+                            <!-- Left Info -->
+                            <div class="flex-1 p-8 md:p-10">
+                                <div class="flex justify-between items-start mb-10">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-slate-200/5 rounded-full flex items-center justify-center border border-white/5">
+                                            <span class="material-symbols-outlined text-slate-400">flight_takeoff</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.AirlineName</span>
+                                            <p class="text-[11px] text-slate-400 font-medium">@flight.AirlineName.Substring(0, 2).ToUpper() @(new Random().Next(100, 999)) • Modern Fleet</p>
+                                        </div>
+                                    </div>
+                                    @if (flight.Stops == 0)
+                                    {
+                                        <div class="px-3 py-1 bg-tertiary/10 border border-tertiary/20 rounded-full">
+                                            <span class="text-[9px] font-bold text-tertiary uppercase tracking-wider">Fastest Route</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex items-center justify-between relative">
+                                    <div class="text-center md:text-left z-10">
+                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.DepartureTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.OriginAirport</span>
+                                    </div>
+                                    <!-- Flight Path Decoration -->
+                                    <div class="flex-1 px-8 relative">
+                                        <div class="h-[1px] w-full bg-slate-700/50 relative">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+                                            <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-slate-700"></div>
+                                            <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-tertiary"></div>
+                                            <!-- Plane Icon -->
+                                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-low group-hover:bg-surface-container-high transition-colors px-3">
+                                                <span class="material-symbols-outlined text-sm text-slate-500 rotate-90">flight</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <span class="text-[9px] uppercase tracking-widest text-slate-500 font-medium">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m • @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} Stop{(flight.Stops > 1 ? "s" : "")}")</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center md:text-right z-10">
+                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.ArrivalTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.DestinationAirport</span>
+                                        @if (flight.ArrivalTime.Date > flight.DepartureTime.Date)
+                                        {
+                                            <p class="text-[9px] text-tertiary mt-1">+1 Day</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right Actions -->
+                            <div class="w-full md:w-64 bg-surface-container-high p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Celestial Selection</span>
+                                <div class="flex items-baseline gap-1 mb-8">
+                                    <span class="text-[11px] font-bold text-slate-400">$</span>
+                                    <span class="text-4xl font-headline font-extrabold text-tertiary tracking-tighter">@flight.Price.ToString("N0")</span>
+                                </div>
+                                <a href="@flight.RedirectURL" class="w-full py-4 bg-primary text-on-primary rounded-xl text-xs font-extrabold uppercase text-center tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-300">Reserve Seat</a>
+                                <button type="button" onclick="this.closest('.flight-card').querySelector('.journey-details').classList.toggle('hidden')" class="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-tertiary transition-colors">Journey Details</button>
+                            </div>
+                        </div>
+                        <!-- Expandable Details -->
+                        <div class="hidden journey-details border-t border-white/5 bg-surface-container-low/30 p-8 md:px-10 animate-slide-in">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                                <div>
+                                    <span class="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Flight Number</span>
+                                    <span class="text-sm font-bold text-slate-300">@flight.FlightNumber</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Aircraft</span>
+                                    <span class="text-sm font-bold text-slate-300">Boeing 787 Dreamliner</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Status</span>
+                                    <span class="text-sm font-bold text-[#dac76a]">@flight.Status</span>
+                                </div>
+                                <div>
+                                    <span class="block text-[9px] uppercase tracking-widest text-slate-500 mb-1">Baggage</span>
+                                    <span class="text-sm font-bold text-slate-300">2x 23kg Included</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <div id="NoResultsMessage" class="bg-surface-container-low p-20 rounded-xl text-center border border-dashed border-white/10" style="display:none;">
+                    <span class="material-symbols-outlined text-4xl text-slate-700 mb-4">search_off</span>
+                    <h5 class="text-slate-200 font-headline font-bold text-xl mb-2">No Paths Found</h5>
+                    <p class="text-slate-500 text-sm mb-8">Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.</p>
+                    <button class="text-primary font-bold uppercase tracking-widest text-xs" onclick="resetFilters()">Reset All Filters</button>
+                </div>
+            </div>
+
+            <!-- Load More Asymmetric Pattern -->
+            <div class="pt-12 flex justify-center">
+                <button class="group flex flex-col items-center gap-4">
+                    <div class="w-px h-16 bg-gradient-to-b from-slate-700 to-transparent"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500 group-hover:text-primary transition-colors">View More Journeys</span>
+                    <span class="material-symbols-outlined text-slate-700 group-hover:text-primary transition-colors animate-bounce">expand_more</span>
+                </button>
+>>>>>>> Stashed changes
             </div>
         </div>
     </div>
@@ -202,11 +312,36 @@
                 const stopsMatch = allowedStops.includes(stops >= 2 ? 2 : stops);
                 const airlineMatch = allowedAirlines.includes(airline);
                 
+<<<<<<< Updated upstream
                 if (priceMatch && stopsMatch && airlineMatch) {
                     card.style.display = 'block';
+=======
+                // Update checkbox UI
+                const checkbox = card.closest('label')?.querySelector('.checkbox-inner');
+                // Wait, these checkboxes are in the sidebar, not the cards.
+                
+                const isHidden = card.classList.contains('hidden') || card.classList.contains('animate-fade-out');
+                const shouldBeVisible = priceMatch && stopsMatch && airlineMatch;
+
+                if (shouldBeVisible) {
+>>>>>>> Stashed changes
                     visibleCount++;
+                    if (isHidden) {
+                        card.classList.remove('hidden', 'animate-fade-out');
+                        card.classList.add('animate-slide-in');
+                        card.dataset.visible = 'true';
+                    }
                 } else {
-                    card.style.display = 'none';
+                    if (!isHidden) {
+                        card.classList.remove('animate-slide-in');
+                        card.classList.add('animate-fade-out');
+                        card.dataset.visible = 'false';
+                        setTimeout(() => {
+                            if (card.dataset.visible === 'false') {
+                                card.classList.add('hidden');
+                            }
+                        }, 400); // 400ms matches the tailwind keyframe duration
+                    }
                 }
             });
 

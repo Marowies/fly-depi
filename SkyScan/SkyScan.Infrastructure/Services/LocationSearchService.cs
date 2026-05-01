@@ -6,6 +6,7 @@ using SkyScan.Infrastructure.Data.Data_Sources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SkyScan.Infrastructure.Services
@@ -15,6 +16,7 @@ namespace SkyScan.Infrastructure.Services
         private List<CitySuggestionDto> _searchIndex = new();
         private readonly IServiceProvider _serviceProvider;
         private bool _isInitialized = false;
+        private readonly SemaphoreSlim _initLock = new SemaphoreSlim(1, 1);
 
         public LocationSearchService(IServiceProvider serviceProvider)
         {
@@ -25,7 +27,12 @@ namespace SkyScan.Infrastructure.Services
         {
             if (_isInitialized) return;
 
-            using (var scope = _serviceProvider.CreateScope())
+            await _initLock.WaitAsync();
+            try
+            {
+                if (_isInitialized) return;
+
+                using (var scope = _serviceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<SkyScanDbContext>();
                 
@@ -74,6 +81,11 @@ namespace SkyScan.Infrastructure.Services
 
                 _searchIndex = cities;
                 _isInitialized = true;
+            }
+            }
+            finally
+            {
+                _initLock.Release();
             }
         }
 

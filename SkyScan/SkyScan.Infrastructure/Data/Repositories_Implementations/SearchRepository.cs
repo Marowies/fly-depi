@@ -36,6 +36,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .Take(count)
                 .ToListAsync();
 
+<<<<<<< Updated upstream
             List<Tuple<City, City>> routeList = new List<Tuple<City, City>>();
             Tuple<City, City> route;
             foreach (var item in topSearchGroup)
@@ -53,6 +54,28 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 }
             }
             return routeList;
+=======
+            var cityIds = topSearchGroup.Select(x => x.OriginCityId)
+                .Concat(topSearchGroup.Select(x => x.DestinationCityId))
+                .Distinct()
+                .ToList();
+
+            var cities = await _context.Cities
+                .Where(c => cityIds.Contains(c.CityId))
+                .AsNoTracking()
+                .ToDictionaryAsync(c => c.CityId);
+
+            var trendingSearches = topSearchGroup.Select(item => new Search
+            {
+                SearchId = Guid.NewGuid(),
+                OriginCityId = item.OriginCityId,
+                DestinationCityId = item.DestinationCityId,
+                OriginCity = cities.ContainsKey(item.OriginCityId) ? cities[item.OriginCityId] : null,
+                DestinationCity = cities.ContainsKey(item.DestinationCityId) ? cities[item.DestinationCityId] : null
+            }).ToList();
+
+            return trendingSearches;
+>>>>>>> Stashed changes
         }
     }
 }

@@ -3,6 +3,7 @@
     ViewData["Title"] = "Search Flights";
 }
 
+<<<<<<< Updated upstream
 <div class="mb-4">
     <h2 class="mb-1 fw-bold text-primary">Flight Search</h2>
     <p class="text-secondary mb-0">Strictly validated, high-performance itinerary comparison.</p>
@@ -18,6 +19,14 @@
 
         <input type="radio" class="btn-check" name="TripTypeRadio" id="MultiWay" value="MultiWay" onchange="handleTripTypeChange('MultiWay')">
         <label class="btn btn-outline" for="MultiWay">Multi-city</label>
+=======
+<!-- Hero Canvas -->
+<main class="relative min-h-screen flex flex-col items-center justify-center pt-20">
+    <!-- Background Imagery with Dark Overlay -->
+    <div class="absolute inset-0 z-0">
+        <img class="w-full h-full object-cover" alt="ultra-luxury private jet cabin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvo3-nC_IOyG1LhxX6eREWDVtr017HJtBYfW7dGmMauwSsZCpZQKSIii0xBUz2PinJY810vxWxHOMZSP8WXxlf9Uq_I8dvqbR6TJHOek5S-IYW5-YADULfFUqMFaoiEhe7B1RCrLUSLlu4ZUVXoEL93hfIqgquw4S-eK4cbyFX7ZP-wMhnIo3hQoVDL9oCqyHdRwYnbM6EwulQEqezYBZop00qLNLFM9f4pWehMaXO7wa5fvJPP6fW_jUtuxoEciOrXO6YATxDIQ" />
+        <div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background"></div>
+>>>>>>> Stashed changes
     </div>
 </div>
 
@@ -44,6 +53,7 @@
             </button>
         </div>
 
+<<<<<<< Updated upstream
         <div class="col-md-5">
             <label class="form-label small fw-bold text-secondary">Destination</label>
             <div class="position-relative">
@@ -66,6 +76,123 @@
             <label class="form-label small fw-bold text-secondary">Return Date</label>
             <input asp-for="ReturnDate" type="date" id="RetDate" class="form-control tabular-data" min="@DateTime.Now.ToString("yyyy-MM-dd")" onchange="validateDates()" />
             <div class="invalid-feedback">Date must be after departure.</div>
+=======
+            <div class="w-full glass-panel rounded-2xl p-1 md:p-2 border border-outline-variant/10 relative z-50">
+                <!-- Standard Search (OneWay / RoundTrip) -->
+                <div id="StandardSearchFields" class="flex flex-col lg:flex-row items-stretch gap-1">
+                    <!-- Origin -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative hover:z-50 focus-within:z-50">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Origin</label>
+                        <div class="flex items-center gap-3 relative">
+                            <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+                            <input asp-for="OriginCity" autocomplete="off" data-autocomplete="city" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
+                        </div>
+                    </div>
+                    <!-- Destination -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative hover:z-50 focus-within:z-50">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
+                        <div class="flex items-center gap-3 relative">
+                            <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
+                            <input asp-for="DestinationCity" autocomplete="off" data-autocomplete="city" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
+                        </div>
+                    </div>
+                    <!-- Departure -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative hover:z-50 focus-within:z-50">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                            <input asp-for="DepartureDate" type="text" class="luxury-date bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none placeholder:text-on-surface-variant/30" placeholder="Select Date" />
+                        </div>
+                    </div>
+                    <!-- Return Date -->
+                    <div id="ReturnDateField" class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative hover:z-50 focus-within:z-50" style="display: none;">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Return</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-tertiary text-xl">event_repeat</span>
+                            <input asp-for="ReturnDate" type="text" class="luxury-date bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none placeholder:text-on-surface-variant/30" placeholder="Select Return" />
+                        </div>
+                    </div>
+                    <!-- Cabin Class -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative cursor-pointer hover:z-50 focus-within:z-50" onclick="document.getElementById('cabinDropdown').classList.toggle('hidden')">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold cursor-pointer">Cabin Class</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">star</span>
+                            <div class="flex-1 text-on-surface font-headline font-bold text-xl uppercase select-none" id="cabinDisplay">First Class</div>
+                            <span class="material-symbols-outlined text-on-surface-variant text-xl">expand_more</span>
+                        </div>
+                        <input type="hidden" asp-for="CabinClass" id="cabinInput" value="first" />
+                        
+                        <!-- Dropdown Menu -->
+                        <div id="cabinDropdown" class="absolute left-0 right-0 top-full mt-4 bg-[#141a32] border border-white/10 rounded-xl shadow-[0_24px_48px_rgba(6,13,36,0.8)] overflow-hidden z-[100] hidden animate-slide-in">
+                            <div class="px-6 py-4 hover:bg-white/5 cursor-pointer text-sm font-bold text-[#dce1ff] transition-colors border-b border-white/5 uppercase" onclick="selectCabin('first', 'First Class', event)">First Class</div>
+                            <div class="px-6 py-4 hover:bg-white/5 cursor-pointer text-sm font-bold text-[#dce1ff] transition-colors border-b border-white/5 uppercase" onclick="selectCabin('business', 'Business', event)">Business</div>
+                            <div class="px-6 py-4 hover:bg-white/5 cursor-pointer text-sm font-bold text-[#dce1ff] transition-colors border-b border-white/5 uppercase" onclick="selectCabin('premium', 'Premium', event)">Premium</div>
+                            <div class="px-6 py-4 hover:bg-white/5 cursor-pointer text-sm font-bold text-[#dce1ff] transition-colors uppercase" onclick="selectCabin('economy', 'Economy', event)">Economy</div>
+                        </div>
+                    </div>
+                    <!-- CTA -->
+                    <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-12 py-6 lg:py-0 rounded-xl transition-all active:scale-[0.98]">
+                        Explore
+                    </button>
+                </div>
+
+                <!-- Multi-City Search -->
+                <div id="MultiCitySearchFields" class="p-4 space-y-4" style="display: none;">
+                    <div id="MultiCityLegsContainer" class="space-y-4">
+                        <!-- Legs will be added here -->
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <button type="button" onclick="addMultiCityLeg()" class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-lg">add_circle</span>
+                            Add Destination
+                        </button>
+                        <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-16 py-4 rounded-xl transition-all active:scale-[0.98]">
+                            Explore Journey
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Filter Chips -->
+            <div class="flex flex-wrap gap-4 mt-6 ml-2">
+                <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-white text-black px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all">One Way</button>
+                <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Round Trip</button>
+                <button type="button" onclick="setTripType('MultiWay')" id="btnMultiWay" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Multi-City</button>
+                <div class="flex items-center gap-2 ml-auto text-[#DAC76A] cursor-pointer hover:opacity-80 transition-opacity">
+                    <span class="material-symbols-outlined text-lg">auto_awesome</span>
+                    <span class="font-label text-[10px] uppercase tracking-widest font-bold">SkyScan VIP Concierge</span>
+                </div>
+            </div>
+            
+
+        </form>
+    </section>
+</main>
+
+<!-- Template for Multi-City Leg -->
+<template id="MultiCityLegTemplate">
+    <div class="multi-city-leg flex flex-col lg:flex-row items-stretch gap-1 animate-slide-in">
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5 hover:z-50 focus-within:z-50">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Leg {index} Origin</label>
+            <div class="flex items-center gap-3 relative">
+                <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+                <input name="MultiCityLegs[{index}].OriginCity" autocomplete="off" data-autocomplete="city" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
+            </div>
+        </div>
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5 hover:z-50 focus-within:z-50">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
+            <div class="flex items-center gap-3 relative">
+                <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
+                <input name="MultiCityLegs[{index}].DestinationCity" autocomplete="off" data-autocomplete="city" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
+            </div>
+        </div>
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5 hover:z-50 focus-within:z-50">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                <input name="MultiCityLegs[{index}].DepartureDate" type="text" class="luxury-date bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none placeholder:text-on-surface-variant/30" placeholder="Select Date" required />
+            </div>
+>>>>>>> Stashed changes
         </div>
         
         <div class="col-md-3">
@@ -106,12 +233,82 @@
 
 @section Scripts {
     <script>
+<<<<<<< Updated upstream
         // Mock data dictionary mapping CityName/IATA to Guid from _airportRepository.GetCityDropdownItemsAsync()
         // In reality, this data should come from the /api/search/cities endpoint. We'll simulate it.
         const mockAirports = @Html.Raw(Json.Serialize(Model.CitiesWithAirports));
         
         let multiCityLegCount = 0;
         const MAX_LEGS = 5;
+=======
+        const availableCities = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.CitiesWithAirports?.Select(c => c.Text) ?? new List<string>()));
+
+        // Custom Autocomplete Dropdown Logic
+        document.addEventListener('input', function(e) {
+            if (!e.target.matches('[data-autocomplete="city"]')) return;
+            
+            const input = e.target;
+            const container = input.parentNode;
+            let dropdown = container.querySelector('.autocomplete-dropdown');
+            
+            if (!dropdown) {
+                dropdown = document.createElement('div');
+                dropdown.className = 'autocomplete-dropdown absolute left-0 right-0 top-full mt-4 bg-[#141a32] border border-white/10 rounded-xl shadow-[0_24px_48px_rgba(6,13,36,0.8)] overflow-hidden z-[100] max-h-64 overflow-y-auto hidden animate-slide-in';
+                container.appendChild(dropdown);
+            }
+            
+            const val = input.value.toLowerCase();
+            dropdown.innerHTML = '';
+            
+            if (!val) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            
+            const matches = availableCities.filter(c => c.toLowerCase().includes(val)).slice(0, 5);
+            
+            if (matches.length === 0) {
+                dropdown.classList.add('hidden');
+                return;
+            }
+            
+            matches.forEach(city => {
+                const div = document.createElement('div');
+                div.className = 'px-6 py-4 hover:bg-white/5 cursor-pointer text-sm font-bold text-[#dce1ff] transition-colors flex items-center gap-3 border-b border-white/5 last:border-0';
+                div.innerHTML = `<span class="material-symbols-outlined text-[#dac76a] text-sm">location_city</span>${city}`;
+                div.onclick = function() {
+                    input.value = city;
+                    dropdown.classList.add('hidden');
+                };
+                dropdown.appendChild(div);
+            });
+            
+            dropdown.classList.remove('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            // Close autocomplete
+            if (!e.target.closest('.autocomplete-dropdown') && !e.target.matches('[data-autocomplete="city"]')) {
+                document.querySelectorAll('.autocomplete-dropdown').forEach(d => d.classList.add('hidden'));
+            }
+            // Close cabin dropdown
+            if (!e.target.closest('#cabinDropdown') && !e.target.closest('[onclick*="cabinDropdown"]')) {
+                const drop = document.getElementById('cabinDropdown');
+                if (drop) drop.classList.add('hidden');
+            }
+        });
+
+        // Handle Cabin Select
+        function selectCabin(val, text, e) {
+            e.stopPropagation();
+            document.getElementById('cabinInput').value = val;
+            document.getElementById('cabinDisplay').innerText = text;
+            document.getElementById('cabinDropdown').classList.add('hidden');
+        }
+
+        let multiCityCount = 0;
+>>>>>>> Stashed changes
 
         document.addEventListener('DOMContentLoaded', function() {
             setupAutocomplete('OriginInput', 'OriginId', 'OriginSuggestions', 'OriginSpinner', 'OriginClear');

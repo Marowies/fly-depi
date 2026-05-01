@@ -32,6 +32,6 @@ namespace SkyScan.Core.Entities
 
         [Required]
         public Guid CityId { get; set; }
-        public City City { get; set; }
+        public City? City { get; set; }
     }
 }

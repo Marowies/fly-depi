@@ -21,7 +21,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -39,18 +39,22 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public Task UpdateAsync(T entity)
         {
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(T entity)
+        public Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
+            return Task.CompletedTask;
+        }
+
+        public async Task SaveAsync()
+        {
             await _context.SaveChangesAsync();
         }
     }

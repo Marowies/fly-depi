@@ -6,6 +6,14 @@ using SkyScan.Application.Mappings;
 using SkyScan.Presentation.Middlewares;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Data.Repositories_Implementations;
+<<<<<<< Updated upstream
+=======
+using Microsoft.AspNetCore.Identity;
+using SkyScan.Core.Entities;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using SkyScan.Application.Validators;
+>>>>>>> Stashed changes
 
 namespace SkyScan.Presentation
 {
@@ -27,6 +35,10 @@ namespace SkyScan.Presentation
             
             // Add AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+            // Add FluentValidation
+            builder.Services.AddFluentValidationAutoValidation();
+            builder.Services.AddValidatorsFromAssemblyContaining<FlightSearchRequestValidator>();
  
             // Register Repositories
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
