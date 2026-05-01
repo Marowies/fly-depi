@@ -1,8 +1,12 @@
-﻿@{
+@{
     ViewData["Title"] = "SkyScan";
+    Layout = "_Layout";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="flex flex-col items-center justify-center min-vh-100 bg-background">
+    <div class="text-center space-y-6">
+        <h1 class="text-5xl font-black tracking-tighter text-on-surface headline">Welcome to SkyScan</h1>
+        <p class="text-on-surface-variant text-lg max-w-lg mx-auto font-light">Experience the zenith of aviation. Curated itineraries for those who view the horizon not as a boundary, but as a beginning.</p>
+        <a asp-controller="Flight" asp-action="Index" class="inline-block bg-primary text-on-primary px-12 py-4 rounded-full font-bold uppercase tracking-widest hover:scale-105 transition-transform">Begin Journey</a>
+    </div>
 </div>

@@ -44,18 +44,12 @@ namespace SkyScan.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> Search(FlightSearchViewModel model)
         {
+            // Fetch cached cities for resolution
+            var allCities = await GetCachedAirportDropdownAsync();
+
             if (!ModelState.IsValid)
             {
-                // Debug: Log validation errors to console
-                foreach (var state in ModelState)
-                {
-                    foreach (var error in state.Value.Errors)
-                    {
-                        Console.WriteLine($"Property: {state.Key}, Error: {error.ErrorMessage}");
-                    }
-                }
-                
-                model.CitiesWithAirports = await GetCachedAirportDropdownAsync();
+                model.CitiesWithAirports = allCities;
                 return View("Index", model);
             }
 
@@ -67,25 +61,52 @@ namespace SkyScan.Presentation.Controllers
                 CabinClass = model.CabinClass
             };
 
+            // Helper to resolve string input to Guid
+            Guid? ResolveId(string? input)
+            {
+                if (string.IsNullOrEmpty(input)) return null;
+                if (Guid.TryParse(input, out var guid)) return guid;
+                
+                // Try to find by name in cache
+                var match = allCities.FirstOrDefault(c => 
+                    c.Text.Equals(input, StringComparison.OrdinalIgnoreCase) || 
+                    c.Text.Contains(input, StringComparison.OrdinalIgnoreCase));
+                
+                return match != null ? Guid.Parse(match.Value) : null;
+            }
+
+            Guid? finalOriginId = null;
+            Guid? finalDestId = null;
+
             if (model.TripType == TripType.MultiWay)
             {
                 searchRequest.Legs = model.MultiCityLegs
-                    .Where(l => !string.IsNullOrEmpty(l.OriginCity) && !string.IsNullOrEmpty(l.DestinationCity))
-                    .Select(l => new FlightLegDto
+                    .Select(l => new { Leg = l, OriginId = ResolveId(l.OriginCity), DestId = ResolveId(l.DestinationCity) })
+                    .Where(x => x.OriginId.HasValue && x.DestId.HasValue)
+                    .Select(x => new FlightLegDto
                     {
-                        OriginCityId = Guid.Parse(l.OriginCity!),
-                        DestinationCityId = Guid.Parse(l.DestinationCity!),
-                        DepartureDate = l.DepartureDate
+                        OriginCityId = x.OriginId!.Value,
+                        DestinationCityId = x.DestId!.Value,
+                        DepartureDate = x.Leg.DepartureDate
                     }).ToList();
+                
+                if (searchRequest.Legs.Any())
+                {
+                    finalOriginId = searchRequest.Legs.First().OriginCityId;
+                    finalDestId = searchRequest.Legs.First().DestinationCityId;
+                }
             }
             else
             {
-                if (!string.IsNullOrEmpty(model.OriginCity) && !string.IsNullOrEmpty(model.DestinationCity))
+                finalOriginId = ResolveId(model.OriginCity);
+                finalDestId = ResolveId(model.DestinationCity);
+
+                if (finalOriginId.HasValue && finalDestId.HasValue)
                 {
                     searchRequest.Legs.Add(new FlightLegDto
                     {
-                        OriginCityId = Guid.Parse(model.OriginCity),
-                        DestinationCityId = Guid.Parse(model.DestinationCity),
+                        OriginCityId = finalOriginId.Value,
+                        DestinationCityId = finalDestId.Value,
                         DepartureDate = model.DepartureDate
                     });
 
@@ -96,18 +117,18 @@ namespace SkyScan.Presentation.Controllers
                 }
             }
 
-            // If no legs were successfully parsed, redirect back
-            if (searchRequest.Legs.Count == 0)
+            // If no legs were successfully parsed, return with error
+            if (searchRequest.Legs.Count == 0 || !finalOriginId.HasValue || !finalDestId.HasValue)
             {
-                return RedirectToAction("Index");
+                ModelState.AddModelError("", "We couldn't recognize one of the cities. Please select from the suggestions.");
+                model.CitiesWithAirports = allCities;
+                return View("Index", model);
             }
 
-            // For now, redirect standard searches to Results page
-            // Multi-city results page can be implemented similarly
             return RedirectToAction("Results", new
             {
-                origin      = model.OriginCity,
-                destination = model.DestinationCity,
+                origin      = finalOriginId.Value.ToString(),
+                destination = finalDestId.Value.ToString(),
                 date        = model.DepartureDate.ToString("yyyy-MM-dd"),
                 tripType    = model.TripType.ToString()
             });

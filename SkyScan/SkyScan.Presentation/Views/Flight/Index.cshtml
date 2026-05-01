@@ -1,390 +1,286 @@
 @model SkyScan.Presentation.Models.FlightSearchViewModel
 @{
-    ViewData["Title"] = "Search Flights";
+    ViewData["Title"] = "SkyScan - Premium Flight Experience";
+    Layout = "_Layout";
 }
 
-<div class="mb-4">
-    <h2 class="mb-1 fw-bold text-primary">Flight Search</h2>
-    <p class="text-secondary mb-0">Strictly validated, high-performance itinerary comparison.</p>
-</div>
-
-<div class="mb-4">
-    <div class="btn-group" role="group" aria-label="Trip Type">
-        <input type="radio" class="btn-check" name="TripTypeRadio" id="OneWay" value="OneWay" checked onchange="handleTripTypeChange('OneWay')">
-        <label class="btn btn-outline" for="OneWay">One-way</label>
-
-        <input type="radio" class="btn-check" name="TripTypeRadio" id="RoundTrip" value="RoundTrip" onchange="handleTripTypeChange('RoundTrip')">
-        <label class="btn btn-outline" for="RoundTrip">Round-trip</label>
-
-        <input type="radio" class="btn-check" name="TripTypeRadio" id="MultiWay" value="MultiWay" onchange="handleTripTypeChange('MultiWay')">
-        <label class="btn btn-outline" for="MultiWay">Multi-city</label>
+<!-- Hero Canvas -->
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
+    <!-- Background Imagery with Dark Overlay -->
+    <div class="absolute inset-0 z-0">
+        <img class="w-full h-full object-cover" alt="ultra-luxury private jet cabin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvo3-nC_IOyG1LhxX6eREWDVtr017HJtBYfW7dGmMauwSsZCpZQKSIii0xBUz2PinJY810vxWxHOMZSP8WXxlf9Uq_I8dvqbR6TJHOek5S-IYW5-YADULfFUqMFaoiEhe7B1RCrLUSLlu4ZUVXoEL93hfIqgquw4S-eK4cbyFX7ZP-wMhnIo3hQoVDL9oCqyHdRwYnbM6EwulQEqezYBZop00qLNLFM9f4pWehMaXO7wa5fvJPP6fW_jUtuxoEciOrXO6YATxDIQ" />
+        <div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background"></div>
     </div>
-</div>
+    
+    <!-- Hero Content Section -->
+    <section class="relative z-10 w-full max-w-7xl px-8 flex flex-col items-start gap-12">
+        <div class="max-w-3xl">
+            <h1 class="font-headline text-5xl md:text-[80px] font-extrabold tracking-tighter text-on-surface leading-[1.0] mb-8">
+                SKYSCAN: WHERE TO <br /><span class="text-primary italic font-light opacity-90">NEXT?</span>
+            </h1>
+            <p class="text-on-surface-variant text-lg md:text-xl font-light max-w-xl leading-relaxed opacity-80">
+                Experience the zenith of aviation with SkyScan. Curated itineraries for those who view the horizon not as a boundary, but as a beginning.
+            </p>
+        </div>
 
-<form asp-action="Search" method="post" id="searchForm" novalidate>
-    <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
+        <!-- Floating Glassmorphism Search Engine -->
+        <form asp-controller="Flight" asp-action="Search" method="post" id="searchForm" class="w-full">
+            <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
+            
+            <div asp-validation-summary="ModelOnly" class="text-red-400 text-sm mb-4 font-bold bg-red-950/20 p-4 rounded-xl border border-red-500/20 backdrop-blur-md"></div>
 
-    <!-- Standard Search -->
-    <div id="StandardSearch" class="row g-3 mb-4">
-        <div class="col-md-5">
-            <label class="form-label small fw-bold text-secondary">Origin</label>
-            <div class="position-relative">
-                <input type="text" id="OriginInput" class="form-control autocomplete-input" placeholder="City or Airport" autocomplete="off" role="combobox" aria-expanded="false" required>
-                <input type="hidden" asp-for="OriginCity" id="OriginId">
-                <div class="input-spinner" id="OriginSpinner"></div>
-                <button type="button" class="clear-btn" id="OriginClear" aria-label="Clear origin" onclick="clearInput('Origin')">&times;</button>
-                <div class="suggestion-box" id="OriginSuggestions" role="listbox"></div>
-                <div class="invalid-feedback">Please select a valid airport from the list.</div>
+            <div class="w-full glass-panel rounded-2xl p-1 md:p-2 border border-outline-variant/10">
+                <!-- Standard Search (OneWay / RoundTrip) -->
+                <div id="StandardSearchFields" class="flex flex-col lg:flex-row items-stretch gap-1">
+                    <!-- Origin -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Origin</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+                            <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
+                        </div>
+                    </div>
+                    <!-- Destination -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
+                            <input asp-for="DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
+                        </div>
+                    </div>
+                    <!-- Departure -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                            <input asp-for="DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none text-light" />
+                        </div>
+                    </div>
+                    <!-- Return Date -->
+                    <div id="ReturnDateField" class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative" style="display: none;">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Return</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-tertiary text-xl">event_repeat</span>
+                            <input asp-for="ReturnDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none [color-scheme:dark]" />
+                        </div>
+                    </div>
+                    <!-- Cabin Class -->
+                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Cabin Class</label>
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-primary text-xl">star</span>
+                            <select asp-for="CabinClass" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full cursor-pointer appearance-none uppercase outline-none">
+                                <option value="first" class="bg-surface-container-high text-white">First Class</option>
+                                <option value="business" class="bg-surface-container-high text-white">Business</option>
+                                <option value="premium" class="bg-surface-container-high text-white">Premium</option>
+                                <option value="economy" class="bg-surface-container-high text-white">Economy</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <!-- CTA -->
+                    <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-12 py-6 lg:py-0 rounded-xl transition-all active:scale-[0.98]">
+                        Explore
+                    </button>
+                </div>
+
+                <!-- Multi-City Search -->
+                <div id="MultiCitySearchFields" class="p-4 space-y-4" style="display: none;">
+                    <div id="MultiCityLegsContainer" class="space-y-4">
+                        <!-- Legs will be added here -->
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <button type="button" onclick="addMultiCityLeg()" class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-lg">add_circle</span>
+                            Add Destination
+                        </button>
+                        <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-16 py-4 rounded-xl transition-all active:scale-[0.98]">
+                            Explore Journey
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Filter Chips -->
+            <div class="flex flex-wrap gap-4 mt-6 ml-2">
+                <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-white text-black px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all">One Way</button>
+                <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Round Trip</button>
+                <button type="button" onclick="setTripType('MultiWay')" id="btnMultiWay" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Multi-City</button>
+                <div class="flex items-center gap-2 ml-auto text-[#DAC76A] cursor-pointer hover:opacity-80 transition-opacity">
+                    <span class="material-symbols-outlined text-lg">auto_awesome</span>
+                    <span class="font-label text-[10px] uppercase tracking-widest font-bold">SkyScan VIP Concierge</span>
+                </div>
+            </div>
+            
+            <!-- City List Datalist -->
+            <datalist id="cityList">
+                @if (Model.CitiesWithAirports != null)
+                {
+                    foreach (var city in Model.CitiesWithAirports)
+                    {
+                        <option value="@city.Text"></option>
+                    }
+                }
+            </datalist>
+        </form>
+    </section>
+</main>
+
+<!-- Template for Multi-City Leg -->
+<template id="MultiCityLegTemplate">
+    <div class="multi-city-leg flex flex-col lg:flex-row items-stretch gap-1 animate-in fade-in slide-in-from-left-4 duration-500">
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Leg {index} Origin</label>
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+                <input name="MultiCityLegs[{index}].OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
             </div>
         </div>
-
-        <div class="col-md-2 d-flex align-items-end justify-content-center pb-1">
-            <button type="button" class="btn btn-outline p-2" onclick="swapDestinations()" aria-label="Swap origin and destination">
-                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-            </button>
-        </div>
-
-        <div class="col-md-5">
-            <label class="form-label small fw-bold text-secondary">Destination</label>
-            <div class="position-relative">
-                <input type="text" id="DestInput" class="form-control autocomplete-input" placeholder="City or Airport" autocomplete="off" role="combobox" aria-expanded="false" required>
-                <input type="hidden" asp-for="DestinationCity" id="DestId">
-                <div class="input-spinner" id="DestSpinner"></div>
-                <button type="button" class="clear-btn" id="DestClear" aria-label="Clear destination" onclick="clearInput('Dest')">&times;</button>
-                <div class="suggestion-box" id="DestSuggestions" role="listbox"></div>
-                <div class="invalid-feedback">Please select a valid airport from the list.</div>
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
+                <input name="MultiCityLegs[{index}].DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
             </div>
         </div>
-
-        <div class="col-md-3">
-            <label class="form-label small fw-bold text-secondary">Departure Date</label>
-            <input asp-for="DepartureDate" type="date" id="DepDate" class="form-control tabular-data" required min="@DateTime.Now.ToString("yyyy-MM-dd")" onchange="validateDates()" />
-            <div class="invalid-feedback" id="DepDateError">Invalid date.</div>
+        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
+            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
+                <input name="MultiCityLegs[{index}].DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none [color-scheme:dark]" required />
+            </div>
         </div>
-
-        <div class="col-md-3" id="ReturnDateCol" style="display:none;">
-            <label class="form-label small fw-bold text-secondary">Return Date</label>
-            <input asp-for="ReturnDate" type="date" id="RetDate" class="form-control tabular-data" min="@DateTime.Now.ToString("yyyy-MM-dd")" onchange="validateDates()" />
-            <div class="invalid-feedback">Date must be after departure.</div>
-        </div>
-        
-        <div class="col-md-3">
-            <label class="form-label small fw-bold text-secondary">Travelers</label>
-            <select asp-for="Adults" class="form-select">
-                <option value="1">1 Adult</option>
-                <option value="2">2 Adults</option>
-                <option value="3">3 Adults</option>
-                <option value="4">4 Adults</option>
-            </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label small fw-bold text-secondary">Cabin Class</label>
-            <select asp-for="CabinClass" class="form-select">
-                <option value="economy">Economy</option>
-                <option value="premium">Premium Economy</option>
-                <option value="business">Business Class</option>
-                <option value="first">First Class</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- Multi-city Search -->
-    <div id="MultiCitySearch" style="display:none;" class="mb-4">
-        <div id="MultiCityLegsContainer"></div>
-        <button type="button" class="btn btn-outline btn-sm mt-2" id="AddLegBtn" onclick="addMultiCityLeg()">
-            + Add another flight
+        <button type="button" onclick="removeMultiCityLeg(this)" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-6 rounded-xl transition-all">
+            <span class="material-symbols-outlined">delete</span>
         </button>
     </div>
+</template>
 
-    <div class="mt-4 pt-3 border-top">
-        <button type="submit" class="btn btn-primary px-5 py-2">
-            Search Flights
-        </button>
+<!-- Featured Curations (Bento Grid) -->
+<section class="bg-background py-32 px-8">
+    <div class="max-w-7xl mx-auto">
+        <header class="flex justify-between items-end mb-16">
+            <div class="space-y-2">
+                <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">SkyScan Curated</span>
+                <h2 class="font-headline text-4xl font-bold tracking-tight text-white">The Horizon Collection</h2>
+            </div>
+            <a class="font-label text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-all border-b border-white/10 pb-1" href="#">View All Destinations</a>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 h-auto md:h-[600px]">
+            <!-- Tokyo -->
+            <div class="md:col-span-7 group relative overflow-hidden rounded-2xl bg-surface-container-low shadow-2xl transition-all duration-700 border border-white/5">
+                <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Tokyo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrb19dtuO7CAKXUwjUlpTeTR4x6Y1ABKrvnkEFas2hIbnikxewmi6GULMGztdKanilwIrzN27rrYAWiM0WXJutHCewHfyZmfq-IiEL8w3VlJabHtZhxSXSTMdl5HrwY3rOzTLoDWW797z1S4r3BEz_tCLN9nM78cHJOBZF2ftgNey_m5-xgBJ3wIPQM8vpNYoD_FpxQmZYMdrMIt2zDzPq-XsT0_rjotLMslSYVVJwTGzTWzD_zGbo9t7hhNMPfGKqbaS2fxGTrQ" />
+                <div class="absolute inset-0 atmospheric-layer opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                <div class="absolute bottom-0 left-0 p-10 z-10">
+                    <span class="bg-tertiary text-[#211B00] px-3 py-1 rounded font-label text-[9px] uppercase font-bold tracking-widest mb-4 inline-block shadow-lg">New Opening</span>
+                    <h3 class="font-headline text-3xl font-bold mb-2 text-white">Tokyo Nocturne</h3>
+                    <p class="text-white/60 text-xs font-light max-w-sm">Experience the neon-soaked luxury of the Ginza District's newest private lounge.</p>
+                </div>
+            </div>
+
+            <!-- Swiss Alps & Dubai -->
+            <div class="md:col-span-5 flex flex-col gap-8">
+                <div class="flex-1 group relative overflow-hidden rounded-2xl bg-surface-container-low border border-white/5">
+                    <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB4BpL1Rp_v0LLqR9hOWUcIH1TMXWEQaf1smsv4N98Cx0hjqtXgUpY3Q94MClfuvaBzlNvu3S5R6R7ihhEMf8WCgBJXE49nndV13IBflOLiym-a0wM1zR2NtsOwCz3df-UQjsx0SMVuP46dyJhmXfSTCroA_M72ucYsQheExvQ1T1PdrD2naJXhoWELOUaKrhttHCKf1-AzGdCSZtZukNdFRDdGBxuvIyF8UYbc5lIXFedaNkxLoifEEPbniAs9dSqilrsreoGLQ" />
+                    <div class="absolute inset-0 atmospheric-layer opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8 z-10">
+                        <h3 class="font-headline text-xl font-bold text-white mb-1">Alpine Sanctuary</h3>
+                        <p class="text-white/40 text-[9px] uppercase tracking-widest">St. Moritz, Switzerland</p>
+                    </div>
+                </div>
+                <div class="flex-1 group relative overflow-hidden rounded-2xl bg-surface-container-low border border-white/5">
+                    <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Dubai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4TVeapnSBk381Ot3ATr1whVHFWv2cctTleGNd9fmKeTH181xMFPkbKMUWDzNfjXd4bO4EunMTiR7IDbhgIoX73puKrvddB73Fzn3wvNYqmHWVi__p6lwCEto_0CFlc9Us95YW8EuagLkc5Z6NmLkCjR849Z2_t-rwJLd0E9EiUOGoJZidTywTmOmP4vceUmh6UR85S4eiKvPr_k3iEQ6r8p0ThIDerEv4C6MWFWIPBtZBSatc1rfr7bqqBd74tZWISHSMxPrExA" />
+                    <div class="absolute inset-0 atmospheric-layer opacity-80"></div>
+                    <div class="absolute bottom-0 left-0 p-8 z-10">
+                        <h3 class="font-headline text-xl font-bold text-white mb-1">Desert Mirage</h3>
+                        <p class="text-white/40 text-[9px] uppercase tracking-widest">Dubai, UAE</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+</section>
+
+<!-- Luxury Stats -->
+<section class="bg-background py-24 px-8 border-t border-white/5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
+        <div class="text-center md:text-left space-y-2">
+            <div class="text-tertiary font-headline text-6xl font-extrabold tracking-tighter">98.4%</div>
+            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">SkyScan On-Time Arrival</div>
+        </div>
+        <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+        <div class="text-center md:text-left space-y-2">
+            <div class="text-white font-headline text-6xl font-extrabold tracking-tighter">150+</div>
+            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Global SkyScan Lounges</div>
+        </div>
+        <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+        <div class="text-center md:text-left space-y-2">
+            <div class="text-white font-headline text-6xl font-extrabold tracking-tighter">24/7</div>
+            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">SkyScan Concierge</div>
+        </div>
+    </div>
+</section>
 
 @section Scripts {
     <script>
-        // Mock data dictionary mapping CityName/IATA to Guid from _airportRepository.GetCityDropdownItemsAsync()
-        // In reality, this data should come from the /api/search/cities endpoint. We'll simulate it.
-        const mockAirports = @Html.Raw(Json.Serialize(Model.CitiesWithAirports));
-        
-        let multiCityLegCount = 0;
-        const MAX_LEGS = 5;
+        let multiCityCount = 0;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            setupAutocomplete('OriginInput', 'OriginId', 'OriginSuggestions', 'OriginSpinner', 'OriginClear');
-            setupAutocomplete('DestInput', 'DestId', 'DestSuggestions', 'DestSpinner', 'DestClear');
-            
-            addMultiCityLeg();
-            addMultiCityLeg();
-
-            document.getElementById('searchForm').addEventListener('submit', function(e) {
-                if (!validateForm()) {
-                    e.preventDefault();
-                }
-            });
-        });
-
-        function handleTripTypeChange(type) {
+        function setTripType(type) {
             document.getElementById('TripTypeHidden').value = type;
-            const standardSearch = document.getElementById('StandardSearch');
-            const multiCitySearch = document.getElementById('MultiCitySearch');
-            const returnDateCol = document.getElementById('ReturnDateCol');
+            const buttons = document.querySelectorAll('.trip-type-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-white', 'text-black');
+                btn.classList.add('bg-white/10', 'text-white/40');
+            });
+            const selectedBtn = document.getElementById('btn' + type);
+            if (selectedBtn) {
+                selectedBtn.classList.remove('bg-white/10', 'text-white/40');
+                selectedBtn.classList.add('bg-white', 'text-black');
+            }
+
+            // Toggle Search Fields
+            const standardFields = document.getElementById('StandardSearchFields');
+            const multiCityFields = document.getElementById('MultiCitySearchFields');
+            const returnField = document.getElementById('ReturnDateField');
 
             if (type === 'MultiWay') {
-                standardSearch.style.display = 'none';
-                multiCitySearch.style.display = 'block';
+                standardFields.style.display = 'none';
+                multiCityFields.style.display = 'block';
+                if (multiCityCount === 0) {
+                    addMultiCityLeg();
+                    addMultiCityLeg();
+                }
             } else {
-                standardSearch.style.display = 'flex';
-                multiCitySearch.style.display = 'none';
-                returnDateCol.style.display = (type === 'RoundTrip') ? 'block' : 'none';
+                standardFields.style.display = 'flex';
+                multiCityFields.style.display = 'none';
+                returnField.style.display = (type === 'RoundTrip') ? 'block' : 'none';
             }
         }
 
         function addMultiCityLeg() {
-            if (multiCityLegCount >= MAX_LEGS) return;
             const container = document.getElementById('MultiCityLegsContainer');
-            const index = multiCityLegCount++;
+            const template = document.getElementById('MultiCityLegTemplate').innerHTML;
+            const legHtml = template.replace(/{index}/g, multiCityCount);
             
-            const today = new Date().toISOString().split('T')[0];
-            const legHtml = `
-                <div class="row g-2 mb-3 align-items-end multi-leg" id="Leg_${index}">
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-secondary">Origin</label>
-                        <div class="position-relative">
-                            <input type="text" id="MC_Origin_${index}_Input" class="form-control autocomplete-input" placeholder="City or Airport" required>
-                            <input type="hidden" name="MultiCityLegs[${index}].OriginCity" id="MC_Origin_${index}_Id">
-                            <div class="input-spinner" id="MC_Origin_${index}_Spinner"></div>
-                            <button type="button" class="clear-btn" id="MC_Origin_${index}_Clear" onclick="clearInput('MC_Origin_${index}')">&times;</button>
-                            <div class="suggestion-box" id="MC_Origin_${index}_Suggestions"></div>
-                            <div class="invalid-feedback">Select valid airport.</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-secondary">Destination</label>
-                        <div class="position-relative">
-                            <input type="text" id="MC_Dest_${index}_Input" class="form-control autocomplete-input" placeholder="City or Airport" required>
-                            <input type="hidden" name="MultiCityLegs[${index}].DestinationCity" id="MC_Dest_${index}_Id">
-                            <div class="input-spinner" id="MC_Dest_${index}_Spinner"></div>
-                            <button type="button" class="clear-btn" id="MC_Dest_${index}_Clear" onclick="clearInput('MC_Dest_${index}')">&times;</button>
-                            <div class="suggestion-box" id="MC_Dest_${index}_Suggestions"></div>
-                            <div class="invalid-feedback">Select valid airport.</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small fw-bold text-secondary">Date</label>
-                        <input type="date" name="MultiCityLegs[${index}].DepartureDate" id="MC_Date_${index}" class="form-control tabular-data mc-date" value="${today}" min="${today}" onchange="validateDates()" required>
-                        <div class="invalid-feedback">Date must be after previous leg.</div>
-                    </div>
-                    <div class="col-md-1">
-                        ${index > 1 ? `<button type="button" class="btn btn-outline text-danger w-100" onclick="removeLeg(${index})">&times;</button>` : ''}
-                    </div>
-                </div>
-            `;
-            container.insertAdjacentHTML('beforeend', legHtml);
-            
-            setupAutocomplete(`MC_Origin_${index}_Input`, `MC_Origin_${index}_Id`, `MC_Origin_${index}_Suggestions`, `MC_Origin_${index}_Spinner`, `MC_Origin_${index}_Clear`);
-            setupAutocomplete(`MC_Dest_${index}_Input`, `MC_Dest_${index}_Id`, `MC_Dest_${index}_Suggestions`, `MC_Dest_${index}_Spinner`, `MC_Dest_${index}_Clear`);
-
-            document.getElementById('AddLegBtn').disabled = (multiCityLegCount >= MAX_LEGS);
+            const div = document.createElement('div');
+            div.innerHTML = legHtml;
+            container.appendChild(div.firstElementChild);
+            multiCityCount++;
         }
 
-        function removeLeg(index) {
-            document.getElementById(`Leg_${index}`).remove();
-            multiCityLegCount--;
-            document.getElementById('AddLegBtn').disabled = false;
-            validateDates();
-        }
-
-        // Simulating the backend Trie autocomplete
-        function setupAutocomplete(inputId, hiddenId, boxId, spinnerId, clearId) {
-            const input = document.getElementById(inputId);
-            const hidden = document.getElementById(hiddenId);
-            const box = document.getElementById(boxId);
-            const spinner = document.getElementById(spinnerId);
-            const clearBtn = document.getElementById(clearId);
-            let timeout = null;
-
-            input.addEventListener('input', function() {
-                const query = this.value.toLowerCase();
-                clearBtn.style.display = query.length > 0 ? 'block' : 'none';
-                
-                // Reset hidden ID immediately when arbitrary typing occurs
-                hidden.value = '';
-                input.classList.remove('is-invalid');
-
-                clearTimeout(timeout);
-                if (query.length < 2) { 
-                    box.style.display = 'none'; 
-                    spinner.style.display = 'none';
-                    return; 
-                }
-
-                spinner.style.display = 'block';
-
-                timeout = setTimeout(() => {
-                    // Simulate sub-100ms API call
-                    const results = mockAirports.filter(a => a.text.toLowerCase().includes(query)).slice(0, 8);
-                    
-                    if (results.length > 0) {
-                        box.innerHTML = results.map((item, idx) => `
-                            <div class="suggestion-item" role="option" id="${inputId}-opt-${idx}" onclick="selectCity('${inputId}', '${hiddenId}', '${boxId}', '${item.value}', '${item.text}')">
-                                <div>
-                                    <span class="fw-bold">${item.text}</span>
-                                </div>
-                            </div>
-                        `).join('');
-                        box.style.display = 'block';
-                        input.setAttribute('aria-expanded', 'true');
-                    } else { 
-                        box.style.display = 'none'; 
-                        input.setAttribute('aria-expanded', 'false');
-                    }
-                    spinner.style.display = 'none';
-                }, 80); // <100ms
-            });
-
-            // Handle Blur with arbitrary text check
-            input.addEventListener('blur', () => { 
-                setTimeout(() => { 
-                    box.style.display = 'none'; 
-                    input.setAttribute('aria-expanded', 'false');
-                    
-                    // Strict validation: if input has text but no hidden ID is set, it's invalid arbitrary text
-                    if (input.value.trim().length > 0 && !hidden.value) {
-                        input.classList.add('is-invalid');
-                    } else {
-                        input.classList.remove('is-invalid');
-                    }
-                }, 200); 
-            });
-
-            // Keyboard navigation
-            input.addEventListener('keydown', function(e) {
-                const items = box.querySelectorAll('.suggestion-item');
-                if (items.length === 0 || box.style.display === 'none') return;
-                
-                let active = box.querySelector('.active');
-                let activeIdx = Array.from(items).indexOf(active);
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    if (active) active.classList.remove('active');
-                    activeIdx = (activeIdx + 1) % items.length;
-                    items[activeIdx].classList.add('active');
-                    input.setAttribute('aria-activedescendant', items[activeIdx].id);
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    if (active) active.classList.remove('active');
-                    activeIdx = (activeIdx - 1 + items.length) % items.length;
-                    items[activeIdx].classList.add('active');
-                    input.setAttribute('aria-activedescendant', items[activeIdx].id);
-                } else if (e.key === 'Enter') {
-                    e.preventDefault();
-                    if (active) {
-                        active.click();
-                    }
-                } else if (e.key === 'Escape') {
-                    box.style.display = 'none';
-                }
-            });
-        }
-
-        window.selectCity = function(inputId, hiddenId, boxId, cityId, cityName) {
-            const input = document.getElementById(inputId);
-            input.value = cityName;
-            document.getElementById(hiddenId).value = cityId;
-            document.getElementById(boxId).style.display = 'none';
-            input.classList.remove('is-invalid');
-            input.setAttribute('aria-expanded', 'false');
-        }
-
-        window.clearInput = function(prefix) {
-            document.getElementById(`${prefix}Input`).value = '';
-            document.getElementById(`${prefix}Id`).value = '';
-            document.getElementById(`${prefix}Input`).classList.remove('is-invalid');
-            document.getElementById(`${prefix}Clear`).style.display = 'none';
-            document.getElementById(`${prefix}Input`).focus();
-        }
-
-        function swapDestinations() {
-            const originInput = document.getElementById('OriginInput');
-            const originId = document.getElementById('OriginId');
-            const destInput = document.getElementById('DestInput');
-            const destId = document.getElementById('DestId');
-
-            const tempName = originInput.value; const tempId = originId.value;
-            originInput.value = destInput.value; originId.value = destId.value;
-            destInput.value = tempName; destId.value = tempId;
-            
-            // Re-validate if needed
-            if (originInput.value && !originId.value) originInput.classList.add('is-invalid');
-            else originInput.classList.remove('is-invalid');
-
-            if (destInput.value && !destId.value) destInput.classList.add('is-invalid');
-            else destInput.classList.remove('is-invalid');
-        }
-
-        function validateDates() {
-            let isValid = true;
-            const tripType = document.getElementById('TripTypeHidden').value;
-
-            if (tripType === 'RoundTrip') {
-                const dep = new Date(document.getElementById('DepDate').value);
-                const retInput = document.getElementById('RetDate');
-                const ret = new Date(retInput.value);
-
-                if (retInput.value && ret < dep) {
-                    retInput.classList.add('is-invalid');
-                    isValid = false;
-                } else {
-                    retInput.classList.remove('is-invalid');
-                }
-            } else if (tripType === 'MultiWay') {
-                const dates = Array.from(document.querySelectorAll('.mc-date'));
-                let prevDate = null;
-                
-                dates.forEach(input => {
-                    const current = new Date(input.value);
-                    if (prevDate && current < prevDate) {
-                        input.classList.add('is-invalid');
-                        isValid = false;
-                    } else {
-                        input.classList.remove('is-invalid');
-                    }
-                    if (input.value) prevDate = current;
-                });
-            }
-            return isValid;
-        }
-
-        function validateForm() {
-            let isValid = true;
-            const tripType = document.getElementById('TripTypeHidden').value;
-
-            if (tripType !== 'MultiWay') {
-                const originId = document.getElementById('OriginId').value;
-                const destId = document.getElementById('DestId').value;
-                
-                if (!originId) { document.getElementById('OriginInput').classList.add('is-invalid'); isValid = false; }
-                if (!destId) { document.getElementById('DestInput').classList.add('is-invalid'); isValid = false; }
+        function removeMultiCityLeg(btn) {
+            if (document.querySelectorAll('.multi-city-leg').length > 2) {
+                btn.closest('.multi-city-leg').remove();
             } else {
-                const inputs = document.querySelectorAll('#MultiCityLegsContainer .autocomplete-input');
-                const hiddens = document.querySelectorAll('#MultiCityLegsContainer input[type="hidden"]');
-                
-                for(let i=0; i<inputs.length; i++) {
-                    if (!hiddens[i].value) {
-                        inputs[i].classList.add('is-invalid');
-                        isValid = false;
-                    }
-                }
+                alert('SkyScan Premium: Minimum 2 legs required for Multi-City itineraries.');
             }
-
-            if (!validateDates()) isValid = false;
-
-            return isValid;
         }
+        
+        // Check TripType from Model on load
+        window.addEventListener('load', () => {
+            const initialType = "@Model.TripType";
+            setTripType(initialType);
+        });
     </script>
 }

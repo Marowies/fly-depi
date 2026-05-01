@@ -6,6 +6,8 @@ using SkyScan.Application.Mappings;
 using SkyScan.Presentation.Middlewares;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Data.Repositories_Implementations;
+using Microsoft.AspNetCore.Identity;
+using SkyScan.Core.Entities;
 
 namespace SkyScan.Presentation
 {
@@ -27,6 +29,18 @@ namespace SkyScan.Presentation
             
             // Add AutoMapper
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+ 
+            // Add Identity
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
+                .AddEntityFrameworkStores<SkyScanDbContext>()
+                .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
  
             // Register Repositories
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -59,31 +73,13 @@ namespace SkyScan.Presentation
                 await searchService.InitializeAsync();
             }
 
-            // Seed Data Integration
-            // using (var scope = app.Services.CreateScope())
-            // {
-            //     try
-            //     {
-            //         var parentDir = Directory.GetParent(builder.Environment.ContentRootPath)?.FullName ?? builder.Environment.ContentRootPath;
-            //         var basePath = Path.Combine(parentDir, "Datasets", "Cleaned");
-            //         await SkyScan.Infrastructure.Data.Seeding.DataSeeder.SeedDataAsync(scope.ServiceProvider, basePath);
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-            //         logger.LogError(ex, "An error occurred while seeding datasets.");
-            //     }
-            // }
-
             // Configure the HTTP request pipeline.
             // 1. Add our Global Exception Handler at the very start of the pipeline
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
             if (!app.Environment.IsDevelopment())
             {
-                // In production, we can also use the default error handler as a fallback
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -92,11 +88,12 @@ namespace SkyScan.Presentation
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Flight}/{action=Index}/{id?}");
 
             app.Run();
         }

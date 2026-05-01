@@ -1,28 +1,39 @@
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
-using SkyScan.Infrastructure.Data.Data_Sources;
 using System.Threading.Tasks;
 
 namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 {
-    public class UserRepository : GenericRepository<User>, IUserRepository
+    public class UserRepository : IUserRepository
     {
-        public UserRepository(SkyScanDbContext context) : base(context)
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public UserRepository(UserManager<User> userManager, SignInManager<User> signInManager)
         {
+            _userManager = userManager;
+            _signInManager = signInManager;
+        }
+
+        public async Task<IdentityResult> RegisterUserAsync(User user, string password)
+        {
+            return await _userManager.CreateAsync(user, password);
+        }
+
+        public async Task<SignInResult> LoginUserAsync(string email, string password, bool rememberMe)
+        {
+            return await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+        }
+
+        public async Task LogoutUserAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
         {
-            return await _dbSet
-                .Include(u => u.Searches)
-                .Include(u => u.PriceAlerts)
-                .FirstOrDefaultAsync(u => u.Email == email);
-        }
-
-        public async Task<bool> UserExistsAsync(string email)
-        {
-            return await _dbSet.AnyAsync(u => u.Email == email);
+            return await _userManager.FindByEmailAsync(email);
         }
     }
 }

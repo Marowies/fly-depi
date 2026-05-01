@@ -1,189 +1,199 @@
 @model SkyScan.Presentation.Models.FlightResultsViewModel
 @{
-    ViewData["Title"] = "Flight Results";
+    ViewData["Title"] = "Search Results";
+    Layout = "_Layout";
 }
 
-<div class="mb-4">
-    <div class="d-flex justify-content-between align-items-center">
-        <div>
-            <h3 class="mb-0 fw-bold text-primary">
-                @Model.OriginCity 
-                <span class="text-secondary mx-2">→</span> 
-                @Model.DestinationCity 
-            </h3>
-            <p class="text-secondary mb-0">@Model.Flights.Count() flights found for @Model.DepartureDate.ToLongDateString()</p>
-        </div>
-        <div>
-            <div class="btn-group" role="group">
-                <input type="radio" class="btn-check" name="SortByRadio" id="SortCheapest" autocomplete="off" onchange="sortFlights('Cheapest')" checked>
-                <label class="btn btn-outline btn-sm" for="SortCheapest">Cheapest</label>
-
-                <input type="radio" class="btn-check" name="SortByRadio" id="SortFastest" autocomplete="off" onchange="sortFlights('Fastest')">
-                <label class="btn btn-outline btn-sm" for="SortFastest">Fastest</label>
-
-                <input type="radio" class="btn-check" name="SortByRadio" id="SortBest" autocomplete="off" onchange="sortFlights('Best')">
-                <label class="btn btn-outline btn-sm" for="SortBest">Best</label>
+<main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
+        <!-- Filter Sidebar -->
+        <aside class="w-full lg:w-72 flex-shrink-0 space-y-12">
+            <div class="bg-surface-variant/40 backdrop-blur-2xl p-8 rounded-xl border border-white/5">
+                <h2 class="font-headline text-[11px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-8">Refine Journey</h2>
+                <div class="space-y-10">
+                    <!-- Stops Filter -->
+                    <div>
+                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Stops</label>
+                        <div class="flex flex-col gap-3">
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="hidden filter-checkbox" value="0" checked onchange="applyFilters()" />
+                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
+                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                </div>
+                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">Non-stop Only</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="hidden filter-checkbox" value="1" checked onchange="applyFilters()" />
+                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
+                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                </div>
+                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">Up to 1 Stop</span>
+                            </label>
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" class="hidden filter-checkbox" value="2" checked onchange="applyFilters()" />
+                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
+                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                </div>
+                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">2+ Stops</span>
+                            </label>
+                        </div>
+                    </div>
+                    <!-- Airlines Filter -->
+                    <div>
+                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Airlines</label>
+                        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary">
+                            @foreach (var airline in Model.UniqueAirlines)
+                            {
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <input type="checkbox" class="hidden airline-checkbox" value="@airline" checked onchange="applyFilters()" />
+                                    <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
+                                        <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                    </div>
+                                    <span class="text-[11px] text-on-surface-variant group-hover:text-on-surface transition-colors truncate">@airline</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <!-- Price Range -->
+                    <div>
+                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Max Price</label>
+                        <input type="range" class="w-full accent-primary bg-white/10 h-1 rounded-lg cursor-pointer" 
+                               id="priceSlider" 
+                               min="@Math.Floor(Model.MinPrice)" 
+                               max="@Math.Ceiling(Model.MaxPrice)" 
+                               value="@Math.Ceiling(Model.MaxPrice)"
+                               oninput="updatePriceLabel(this.value)" />
+                        <div class="flex justify-between mt-4">
+                            <span class="text-[10px] font-bold text-on-surface-variant">$@Math.Floor(Model.MinPrice)</span>
+                            <span class="text-[10px] font-bold text-primary" id="priceLabel">$@Math.Ceiling(Model.MaxPrice)</span>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full py-2 text-[9px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors border border-white/10 rounded-lg" onclick="resetFilters()">Reset Filters</button>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Sidebar Filters -->
-    <div class="col-md-3">
-        <div class="card-surface p-4 sticky-top" style="top: 20px;">
-            <h5 class="fw-bold mb-4 border-bottom pb-2 text-primary">Filter Results</h5>
             
-            <!-- Stops Filter -->
-            <fieldset class="mb-4">
-                <legend class="form-label small text-uppercase text-secondary fw-bold fs-6">Stops</legend>
-                <div class="form-check">
-                    <input class="form-check-input filter-checkbox" type="checkbox" value="0" id="stop0" checked>
-                    <label class="form-check-label" for="stop0">Non-stop</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input filter-checkbox" type="checkbox" value="1" id="stop1" checked>
-                    <label class="form-check-label" for="stop1">1 Stop</label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input filter-checkbox" type="checkbox" value="2" id="stop2" checked>
-                    <label class="form-check-label" for="stop2">2+ Stops</label>
-                </div>
-            </fieldset>
-
-            <!-- Price Range Filter -->
-            <div class="mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <label class="form-label small text-uppercase text-secondary fw-bold mb-0" for="priceSlider">Max Price</label>
-                    <span class="text-primary fw-bold price" id="priceLabel">$@Math.Ceiling(Model.MaxPrice)</span>
-                </div>
-                <input type="range" class="form-range" id="priceSlider" 
-                       min="@Math.Floor(Model.MinPrice)" 
-                       max="@Math.Ceiling(Model.MaxPrice)" 
-                       value="@Math.Ceiling(Model.MaxPrice)"
-                       aria-valuenow="@Math.Ceiling(Model.MaxPrice)"
-                       aria-valuemin="@Math.Floor(Model.MinPrice)"
-                       aria-valuemax="@Math.Ceiling(Model.MaxPrice)"
-                       aria-label="Filter by maximum price">
-                <div class="d-flex justify-content-between small text-secondary price">
-                    <span>$@Math.Floor(Model.MinPrice)</span>
-                    <span>$@Math.Ceiling(Model.MaxPrice)</span>
+            <div class="p-8 rounded-xl bg-gradient-to-br from-surface-container-high to-surface-container-low border border-white/5 relative overflow-hidden group">
+                <img class="absolute inset-0 object-cover opacity-20 transition-transform duration-700 group-hover:scale-110" alt="luxury private jet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADowYKZzfpaN69Ljt3K4Cv-EK83EDY2qO_SuZ3WfP2zzuIXfyH1f0f8qTqRNrdeRS8tdsUV54nFq6BG6PHeyEaqW-Dzm-qnYFY8IYeuGgFjX33GX6mlGzSp7enC3zMXko7ol_W3tk257SQDoyBZnRZCm7XSG_y6_PuZLG6VrQbpHYLU4HnVzptFsYI2y6W4DLJzUWcQ7y071U9cvV-HCw4TmhINlu0k54yBk85_rrnMy-m3z0db2xxeZnXSG-me83v9MgWAR90eA" />
+                <div class="relative z-10">
+                    <span class="text-tertiary font-headline text-[9px] font-extrabold uppercase tracking-[.3em]">Celestial Plus</span>
+                    <h3 class="text-xl font-headline font-bold text-slate-200 mt-2 mb-4 leading-tight">Upgrade to Private Access</h3>
+                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Skip the terminals. Enjoy direct apron transfers and private lounge access across 40 global hubs.</p>
+                    <button class="text-[10px] font-bold uppercase tracking-widest text-tertiary border-b border-tertiary/30 pb-1">Learn More</button>
                 </div>
             </div>
+        </aside>
 
-            <!-- Airlines Filter -->
-            <fieldset class="mb-4">
-                <legend class="form-label small text-uppercase text-secondary fw-bold fs-6">Airlines</legend>
-                @foreach (var airline in Model.UniqueAirlines)
+        <!-- Results Content -->
+        <div class="flex-1 space-y-8">
+            <header class="flex justify-between items-end pb-4 border-b border-white/5">
+                <div>
+                    <span class="text-[10px] tracking-[0.3em] font-bold text-primary uppercase">Select your path</span>
+                    <h1 class="text-4xl font-headline font-extrabold text-slate-200 mt-2 tracking-tight">@Model.OriginCity to @Model.DestinationCity</h1>
+                    <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-widest">@Model.DepartureDate.ToString("MMMM dd, yyyy")</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-[10px] tracking-widest text-slate-500 uppercase">@Model.Flights.Count() Results Found</span>
+                </div>
+            </header>
+
+            <div id="FlightResultsContainer" class="space-y-6">
+                @foreach (var flight in Model.Flights)
                 {
-                    <div class="form-check">
-                        <input class="form-check-input airline-checkbox" type="checkbox" value="@airline" id="air_@airline.Replace(" ", "")" checked>
-                        <label class="form-check-label text-truncate w-100" for="air_@airline.Replace(" ", "")">@airline</label>
+                    <div class="flight-card group bg-surface-container-low hover:bg-surface-container-high transition-all duration-500 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-slate-950/50 border border-white/5"
+                         data-price="@flight.Price"
+                         data-stops="@flight.Stops"
+                         data-airline="@flight.AirlineName">
+                        <div class="flex flex-col md:flex-row items-stretch">
+                            <!-- Left Info -->
+                            <div class="flex-1 p-8 md:p-10">
+                                <div class="flex justify-between items-start mb-10">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-slate-200/5 rounded-full flex items-center justify-center border border-white/5">
+                                            <span class="material-symbols-outlined text-slate-400">flight_takeoff</span>
+                                        </div>
+                                        <div>
+                                            <span class="text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.AirlineName</span>
+                                            <p class="text-[11px] text-slate-400 font-medium">@flight.AirlineName.Substring(0, 2).ToUpper() @(new Random().Next(100, 999)) • Modern Fleet</p>
+                                        </div>
+                                    </div>
+                                    @if (flight.Stops == 0)
+                                    {
+                                        <div class="px-3 py-1 bg-tertiary/10 border border-tertiary/20 rounded-full">
+                                            <span class="text-[9px] font-bold text-tertiary uppercase tracking-wider">Fastest Route</span>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="flex items-center justify-between relative">
+                                    <div class="text-center md:text-left z-10">
+                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.DepartureTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.OriginAirport</span>
+                                    </div>
+                                    <!-- Flight Path Decoration -->
+                                    <div class="flex-1 px-8 relative">
+                                        <div class="h-[1px] w-full bg-slate-700/50 relative">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+                                            <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-slate-700"></div>
+                                            <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-tertiary"></div>
+                                            <!-- Plane Icon -->
+                                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-low group-hover:bg-surface-container-high transition-colors px-3">
+                                                <span class="material-symbols-outlined text-sm text-slate-500 rotate-90">flight</span>
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 text-center">
+                                            <span class="text-[9px] uppercase tracking-widest text-slate-500 font-medium">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m • @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} Stop{(flight.Stops > 1 ? "s" : "")}")</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center md:text-right z-10">
+                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.ArrivalTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.DestinationAirport</span>
+                                        @if (flight.ArrivalTime.Date > flight.DepartureTime.Date)
+                                        {
+                                            <p class="text-[9px] text-tertiary mt-1">+1 Day</p>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Right Actions -->
+                            <div class="w-full md:w-64 bg-surface-container-high p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Celestial Selection</span>
+                                <div class="flex items-baseline gap-1 mb-8">
+                                    <span class="text-[11px] font-bold text-slate-400">$</span>
+                                    <span class="text-4xl font-headline font-extrabold text-tertiary tracking-tighter">@flight.Price.ToString("N0")</span>
+                                </div>
+                                <a href="@flight.RedirectURL" class="w-full py-4 bg-primary text-on-primary rounded-xl text-xs font-extrabold uppercase text-center tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-300">Reserve Seat</a>
+                                <button class="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-tertiary transition-colors">Journey Details</button>
+                            </div>
+                        </div>
                     </div>
                 }
-            </fieldset>
-            
-            <button class="btn btn-outline w-100 btn-sm text-secondary" onclick="resetFilters()">Reset Filters</button>
-        </div>
-    </div>
 
-    <!-- Main Results List -->
-    <div class="col-md-9">
-        <div id="FlightResultsContainer">
-            @foreach (var flight in Model.Flights)
-            {
-                <div class="card-surface mb-3 p-3 flight-card" 
-                     data-price="@flight.Price" 
-                     data-stops="@flight.Stops" 
-                     data-airline="@flight.AirlineName"
-                     data-duration="@flight.Duration.TotalMinutes"
-                     data-score="@( ((double)flight.Price * 0.6) + (flight.Duration.TotalMinutes * 0.4) )">
-                    
-                    <!-- Top row: Airline & Badge -->
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 24px; height: 24px; font-size: 10px; font-weight:bold;">
-                                @flight.AirlineName.Substring(0, 1)
-                            </div>
-                            <span class="small fw-bold text-secondary">@flight.AirlineName</span>
-                        </div>
-                        <div class="best-badge-container d-none">
-                            <span class="badge-best">Best Value</span>
-                        </div>
-                    </div>
-
-                    <!-- Main Data Row -->
-                    <div class="row align-items-center">
-                        <!-- Times -->
-                        <div class="col-md-3">
-                            <div class="fs-5 fw-bold time text-primary">@flight.DepartureTime.ToString("HH:mm") <span class="text-secondary small">→</span> @flight.ArrivalTime.ToString("HH:mm")</div>
-                            <div class="small text-secondary iata-code">@flight.OriginAirport — @flight.DestinationAirport</div>
-                        </div>
-                        
-                        <!-- Duration & Stops -->
-                        <div class="col-md-3 text-center">
-                            <div class="small fw-bold duration">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m</div>
-                            <div class="small text-secondary">
-                                @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} stop{(flight.Stops > 1 ? "s" : "")}")
-                            </div>
-                        </div>
-
-                        <!-- Price & Action -->
-                        <div class="col-md-6 d-flex justify-content-end align-items-center">
-                            <div class="text-end me-4">
-                                <div class="fs-4 fw-bold price text-primary">$@flight.Price.ToString("N0")</div>
-                                <div class="small text-secondary">Round trip per traveler</div>
-                            </div>
-                            <a href="@flight.RedirectURL" class="btn btn-primary px-4">Select</a>
-                        </div>
-                    </div>
+                <div id="NoResultsMessage" class="bg-surface-container-low p-20 rounded-xl text-center border border-dashed border-white/10" style="display:none;">
+                    <span class="material-symbols-outlined text-4xl text-slate-700 mb-4">search_off</span>
+                    <h5 class="text-slate-200 font-headline font-bold text-xl mb-2">No Paths Found</h5>
+                    <p class="text-slate-500 text-sm mb-8">Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.</p>
+                    <button class="text-primary font-bold uppercase tracking-widest text-xs" onclick="resetFilters()">Reset All Filters</button>
                 </div>
-            }
-            
-            <div id="NoResultsMessage" class="card-surface p-5 text-center" style="display:none;">
-                <h5 class="text-danger fw-bold">No flights match these filters</h5>
-                <p class="text-secondary">Try adjusting your range or airline preferences.</p>
-                <button class="btn btn-outline" onclick="resetFilters()">Clear all filters</button>
+            </div>
+
+            <!-- Load More Asymmetric Pattern -->
+            <div class="pt-12 flex justify-center">
+                <button class="group flex flex-col items-center gap-4">
+                    <div class="w-px h-16 bg-gradient-to-b from-slate-700 to-transparent"></div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500 group-hover:text-primary transition-colors">View More Journeys</span>
+                    <span class="material-symbols-outlined text-slate-700 group-hover:text-primary transition-colors animate-bounce">expand_more</span>
+                </button>
             </div>
         </div>
     </div>
-</div>
+</main>
 
 @section Scripts {
     <script>
-        let filterTimeout = null;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const priceSlider = document.getElementById('priceSlider');
-            const priceLabel = document.getElementById('priceLabel');
-            
-            // Initial sort to highlight best if chosen
-            sortFlights('Cheapest');
-
-            const applySimulatedDelay = () => {
-                const container = document.getElementById('FlightResultsContainer');
-                const cards = container.querySelectorAll('.flight-card');
-                
-                // Skeleton state
-                cards.forEach(c => { if(c.style.display !== 'none') c.classList.add('skeleton'); c.style.opacity = '0.5'; });
-                
-                clearTimeout(filterTimeout);
-                filterTimeout = setTimeout(() => {
-                    applyFilters();
-                    cards.forEach(c => { c.classList.remove('skeleton'); c.style.opacity = '1'; });
-                }, 80); // <100ms simulated backend filter
-            };
-
-            priceSlider.addEventListener('input', function() {
-                priceLabel.textContent = `$${this.value}`;
-                this.setAttribute('aria-valuenow', this.value);
-                applySimulatedDelay();
-            });
-
-            document.querySelectorAll('.filter-checkbox, .airline-checkbox').forEach(cb => {
-                cb.addEventListener('change', applySimulatedDelay);
-            });
-        });
+        function updatePriceLabel(val) {
+            document.getElementById('priceLabel').textContent = `$${val}`;
+            applyFilters();
+        }
 
         function applyFilters() {
             const maxPrice = parseFloat(document.getElementById('priceSlider').value);
@@ -202,11 +212,28 @@
                 const stopsMatch = allowedStops.includes(stops >= 2 ? 2 : stops);
                 const airlineMatch = allowedAirlines.includes(airline);
                 
+                // Update checkbox UI
+                const checkbox = card.closest('label')?.querySelector('.checkbox-inner');
+                // Wait, these checkboxes are in the sidebar, not the cards.
+                
                 if (priceMatch && stopsMatch && airlineMatch) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
                     card.style.display = 'none';
+                }
+            });
+
+            // Update checkbox visual states
+            document.querySelectorAll('.filter-checkbox, .airline-checkbox').forEach(cb => {
+                const box = cb.nextElementSibling;
+                const inner = box.querySelector('.checkbox-inner');
+                if (cb.checked) {
+                    inner.style.transform = 'scale(1)';
+                    box.style.borderColor = '#bfc5e4'; // primary
+                } else {
+                    inner.style.transform = 'scale(0)';
+                    box.style.borderColor = '#46464d'; // outline-variant
                 }
             });
 
@@ -217,44 +244,32 @@
             const slider = document.getElementById('priceSlider');
             slider.value = slider.max;
             document.getElementById('priceLabel').textContent = `$${slider.max}`;
-            slider.setAttribute('aria-valuenow', slider.max);
             
-            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+            document.querySelectorAll('.filter-checkbox, .airline-checkbox').forEach(cb => cb.checked = true);
             
-            // Re-apply immediately
             applyFilters();
         }
 
-        function sortFlights(option) {
-            const container = document.getElementById('FlightResultsContainer');
-            const cards = Array.from(container.querySelectorAll('.flight-card'));
-            const noResults = document.getElementById('NoResultsMessage');
-            
-            cards.forEach(c => {
-                c.classList.add('skeleton'); 
-                c.style.opacity = '0.5';
-                c.querySelector('.best-badge-container').classList.add('d-none');
-            });
-
-            setTimeout(() => {
-                cards.sort((a, b) => {
-                    if (option === 'Cheapest') return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
-                    if (option === 'Fastest') return parseFloat(a.dataset.duration) - parseFloat(b.dataset.duration);
-                    if (option === 'Best') return parseFloat(a.dataset.score) - parseFloat(b.dataset.score);
-                    return 0;
-                });
-
-                cards.forEach((card, index) => {
-                    container.insertBefore(card, noResults);
-                    card.classList.remove('skeleton');
-                    card.style.opacity = '1';
-
-                    // Show badge on the top card if "Best" is selected
-                    if (option === 'Best' && index === 0) {
-                        card.querySelector('.best-badge-container').classList.remove('d-none');
-                    }
-                });
-            }, 80); // <100ms UI sort indication
-        }
+        // Initial apply to set checkbox states
+        document.addEventListener('DOMContentLoaded', applyFilters);
     </script>
 }
+
+<style>
+    .checkbox-box {
+        border-radius: 2px;
+    }
+    .checkbox-inner {
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 4px;
+    }
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: #bfc5e4;
+        border-radius: 10px;
+    }
+</style>

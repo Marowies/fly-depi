@@ -1,0 +1,64 @@
+@model SkyScan.Presentation.Models.RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "_Layout";
+}
+
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
+    <div class="absolute inset-0 z-0">
+        <img class="w-full h-full object-cover opacity-30" alt="luxury private jet interior" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvo3-nC_IOyG1LhxX6eREWDVtr017HJtBYfW7dGmMauwSsZCpZQKSIii0xBUz2PinJY810vxWxHOMZSP8WXxlf9Uq_I8dvqbR6TJHOek5S-IYW5-YADULfFUqMFaoiEhe7B1RCrLUSLlu4ZUVXoEL93hfIqgquw4S-eK4cbyFX7ZP-wMhnIo3hQoVDL9oCqyHdRwYnbM6EwulQEqezYBZop00qLNLFM9f4pWehMaXO7wa5fvJPP6fW_jUtuxoEciOrXO6YATxDIQ" />
+        <div class="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background"></div>
+    </div>
+    
+    <section class="relative z-10 w-full max-w-md px-8 flex flex-col gap-8">
+        <div class="text-center">
+            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">VIP Access</span>
+            <h1 class="font-headline text-4xl font-extrabold tracking-tight text-white mt-2">Join SkyScan</h1>
+            <p class="text-on-surface-variant text-sm font-light mt-4">Create your account to unlock curated itineraries and concierge services.</p>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-8 border border-outline-variant/10 shadow-2xl">
+            <form asp-controller="Account" asp-action="Register" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-red-400 text-xs mb-4 font-bold bg-red-950/20 p-3 rounded-lg border border-red-500/20"></div>
+
+                <div class="space-y-6">
+                    <div class="group relative">
+                        <label asp-for="Name" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold"></label>
+                        <input asp-for="Name" class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface/30" placeholder="John Doe" />
+                        <span asp-validation-for="Name" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+
+                    <div class="group relative">
+                        <label asp-for="Email" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold"></label>
+                        <input asp-for="Email" class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface/30" placeholder="john@example.com" />
+                        <span asp-validation-for="Email" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+
+                    <div class="group relative">
+                        <label asp-for="Password" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold"></label>
+                        <input asp-for="Password" class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface/30" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+
+                    <div class="group relative">
+                        <label asp-for="ConfirmPassword" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold"></label>
+                        <input asp-for="ConfirmPassword" class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface/30" placeholder="••••••••" />
+                        <span asp-validation-for="ConfirmPassword" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-sm py-4 rounded-xl transition-all active:scale-[0.98] mt-4 shadow-lg shadow-primary/20">
+                        Register Account
+                    </button>
+                </div>
+            </form>
+            
+            <div class="mt-8 text-center border-t border-white/5 pt-6">
+                <p class="text-xs text-on-surface-variant">Already have an account? <a asp-action="Login" class="text-tertiary hover:text-white transition-colors border-b border-tertiary/30 pb-0.5">Sign In</a></p>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
