@@ -41,5 +41,14 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
             return cities.Select(c => (c.CityId, c.Name));
         }
+
+        public async Task<IEnumerable<Airport>> GetAirportsByCityIdAsync(Guid cityId)
+        {
+            return await _dbSet
+                .Include(a => a.City)
+                .Where(a => a.CityId == cityId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }

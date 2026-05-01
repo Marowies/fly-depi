@@ -15,16 +15,15 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         {
         }
 
-        public async Task<IEnumerable<Flight>> SearchFlightsAsync(Guid originCityId, Guid destinationCityId, DateTime departureDate)
+        public async Task<IEnumerable<Flight>> SearchFlightsAsync(IEnumerable<string> originIatas, IEnumerable<string> destinationIatas, DateTime departureDate)
         {
             return await _dbSet
                 .Include(f => f.Airline)
-                .Include(f => f.Airplane)
-                .Include(f => f.DepartureAirport).ThenInclude(a => a.City)
-                .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
+                .Include(f => f.DepartureAirport)
+                .Include(f => f.ArrivalAirport)
                 .Include(f => f.Tickets)
-                .Where(f => f.DepartureAirport.CityId == originCityId 
-                         && f.ArrivalAirport.CityId == destinationCityId 
+                .Where(f => originIatas.Contains(f.DepartureAirport.IataCode) 
+                         && destinationIatas.Contains(f.ArrivalAirport.IataCode) 
                          && f.DepartureTime.Date == departureDate.Date)
                 .AsNoTracking()
                 .ToListAsync();

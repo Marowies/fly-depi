@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using SkyScan.Application.DTOs;
 using SkyScan.Application.Interfaces;
 using SkyScan.Core.Constants;
+using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Presentation.Models;
 
@@ -13,6 +14,7 @@ namespace SkyScan.Presentation.Controllers
     {
         private readonly IAirportRepository _airportRepository;
         private readonly ISearchRepository _searchRepository;
+        private readonly IFlightRepository _flightRepository;
         private readonly IFlightProviderService _flightProviderService;
         private readonly IMemoryCache _cache;
 
@@ -22,9 +24,11 @@ namespace SkyScan.Presentation.Controllers
 
         public FlightController(
             IAirportRepository airportRepository,
+            IFlightRepository flightRepository,
             IFlightProviderService flightProviderService,
             IMemoryCache cache)
         {
+            _flightRepository = flightRepository;
             _airportRepository = airportRepository;
             _flightProviderService = flightProviderService;
             _cache = cache;
@@ -57,7 +61,6 @@ namespace SkyScan.Presentation.Controllers
             var searchRequest = new FlightSearchRequestDto
             {
                 TripType = model.TripType,
-                Adults = model.Adults,
                 CabinClass = model.CabinClass
             };
 
@@ -149,25 +152,40 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Resolve City Names and Airports for the search
-            var originCity = await _airportRepository.GetCityDropdownItemsAsync();
-            var originName = originCity.FirstOrDefault(c => c.CityId == originId).CityName ?? "Unknown";
+            // Resolve City Names and all Airports for the search (City-to-City support)
+            var originAirports = await _airportRepository.GetAirportsByCityIdAsync(originId);
+            var destAirports = await _airportRepository.GetAirportsByCityIdAsync(destId);
 
-            var destCity = await _airportRepository.GetCityDropdownItemsAsync();
-            var destName = destCity.FirstOrDefault(c => c.CityId == destId).CityName ?? "Unknown";
+            var originIatas = originAirports.Select(a => a.IataCode).Where(i => !string.IsNullOrEmpty(i)).ToList();
+            var destIatas = destAirports.Select(a => a.IataCode).Where(i => !string.IsNullOrEmpty(i)).ToList();
+
+            // Resolve City Names from the first available airport or default
+            var originName = originAirports.FirstOrDefault()?.City?.Name ?? "Origin";
+            var destName = destAirports.FirstOrDefault()?.City?.Name ?? "Destination";
             
             // Search Flights via the provider (Mock or Real)
-            // Note: We pass the CityId as string to the provider
-            var flights = await _flightProviderService.SearchFlightsAsync(origin, destination, departureDate);
+            // Note: We now pass ALL IATA codes in the city to support city-to-city searching
+            var flights = await _flightRepository.SearchFlightsAsync(originIatas!, destIatas!, departureDate);
 
             var viewModel = new FlightResultsViewModel
             {
-                OriginIata      = origin,
-                DestinationIata = destination,
+                OriginIata      = string.Join("/", originIatas),
+                DestinationIata = string.Join("/", destIatas),
                 OriginCity      = originName,
                 DestinationCity = destName,
                 DepartureDate   = departureDate,
-                Flights         = flights
+                Flights         = flights.Select(f => new FlightDto
+                {
+                    AirlineName = f.Airline?.Name ?? "Unknown",
+                    FlightNumber = f.FlightNumber,
+                    OriginAirport = f.DepartureAirport?.IataCode ?? f.DepartureAirport?.Code ?? "Unknown",
+                    DestinationAirport = f.ArrivalAirport?.IataCode ?? f.ArrivalAirport?.Code ?? "Unknown",
+                    DepartureTime = f.DepartureTime,
+                    ArrivalTime = f.ArrivalTime,
+                    Price = f.Tickets.Any() ? f.Tickets.Min(t => t.Price) : 0,
+                    Status = "Active",
+                    RedirectURL = f.RedirectURL
+                }).ToList()
             };
 
             return View(viewModel);

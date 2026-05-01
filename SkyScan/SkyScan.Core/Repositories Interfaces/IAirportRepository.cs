@@ -10,5 +10,6 @@ namespace SkyScan.Core.Repositories_Interfaces
         Task<IEnumerable<Airport>> GetAllWithDetailsAsync();
         Task<Airport?> GetByIataAsync(string iataCode);
         Task<IEnumerable<(Guid CityId, string CityName)>> GetCityDropdownItemsAsync();
+        Task<IEnumerable<Airport>> GetAirportsByCityIdAsync(Guid cityId);
     }
 }
