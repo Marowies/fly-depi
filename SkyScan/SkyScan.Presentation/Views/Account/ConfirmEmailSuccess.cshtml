@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Email Confirmed";
+    Layout = "_Layout";
+}
+
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
+    <section class="relative z-10 w-full max-w-md px-8 flex flex-col gap-8 text-center">
+        <div>
+            <span class="material-symbols-outlined text-6xl text-green-400 mb-4 block">verified</span>
+            <h1 class="font-headline text-3xl font-extrabold tracking-tight text-white mt-2">Email Confirmed!</h1>
+            <p class="text-on-surface-variant text-sm font-light mt-4">
+                Your email address has been successfully verified. You can now sign in to your SkyScan account.
+            </p>
+        </div>
+        <a asp-action="Login" class="inline-block bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-sm py-4 px-8 rounded-xl transition-all shadow-lg">
+            Sign In Now
+        </a>
+    </section>
+</main>

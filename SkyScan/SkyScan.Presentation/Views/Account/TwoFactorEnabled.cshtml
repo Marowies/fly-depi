@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "2FA Enabled";
+    Layout = "_Layout";
+}
+
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
+    <section class="relative z-10 w-full max-w-md px-8 flex flex-col gap-8 text-center">
+        <div>
+            <span class="material-symbols-outlined text-6xl text-green-400 mb-4 block">verified_user</span>
+            <h1 class="font-headline text-3xl font-extrabold tracking-tight text-white mt-2">2FA Active</h1>
+            <p class="text-on-surface-variant text-sm font-light mt-4">
+                Two-factor authentication is now enabled on your account. Your account is more secure.
+            </p>
+        </div>
+        <div class="flex flex-col gap-3">
+            <a asp-controller="Home" asp-action="Index"
+               class="inline-block bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-sm py-4 px-8 rounded-xl transition-all shadow-lg">
+                Continue to Dashboard
+            </a>
+            <form asp-action="DisableTwoFactor" method="post" class="inline">
+                <button type="submit" class="text-[10px] text-red-400 hover:text-red-300 transition-colors uppercase tracking-widest">
+                    Disable 2FA
+                </button>
+            </form>
+        </div>
+    </section>
+</main>

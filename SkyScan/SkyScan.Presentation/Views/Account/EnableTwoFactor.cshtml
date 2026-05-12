@@ -1,0 +1,58 @@
+@model SkyScan.Presentation.Models.EnableTwoFactorViewModel
+@{
+    ViewData["Title"] = "Enable Two-Factor Authentication";
+    Layout = "_Layout";
+}
+
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
+    <section class="relative z-10 w-full max-w-lg px-8 flex flex-col gap-8">
+        <div class="text-center">
+            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">Security</span>
+            <h1 class="font-headline text-4xl font-extrabold tracking-tight text-white mt-2">Enable 2FA</h1>
+            <p class="text-on-surface-variant text-sm font-light mt-4">
+                Scan the QR code below with your authenticator app (e.g. Google Authenticator, Authy), then enter the verification code.
+            </p>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-8 border border-outline-variant/10 shadow-2xl">
+
+            {{-- QR Code --}}
+            <div class="flex flex-col items-center mb-6">
+                <div id="qrcode" class="bg-white p-4 rounded-xl mb-4"></div>
+                <p class="text-on-surface-variant text-xs text-center">Can't scan? Enter this key manually:</p>
+                <code class="text-tertiary text-sm mt-1 font-mono tracking-widest">@Model.SharedKey</code>
+            </div>
+
+            <form asp-action="EnableTwoFactor" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-red-400 text-xs mb-4 font-bold bg-red-950/20 p-3 rounded-lg border border-red-500/20"></div>
+                <div class="space-y-6">
+                    <div>
+                        <label asp-for="Code" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Verification Code</label>
+                        <input asp-for="Code" autocomplete="one-time-code" inputmode="numeric" maxlength="7"
+                               class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-xl text-center tracking-[0.5em] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                               placeholder="000000" />
+                        <span asp-validation-for="Code" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+                    <button type="submit" class="w-full bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-sm py-4 rounded-xl transition-all shadow-lg">
+                        Verify &amp; Enable 2FA
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script>
+        new QRCode(document.getElementById("qrcode"), {
+            text: "@Html.Raw(Model.AuthenticatorUri)",
+            width: 180,
+            height: 180,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.M
+        });
+    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

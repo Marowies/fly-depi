@@ -17,53 +17,92 @@ namespace SkyScan.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            // ── Core MVC ─────────────────────────────────────────────────────────
             builder.Services.AddControllersWithViews();
-
-            // IMemoryCache: used to cache static reference data (e.g. airport dropdown list)
             builder.Services.AddMemoryCache();
 
-            // DbContext should be Scoped (one per request), not Transient (wastes connection pool)
+            // ── Database ──────────────────────────────────────────────────────────
             builder.Services.AddDbContext<SkyScanDbContext>(options =>
-                    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-            
-            // Add AutoMapper
-            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
- 
-            // Add Identity
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>()
-                .AddEntityFrameworkStores<SkyScanDbContext>()
-                .AddDefaultTokenProviders();
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+            // ── AutoMapper ────────────────────────────────────────────────────────
+            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
+
+            // ── Identity ──────────────────────────────────────────────────────────
+            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                // Password policy
+                options.Password.RequireDigit           = true;
+                options.Password.RequireLowercase       = true;
+                options.Password.RequireUppercase       = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength         = 6;
+
+                // Email confirmation required to sign in
+                options.SignIn.RequireConfirmedEmail = true;
+
+                // Lockout
+                options.Lockout.DefaultLockoutTimeSpan  = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts  = 5;
+                options.Lockout.AllowedForNewUsers        = true;
+
+                // Tokens
+                options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+            })
+            .AddEntityFrameworkStores<SkyScanDbContext>()
+            .AddDefaultTokenProviders();
+
+            // ── Cookie / Session settings ─────────────────────────────────────────
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                options.LoginPath = "/Account/Login";
-                options.LogoutPath = "/Account/Logout";
+                options.LoginPath        = "/Account/Login";
+                options.LogoutPath       = "/Account/Logout";
                 options.AccessDeniedPath = "/Account/AccessDenied";
+
+                // Sliding expiration — cookie refreshed on each request within the window
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan    = TimeSpan.FromDays(14);
             });
- 
-            // Register Repositories
+
+            // ── Google External Authentication ─────────────────────────────────────
+            var googleClientId     = builder.Configuration["Authentication:Google:ClientId"];
+            var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+
+            if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
+            {
+                builder.Services.AddAuthentication()
+                    .AddGoogle(options =>
+                    {
+                        options.ClientId     = googleClientId;
+                        options.ClientSecret = googleClientSecret;
+                    });
+            }
+
+            // ── Email Service ─────────────────────────────────────────────────────
+            builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+            // ── UrlEncoder (for 2FA QR URI) ────────────────────────────────────────
+            builder.Services.AddSingleton(System.Text.Encodings.Web.UrlEncoder.Default);
+
+            // ── Repositories ──────────────────────────────────────────────────────
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IFlightRepository, FlightRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IPriceAlertRepository, PriceAlertRepository>();
             builder.Services.AddScoped<ISearchRepository, SearchRepository>();
             builder.Services.AddScoped<IAirportRepository, AirportRepository>();
- 
-            var useMockData = builder.Configuration["FlightProviderSettings:UseMockData"] == "true";
 
+            // ── Flight Provider ────────────────────────────────────────────────────
+            var useMockData = builder.Configuration["FlightProviderSettings:UseMockData"] == "true";
             if (useMockData)
-            {
                 builder.Services.AddScoped<IFlightProviderService, MockFlightProviderService>();
-            }
             else
-            {
                 builder.Services.AddHttpClient<IFlightProviderService, AviationStackFlightService>();
-            }
 
             builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();
 
+            // ─────────────────────────────────────────────────────────────────────
             var app = builder.Build();
 
             // Warm up the In-Memory Search Index
@@ -73,8 +112,7 @@ namespace SkyScan.Presentation
                 await searchService.InitializeAsync();
             }
 
-            // Configure the HTTP request pipeline.
-            // 1. Add our Global Exception Handler at the very start of the pipeline
+            // ── Pipeline ──────────────────────────────────────────────────────────
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
             if (!app.Environment.IsDevelopment())
@@ -85,7 +123,6 @@ namespace SkyScan.Presentation
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
             app.UseRouting();
 
             app.UseAuthentication();

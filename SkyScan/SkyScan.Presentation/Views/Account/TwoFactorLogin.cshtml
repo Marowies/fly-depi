@@ -1,0 +1,47 @@
+@model SkyScan.Presentation.Models.TwoFactorVerifyViewModel
+@{
+    ViewData["Title"] = "Two-Factor Authentication";
+    Layout = "_Layout";
+}
+
+<main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20 pb-20">
+    <section class="relative z-10 w-full max-w-md px-8 flex flex-col gap-8">
+        <div class="text-center">
+            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">Security Check</span>
+            <h1 class="font-headline text-4xl font-extrabold tracking-tight text-white mt-2">Two-Factor Auth</h1>
+            <p class="text-on-surface-variant text-sm font-light mt-4">
+                Open your authenticator app and enter the 6-digit code for SkyScan.
+            </p>
+        </div>
+
+        <div class="glass-panel rounded-2xl p-8 border border-outline-variant/10 shadow-2xl">
+            <form asp-action="TwoFactorLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-red-400 text-xs mb-4 font-bold bg-red-950/20 p-3 rounded-lg border border-red-500/20"></div>
+                <div class="space-y-6">
+                    <div>
+                        <label asp-for="Code" class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Authenticator Code</label>
+                        <input asp-for="Code" autocomplete="one-time-code" inputmode="numeric" pattern="[0-9 ]*" maxlength="7"
+                               class="w-full bg-surface-container-low/60 border border-white/5 p-4 rounded-xl text-on-surface font-body text-xl text-center tracking-[0.5em] focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-on-surface/30 placeholder:tracking-normal"
+                               placeholder="000000" />
+                        <span asp-validation-for="Code" class="text-red-400 text-[10px] mt-1 block"></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input asp-for="RememberMachine" class="w-4 h-4 rounded border-white/10 bg-surface-container-low text-primary" />
+                        <label asp-for="RememberMachine" class="text-xs text-on-surface-variant">Remember this device for 30 days</label>
+                    </div>
+                    <input type="hidden" asp-for="RememberMe" />
+                    <button type="submit" class="w-full bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-sm py-4 rounded-xl transition-all shadow-lg">
+                        Verify
+                    </button>
+                </div>
+            </form>
+            <div class="mt-6 text-center">
+                <a asp-action="Login" class="text-[10px] text-tertiary hover:text-white transition-colors">Back to Sign In</a>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
