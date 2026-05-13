@@ -8,6 +8,7 @@
 
 # User-specific files (DotSettings)
 *.Generated.DotSettings.user
+appsettings.json
 
 # Build results
 [Dd]ebug/
