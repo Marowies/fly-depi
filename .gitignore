@@ -64,3 +64,4 @@ _ReSharper*/
 
 # Visual Studio Code
 .vscode/
+/SkyScan/SkyScan.Presentation/appsettings.json
