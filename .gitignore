@@ -63,3 +63,11 @@ _ReSharper*/
 
 # Visual Studio Code
 .vscode/
+
+## [Secrets & Sensitive Configuration]
+# Exclude appsettings files that contain secrets (connection strings, API keys, etc.)
+# Keep appsettings.Development.json as a template/reference only if needed
+**/appsettings.json
+**/appsettings.Production.json
+# Allow example/template files to be committed
+!**/appsettings.Example.json
