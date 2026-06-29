@@ -6,6 +6,9 @@ using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Presentation.Models;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using SkyScan.Infrastructure.Data.Data_Sources;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace SkyScan.Presentation.Controllers
 {
@@ -16,19 +19,22 @@ namespace SkyScan.Presentation.Controllers
         private readonly UrlEncoder        _urlEncoder;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly SkyScanDbContext  _context;
 
         public AccountController(
             IUserRepository    userRepository,
             IEmailService      emailService,
             UrlEncoder         urlEncoder,
             UserManager<User>  userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            SkyScanDbContext   context)
         {
             _userRepository = userRepository;
             _emailService   = emailService;
             _urlEncoder     = urlEncoder;
             _userManager    = userManager;
             _signInManager  = signInManager;
+            _context        = context;
         }
 
         // ══════════════════════════════════════════════════════════════════════════
@@ -272,8 +278,13 @@ namespace SkyScan.Presentation.Controllers
         // ══════════════════════════════════════════════════════════════════════════
 
         [HttpGet]
-        public IActionResult TwoFactorLogin(string? returnUrl = null, bool rememberMe = false)
+        public async Task<IActionResult> TwoFactorLogin(string? returnUrl = null, bool rememberMe = false)
         {
+            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+            if (user == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
             ViewData["ReturnUrl"]  = returnUrl;
             ViewData["RememberMe"] = rememberMe;
             return View(new TwoFactorVerifyViewModel { RememberMe = rememberMe });
@@ -438,6 +449,41 @@ namespace SkyScan.Presentation.Controllers
         }
 
         // ══════════════════════════════════════════════════════════════════════════
+        // PROFILE
+        // ══════════════════════════════════════════════════════════════════════════
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var fullUser = await _context.Users
+                .Include(u => u.Searches)
+                    .ThenInclude(s => s.OriginCity)
+                .Include(u => u.Searches)
+                    .ThenInclude(s => s.DestinationCity)
+                .Include(u => u.PriceAlerts)
+                    .ThenInclude(pa => pa.Trip)
+                        .ThenInclude(t => t.Flights)
+                            .ThenInclude(f => f.Airline)
+                .Include(u => u.PriceAlerts)
+                    .ThenInclude(pa => pa.Trip)
+                        .ThenInclude(t => t.Flights)
+                            .ThenInclude(f => f.DepartureAirport)
+                                .ThenInclude(a => a.City)
+                .Include(u => u.PriceAlerts)
+                    .ThenInclude(pa => pa.Trip)
+                        .ThenInclude(t => t.Flights)
+                            .ThenInclude(f => f.ArrivalAirport)
+                                .ThenInclude(a => a.City)
+                .FirstOrDefaultAsync(u => u.Id == user.Id);
+
+            return View(fullUser);
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
         // ACCESS DENIED
         // ══════════════════════════════════════════════════════════════════════════
 
@@ -466,7 +512,7 @@ namespace SkyScan.Presentation.Controllers
             }
             if (currentPosition < unformattedKey.Length)
                 result.Append(unformattedKey.AsSpan(currentPosition));
-            return result.ToString().ToLowerInvariant();
+            return result.ToString().ToUpperInvariant();
         }
 
         private string GenerateQrCodeUri(string email, string unformattedKey)

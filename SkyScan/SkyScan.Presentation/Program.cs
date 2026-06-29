@@ -97,7 +97,7 @@ namespace SkyScan.Presentation
             if (useMockData)
                 builder.Services.AddScoped<IFlightProviderService, MockFlightProviderService>();
             else
-                builder.Services.AddHttpClient<IFlightProviderService, AviationStackFlightService>();
+                builder.Services.AddHttpClient<IFlightProviderService, AmadeusFlightService>();
 
             builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();

@@ -8,6 +8,7 @@ using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Presentation.Controllers;
 using SkyScan.Presentation.Models;
 using System.Text.Encodings.Web;
+using SkyScan.Infrastructure.Data.Data_Sources;
 using Xunit;
 
 namespace SkyScan.Tests
@@ -45,7 +46,8 @@ namespace SkyScan.Tests
                 _mockEmailService.Object,
                 _mockUrlEncoder.Object,
                 _mockUserManager.Object,
-                _mockSignInManager.Object);
+                _mockSignInManager.Object,
+                new Mock<SkyScanDbContext>().Object);
 
             _controller.ControllerContext = new ControllerContext
             {

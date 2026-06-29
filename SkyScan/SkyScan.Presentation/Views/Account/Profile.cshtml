@@ -1,0 +1,222 @@
+@model SkyScan.Core.Entities.User
+@{
+    ViewData["Title"] = "Your SkyScan Profile";
+    Layout = "_Layout";
+}
+
+<main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
+    <div class="max-w-7xl mx-auto space-y-12">
+        <!-- Profile Header -->
+        <header class="text-center md:text-left space-y-2 pb-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+            <div>
+                <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">SkyScan Identity</span>
+                <h1 class="font-headline text-4xl font-extrabold text-white">@Model.Name</h1>
+                <p class="text-on-surface-variant text-sm font-light opacity-80">Premium member profile and curated flight settings.</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="bg-[#BFC5E4]/10 text-[#BFC5E4] px-4 py-2 rounded-full font-label text-[10px] uppercase font-bold tracking-widest border border-[#BFC5E4]/20">
+                    SkyScan Member
+                </span>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Account Details Sidebar (4 cols) -->
+            <section class="lg:col-span-4 space-y-8">
+                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Personal Details</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Full Name</span>
+                            <span class="text-slate-200 font-bold text-sm">@Model.Name</span>
+                        </div>
+                        <div>
+                            <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Email Address</span>
+                            <span class="text-slate-200 font-bold text-sm">@Model.Email</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Factor Authentication Management -->
+                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Security & Authenticator</h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">Enhance your SkyScan profile security by enabling Two-Factor Authentication (2FA).</p>
+                    
+                    <div class="flex items-center justify-between py-2">
+                        <span class="text-xs font-bold text-slate-300">2FA Status</span>
+                        @if (Model.TwoFactorEnabled)
+                        {
+                            <span class="text-[10px] font-bold text-green-400 bg-green-950/20 px-3 py-1 rounded-full border border-green-500/20 uppercase tracking-wider">Enabled</span>
+                        }
+                        else
+                        {
+                            <span class="text-[10px] font-bold text-amber-400 bg-amber-950/20 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-wider">Disabled</span>
+                        }
+                    </div>
+
+                    @if (Model.TwoFactorEnabled)
+                    {
+                        <form asp-controller="Account" asp-action="DisableTwoFactor" method="post">
+                            <button type="submit" class="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
+                                Disable Two-Factor Auth
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="EnableTwoFactor" class="block text-center w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
+                            Set Up Two-Factor Auth
+                        </a>
+                    }
+                </div>
+            </section>
+
+            <!-- Favorites and Search Log Dashboard (8 cols) -->
+            <section class="lg:col-span-8 space-y-8">
+                <!-- Favorites / Price Monitored Routes -->
+                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 flex items-center justify-between">
+                        <span>Monitored Routes & Favorites</span>
+                        <span class="text-[10px] bg-tertiary/10 text-tertiary px-3 py-1 rounded-full font-bold uppercase">@Model.PriceAlerts.Count Saved</span>
+                    </h2>
+
+                    @if (!Model.PriceAlerts.Any())
+                    {
+                        <div class="py-12 text-center space-y-3">
+                            <span class="material-symbols-outlined text-4xl text-slate-600">favorite_border</span>
+                            <p class="text-slate-400 text-sm">No routes saved to favorites yet.</p>
+                            <p class="text-xs text-slate-600">Favorite flight paths to monitor price changes and save schedules here.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="space-y-4">
+                            @foreach (var alert in Model.PriceAlerts)
+                            {
+                                var flight = alert.Trip?.Flights?.FirstOrDefault();
+                                if (flight != null)
+                                {
+                                    <div class="p-5 rounded-lg bg-surface-container-low border border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-white/10 transition-all">
+                                        <div class="flex-1 space-y-2">
+                                            <div class="flex items-center gap-3">
+                                                <span class="text-xs font-bold uppercase tracking-wider text-slate-300">@flight.FlightNumber</span>
+                                                <span class="text-[10px] text-slate-500">| @flight.Airline?.Name</span>
+                                            </div>
+                                            <div class="flex items-center gap-4 text-sm font-semibold text-slate-200">
+                                                <span>@flight.DepartureAirport?.City?.Name (@flight.DepartureAirport?.IataCode)</span>
+                                                <span class="material-symbols-outlined text-xs text-slate-500">arrow_forward</span>
+                                                <span>@flight.ArrivalAirport?.City?.Name (@flight.ArrivalAirport?.IataCode)</span>
+                                            </div>
+                                            <div class="text-[10px] text-slate-400">
+                                                Departs: @flight.DepartureTime.ToString("yyyy-MM-dd HH:mm")
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center gap-6">
+                                            <div class="text-right">
+                                                <span class="block text-[9px] text-slate-500 uppercase tracking-widest">Saved Price</span>
+                                                <span class="text-tertiary font-bold text-lg">$@alert.TargetPrice.ToString("N0")</span>
+                                            </div>
+                                            
+                                            <button class="remove-fav-btn text-slate-500 hover:text-red-500 transition-colors p-2 cursor-pointer" 
+                                                    data-flight-number="@flight.FlightNumber" 
+                                                    data-dep-time="@flight.DepartureTime.ToString("o")" 
+                                                    data-price="@alert.TargetPrice"
+                                                    title="Remove from favorites">
+                                                <span class="material-symbols-outlined">delete</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Recent Searches Log -->
+                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Your Search History</h2>
+
+                    @if (!Model.Searches.Any())
+                    {
+                        <p class="text-slate-400 text-xs py-4 text-center">No recent flight searches recorded.</p>
+                    }
+                    else
+                    {
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs border-collapse">
+                                <thead>
+                                    <tr class="border-b border-white/5 text-slate-500 uppercase tracking-wider font-bold">
+                                        <th class="py-3 px-2">Date Searched</th>
+                                        <th class="py-3 px-2">Route</th>
+                                        <th class="py-3 px-2">Departure Date</th>
+                                        <th class="py-3 px-2">Trip Type</th>
+                                        <th class="py-3 px-2"></th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5 text-slate-300">
+                                    @foreach (var search in Model.Searches.OrderByDescending(s => s.TimeStamp).Take(10))
+                                    {
+                                        <tr class="hover:bg-white/5 transition-colors">
+                                            <td class="py-4 px-2 text-slate-400">@search.TimeStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                            <td class="py-4 px-2 font-bold">
+                                                @(search.OriginCity?.Name ?? "Unknown") → @(search.DestinationCity?.Name ?? "Unknown")
+                                            </td>
+                                            <td class="py-4 px-2 text-slate-400">@search.DepartureDate.ToString("yyyy-MM-dd")</td>
+                                            <td class="py-4 px-2">
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white/5 uppercase">
+                                                    @search.Type.ToString()
+                                                </span>
+                                            </td>
+                                            <td class="py-4 px-2 text-right">
+                                                <a href="/Flight/Results?origin=@search.OriginCityId&destination=@search.DestinationCityId&date=@search.DepartureDate.ToString("yyyy-MM-dd")&tripType=@search.Type" 
+                                                   class="text-primary hover:text-white font-bold uppercase text-[10px] tracking-wider transition-colors">
+                                                    Search Again
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.remove-fav-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const flightNumber = btn.dataset.flightNumber;
+                const departureTime = btn.dataset.depTime;
+                const price = btn.dataset.price;
+
+                const formData = new FormData();
+                formData.append('flightNumber', flightNumber);
+                formData.append('departureTime', departureTime);
+                formData.append('price', price);
+
+                try {
+                    const response = await fetch('/Flight/ToggleFavorite', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // Reload the page to refresh favorites list
+                        window.location.reload();
+                    } else {
+                        alert("Could not remove favorite. Please try again.");
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alert("An error occurred. Please try again.");
+                }
+            });
+        });
+    </script>
+}

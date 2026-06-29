@@ -1,0 +1,72 @@
+@model IEnumerable<SkyScan.Core.Entities.Booking>
+@{
+    ViewData["Title"] = "My Premium Bookings";
+    Layout = "_Layout";
+}
+
+<main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
+    <div class="max-w-4xl mx-auto space-y-12">
+        <header class="text-center md:text-left space-y-2 pb-6 border-b border-white/5">
+            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">SkyScan Collection</span>
+            <h1 class="font-headline text-4xl font-extrabold text-white">Your Booked Journeys</h1>
+            <p class="text-on-surface-variant text-sm font-light opacity-80">A curation of your scheduled skies and historical flights.</p>
+        </header>
+
+        <div class="space-y-6">
+            @if (!Model.Any())
+            {
+                <div class="bg-surface-container-low/40 border border-white/5 p-16 rounded-2xl text-center backdrop-blur-md">
+                    <span class="material-symbols-outlined text-5xl text-slate-600 mb-4">flight_takeoff</span>
+                    <h3 class="text-white font-headline font-bold text-xl mb-2">No Bookings Yet</h3>
+                    <p class="text-slate-400 text-sm max-w-md mx-auto mb-8">You haven't reserved any flights yet. Let us search and prepare your next itinerary.</p>
+                    <a href="/" class="bg-primary hover:bg-white text-on-primary hover:text-black font-headline font-bold uppercase tracking-widest text-xs px-8 py-3 rounded-xl transition-all">Start Exploring</a>
+                </div>
+            }
+            else
+            {
+                @foreach (var booking in Model)
+                {
+                    <div class="glass-panel p-8 rounded-xl border border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <div class="space-y-4 flex-1">
+                            <div class="flex items-center gap-3">
+                                <span class="bg-tertiary/10 text-tertiary px-3 py-1 rounded font-label text-[9px] uppercase font-bold tracking-widest">
+                                    Booked: @booking.BookingDate.ToString("yyyy-MM-dd")
+                                </span>
+                                <span class="text-slate-500 text-xs font-semibold">| ID: @booking.BookingId.ToString().Substring(0, 8).ToUpper()</span>
+                            </div>
+
+                            <div class="flex items-center gap-6">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-white">@booking.Flight.DepartureTime.ToString("HH:mm")</h3>
+                                    <p class="text-xs text-slate-400 font-semibold">@booking.Flight.DepartureAirport?.City?.Name (@booking.Flight.DepartureAirport?.IataCode)</p>
+                                </div>
+                                <div class="flex-1 flex flex-col items-center px-4">
+                                    <span class="text-[9px] text-slate-500 uppercase tracking-widest mb-1">
+                                        @booking.Flight.FlightNumber
+                                    </span>
+                                    <div class="h-px bg-white/10 w-24 relative">
+                                        <span class="material-symbols-outlined text-xs text-slate-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90">flight</span>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <h3 class="text-2xl font-bold text-white">@booking.Flight.ArrivalTime.ToString("HH:mm")</h3>
+                                    <p class="text-xs text-slate-400 font-semibold">@booking.Flight.ArrivalAirport?.City?.Name (@booking.Flight.ArrivalAirport?.IataCode)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center md:text-right space-y-4">
+                            <div>
+                                <span class="block text-[10px] text-slate-500 uppercase tracking-widest">Airline</span>
+                                <span class="text-slate-200 font-bold text-sm">@booking.Flight.Airline?.Name</span>
+                            </div>
+                            <a href="@booking.Flight.RedirectURL" target="_blank" class="inline-block bg-[#BFC5E4] hover:bg-white text-[#292F48] font-label text-[10px] font-bold uppercase tracking-widest px-6 py-3 rounded-lg transition-all">
+                                View Ticket
+                            </a>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</main>

@@ -22,7 +22,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
             => await _userManager.CreateAsync(user, password);
 
         public async Task<SignInResult> LoginUserAsync(string email, string password, bool rememberMe)
-            => await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: false);
+            => await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true);
 
         public async Task LogoutUserAsync()
             => await _signInManager.SignOutAsync();

@@ -19,8 +19,14 @@
             {{-- QR Code --}}
             <div class="flex flex-col items-center mb-6">
                 <div id="qrcode" class="bg-white p-4 rounded-xl mb-4"></div>
-                <p class="text-on-surface-variant text-xs text-center">Can't scan? Enter this key manually:</p>
-                <code class="text-tertiary text-sm mt-1 font-mono tracking-widest">@Model.SharedKey</code>
+                <p class="text-on-surface-variant text-xs text-center">Can't scan? Use the manual setup key:</p>
+                
+                <div class="flex items-center gap-3 mt-2 bg-slate-950/20 px-4 py-2 rounded-lg border border-white/5">
+                    <code id="manualKey" class="text-tertiary text-sm font-mono tracking-widest filter blur-sm select-all">@Model.SharedKey</code>
+                    <button type="button" id="btnToggleKey" class="text-slate-400 hover:text-white text-xs cursor-pointer flex items-center gap-1 font-semibold uppercase tracking-wider" onclick="toggleManualKey()">
+                        <span class="material-symbols-outlined text-sm">visibility</span> Show
+                    </button>
+                </div>
             </div>
 
             <form asp-action="EnableTwoFactor" method="post">
@@ -53,6 +59,18 @@
             colorLight: "#ffffff",
             correctLevel: QRCode.CorrectLevel.M
         });
+
+        function toggleManualKey() {
+            const keyEl = document.getElementById("manualKey");
+            const btnEl = document.getElementById("btnToggleKey");
+            if (keyEl.classList.contains("blur-sm")) {
+                keyEl.classList.remove("blur-sm");
+                btnEl.innerHTML = `<span class="material-symbols-outlined text-sm">visibility_off</span> Hide`;
+            } else {
+                keyEl.classList.add("blur-sm");
+                btnEl.innerHTML = `<span class="material-symbols-outlined text-sm">visibility</span> Show`;
+            }
+        }
     </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

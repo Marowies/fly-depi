@@ -27,6 +27,17 @@ namespace SkyScan.Presentation.Models
         
         public int Adults { get; set; } = 1;
         public string CabinClass { get; set; } = "economy";
+        public List<TrendingRouteViewModel> TrendingRoutes { get; set; } = new();
+    }
+
+    public class TrendingRouteViewModel
+    {
+        public Guid OriginCityId { get; set; }
+        public Guid DestinationCityId { get; set; }
+        public string OriginCityName { get; set; } = string.Empty;
+        public string DestinationCityName { get; set; } = string.Empty;
+        public int SearchCount { get; set; }
+        public double MinPrice { get; set; }
     }
 
     public class MultiCityLegViewModel

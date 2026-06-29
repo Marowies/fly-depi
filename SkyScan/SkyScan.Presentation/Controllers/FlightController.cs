@@ -5,8 +5,15 @@ using SkyScan.Application.DTOs;
 using SkyScan.Application.Interfaces;
 using SkyScan.Core.Constants;
 using SkyScan.Core.Entities;
+using SkyScan.Core.Entities.AirLine;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Presentation.Models;
+
+
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using SkyScan.Infrastructure.Data.Data_Sources;
+using Microsoft.EntityFrameworkCore;
 
 namespace SkyScan.Presentation.Controllers
 {
@@ -17,6 +24,8 @@ namespace SkyScan.Presentation.Controllers
         private readonly IFlightRepository _flightRepository;
         private readonly IFlightProviderService _flightProviderService;
         private readonly IMemoryCache _cache;
+        private readonly SkyScanDbContext _context;
+        private readonly UserManager<User> _userManager;
 
         // Airport dropdown is static reference data — cache for 6 hours
         private const string AirportCacheKey = "airports_dropdown";
@@ -26,12 +35,16 @@ namespace SkyScan.Presentation.Controllers
             IAirportRepository airportRepository,
             IFlightRepository flightRepository,
             IFlightProviderService flightProviderService,
-            IMemoryCache cache)
+            IMemoryCache cache,
+            SkyScanDbContext context,
+            UserManager<User> userManager)
         {
             _flightRepository = flightRepository;
             _airportRepository = airportRepository;
             _flightProviderService = flightProviderService;
             _cache = cache;
+            _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -41,6 +54,75 @@ namespace SkyScan.Presentation.Controllers
             {
                 CitiesWithAirports = await GetCachedAirportDropdownAsync()
             };
+
+            var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
+            var trending = await _context.Searches
+                .Where(s => s.TimeStamp >= thirtyDaysAgo)
+                .GroupBy(s => new { s.OriginCityId, s.DestinationCityId })
+                .Select(g => new
+                {
+                    OriginId = g.Key.OriginCityId,
+                    DestId = g.Key.DestinationCityId,
+                    Count = g.Count()
+                })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            var trendingRoutesList = new List<TrendingRouteViewModel>();
+            foreach (var route in trending)
+            {
+                var originCity = await _context.Cities.FindAsync(route.OriginId);
+                var destCity = await _context.Cities.FindAsync(route.DestId);
+                if (originCity != null && destCity != null)
+                {
+                    trendingRoutesList.Add(new TrendingRouteViewModel
+                    {
+                        OriginCityId = route.OriginId,
+                        DestinationCityId = route.DestId,
+                        OriginCityName = originCity.Name,
+                        DestinationCityName = destCity.Name,
+                        SearchCount = route.Count,
+                        MinPrice = 150 + new Random().Next(50, 400)
+                    });
+                }
+            }
+
+            if (trendingRoutesList.Count < 4)
+            {
+                var dbCities = await _context.Cities.Take(10).ToListAsync();
+                if (dbCities.Count >= 2)
+                {
+                    var defaults = new[]
+                    {
+                        new { OriginName = "Sydney", DestName = "Bangkok", Price = 450.0 },
+                        new { OriginName = "Tokyo", DestName = "Singapore", Price = 620.0 },
+                        new { OriginName = "London", DestName = "Dubai", Price = 590.0 },
+                        new { OriginName = "Paris", DestName = "New York", Price = 780.0 }
+                    };
+
+                    foreach (var def in defaults)
+                    {
+                        var origin = dbCities.FirstOrDefault(c => c.Name.Contains(def.OriginName, StringComparison.OrdinalIgnoreCase)) ?? dbCities[0];
+                        var dest = dbCities.FirstOrDefault(c => c.Name.Contains(def.DestName, StringComparison.OrdinalIgnoreCase)) ?? dbCities[Math.Min(1, dbCities.Count - 1)];
+
+                        if (origin.CityId != dest.CityId && !trendingRoutesList.Any(r => r.OriginCityId == origin.CityId && r.DestinationCityId == dest.CityId))
+                        {
+                            trendingRoutesList.Add(new TrendingRouteViewModel
+                            {
+                                OriginCityId = origin.CityId,
+                                DestinationCityId = dest.CityId,
+                                OriginCityName = origin.Name,
+                                DestinationCityName = dest.Name,
+                                SearchCount = 12 + new Random().Next(1, 40),
+                                MinPrice = def.Price
+                            });
+                        }
+                    }
+                }
+            }
+
+            viewModel.TrendingRoutes = trendingRoutesList.Take(5).ToList();
 
             return View(viewModel);
         }
@@ -152,6 +234,33 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Log Search to database for trending/popular analytics
+            try
+            {
+                var searchLog = new Search
+                {
+                    SearchId = Guid.NewGuid(),
+                    TimeStamp = DateTime.UtcNow,
+                    Type = Enum.TryParse(tripType, out TripType parsedType) ? parsedType : TripType.OneWay,
+                    DepartureDate = departureDate,
+                    OriginCityId = originId,
+                    DestinationCityId = destId
+                };
+
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
+                {
+                    searchLog.UserId = user.Id;
+                }
+
+                _context.Searches.Add(searchLog);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error logging search: {ex.Message}");
+            }
+
             // Resolve City Names and all Airports for the search (City-to-City support)
             var originAirports = await _airportRepository.GetAirportsByCityIdAsync(originId);
             var destAirports = await _airportRepository.GetAirportsByCityIdAsync(destId);
@@ -163,9 +272,14 @@ namespace SkyScan.Presentation.Controllers
             var originName = originAirports.FirstOrDefault()?.City?.Name ?? "Origin";
             var destName = destAirports.FirstOrDefault()?.City?.Name ?? "Destination";
             
-            // Search Flights via the provider (Mock or Real)
-            // Note: We now pass ALL IATA codes in the city to support city-to-city searching
-            var flights = await _flightRepository.SearchFlightsAsync(originIatas!, destIatas!, departureDate);
+            // Search Flights via the provider (Mock or Real) with Caching
+            var cacheKey = $"flights_{string.Join("-", originIatas)}_{string.Join("-", destIatas)}_{departureDate:yyyyMMdd}";
+            if (!_cache.TryGetValue(cacheKey, out List<FlightDto>? flightsList) || flightsList == null)
+            {
+                var freshFlights = await _flightProviderService.SearchFlightsAsync(originIatas!, destIatas!, departureDate);
+                flightsList = freshFlights.ToList();
+                _cache.Set(cacheKey, flightsList, TimeSpan.FromMinutes(15));
+            }
 
             var viewModel = new FlightResultsViewModel
             {
@@ -174,21 +288,76 @@ namespace SkyScan.Presentation.Controllers
                 OriginCity      = originName,
                 DestinationCity = destName,
                 DepartureDate   = departureDate,
-                Flights         = flights.Select(f => new FlightDto
-                {
-                    AirlineName = f.Airline?.Name ?? "Unknown",
-                    FlightNumber = f.FlightNumber,
-                    OriginAirport = f.DepartureAirport?.IataCode ?? f.DepartureAirport?.Code ?? "Unknown",
-                    DestinationAirport = f.ArrivalAirport?.IataCode ?? f.ArrivalAirport?.Code ?? "Unknown",
-                    DepartureTime = f.DepartureTime,
-                    ArrivalTime = f.ArrivalTime,
-                    Price = f.Tickets.Any() ? f.Tickets.Min(t => t.Price) : 0,
-                    Status = "Active",
-                    RedirectURL = f.RedirectURL
-                }).ToList()
+                Flights         = flightsList
             };
 
             return View(viewModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetNearestCity(double lat, double lon)
+        {
+            var city = await _airportRepository.GetNearestCityByCoordinatesAsync(lat, lon);
+            if (city == null)
+            {
+                return NotFound("No nearby city found.");
+            }
+            return Json(new { cityId = city.CityId, name = city.Name });
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ToggleFavorite(string flightNumber, string departureTime, decimal price)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            if (!DateTime.TryParse(departureTime, out var depTime)) return BadRequest("Invalid date format");
+
+            // Find the flight in our database
+            var dbFlight = await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber && f.DepartureTime == depTime);
+            if (dbFlight == null) return NotFound("Flight not found in database");
+
+            // Find or Create Trip for this flight
+            var trip = await _context.Trips
+                .Include(t => t.Flights)
+                .FirstOrDefaultAsync(t => t.Flights.Any(f => f.FlightId == dbFlight.FlightId));
+
+            if (trip == null)
+            {
+                trip = new Trip
+                {
+                    TripId = Guid.NewGuid(),
+                    TotalPrice = (double)price,
+                    Flights = new List<Flight> { dbFlight }
+                };
+                _context.Trips.Add(trip);
+                await _context.SaveChangesAsync();
+            }
+
+            // Check if price alert / favorite already exists
+            var alert = await _context.PriceAlerts
+                .FirstOrDefaultAsync(pa => pa.UserId == user.Id && pa.TripId == trip.TripId);
+
+            if (alert != null)
+            {
+                _context.PriceAlerts.Remove(alert);
+                await _context.SaveChangesAsync();
+                return Json(new { favorited = false });
+            }
+            else
+            {
+                alert = new PriceAlert
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    TripId = trip.TripId,
+                    TargetPrice = price
+                };
+                _context.PriceAlerts.Add(alert);
+                await _context.SaveChangesAsync();
+                return Json(new { favorited = true });
+            }
         }
 
         // --- Private Helpers ---

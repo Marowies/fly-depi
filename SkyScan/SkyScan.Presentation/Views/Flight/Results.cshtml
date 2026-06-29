@@ -156,13 +156,33 @@
                             </div>
                             <!-- Right Actions -->
                             <div class="w-full md:w-64 bg-surface-container-high p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">Celestial Selection</span>
-                                <div class="flex items-baseline gap-1 mb-8">
+                                <div class="flex items-baseline gap-1 mb-6">
                                     <span class="text-[11px] font-bold text-slate-400">$</span>
                                     <span class="text-4xl font-headline font-extrabold text-tertiary tracking-tighter">@flight.Price.ToString("N0")</span>
                                 </div>
-                                <a href="@flight.RedirectURL" class="w-full py-4 bg-primary text-on-primary rounded-xl text-xs font-extrabold uppercase text-center tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-300">Reserve Seat</a>
-                                <button class="mt-4 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-tertiary transition-colors">Journey Details</button>
+                                
+                                <div class="flex items-center gap-3 w-full mb-3">
+                                    <button class="favorite-btn flex-1 py-3 border border-white/10 hover:border-red-500/50 text-slate-400 hover:text-red-500 rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer" 
+                                            data-flight-number="@flight.FlightNumber" 
+                                            data-dep-time="@flight.DepartureTime.ToString("o")" 
+                                            data-price="@flight.Price">
+                                        <span class="material-symbols-outlined text-sm">favorite</span> Favorite
+                                    </button>
+                                </div>
+
+                                <button class="w-full py-4 bg-primary text-on-primary rounded-xl text-xs font-extrabold uppercase text-center tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-300 cursor-pointer open-details-btn"
+                                        data-flight-number="@flight.FlightNumber"
+                                        data-dep-time="@flight.DepartureTime.ToString("o")"
+                                        data-arr-time="@flight.ArrivalTime.ToString("o")"
+                                        data-origin="@flight.OriginAirport"
+                                        data-destination="@flight.DestinationAirport"
+                                        data-airline="@flight.AirlineName"
+                                        data-price="@flight.Price.ToString("N0")"
+                                        data-stops="@flight.Stops"
+                                        data-duration="@(((int)flight.Duration.TotalHours) + "h " + flight.Duration.Minutes + "m")"
+                                        data-redirect="@flight.RedirectURL">
+                                    Flight Details
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -176,13 +196,118 @@
                 </div>
             </div>
 
-            <!-- Load More Asymmetric Pattern -->
-            <div class="pt-12 flex justify-center">
-                <button class="group flex flex-col items-center gap-4">
-                    <div class="w-px h-16 bg-gradient-to-b from-slate-700 to-transparent"></div>
-                    <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500 group-hover:text-primary transition-colors">View More Journeys</span>
-                    <span class="material-symbols-outlined text-slate-700 group-hover:text-primary transition-colors animate-bounce">expand_more</span>
-                </button>
+            <!-- Flight Details Modal -->
+            <div id="FlightDetailsModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
+                <div class="glass-panel w-full max-w-2xl bg-[#141A32]/95 border border-white/10 rounded-2xl shadow-2xl p-8 text-on-background relative flex flex-col gap-6 max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300" id="ModalContentBox">
+                    <!-- Close Button -->
+                    <button id="btnCloseModal" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                        <span class="material-symbols-outlined text-2xl">close</span>
+                    </button>
+
+                    <!-- Header -->
+                    <header class="space-y-1">
+                        <span class="text-[10px] tracking-[0.3em] font-bold text-tertiary uppercase" id="ModalSubtitle">SkyScan Itinerary</span>
+                        <h2 class="text-3xl font-headline font-extrabold text-white" id="ModalTitle">Flight Details</h2>
+                    </header>
+
+                    <!-- Route timeline -->
+                    <div class="bg-surface-container-low/40 p-6 rounded-xl border border-white/5 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
+                                <div>
+                                    <p class="text-[10px] uppercase text-slate-500 tracking-wider">Departure</p>
+                                    <p class="text-lg font-bold text-slate-100" id="ModalDepTime">10:15</p>
+                                    <p class="text-xs text-slate-400" id="ModalOrigin">Sydney (SYD)</p>
+                                </div>
+                            </div>
+                            <!-- Path Decoration -->
+                            <div class="flex-1 px-6 flex flex-col items-center">
+                                <span class="text-[9px] text-slate-500 font-semibold mb-1" id="ModalDuration">9h 20m</span>
+                                <div class="h-[1px] bg-white/10 w-full relative flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-slate-500 text-sm rotate-90 bg-[#141A32] px-2">flight</span>
+                                </div>
+                                <span class="text-[9px] text-tertiary font-bold mt-1" id="ModalStops">Non-stop</span>
+                            </div>
+                            <div class="flex items-center gap-3 text-right">
+                                <div>
+                                    <p class="text-[10px] uppercase text-slate-500 tracking-wider">Arrival</p>
+                                    <p class="text-lg font-bold text-slate-100" id="ModalArrTime">19:35</p>
+                                    <p class="text-xs text-slate-400" id="ModalDestination">Bangkok (BKK)</p>
+                                </div>
+                                <span class="material-symbols-outlined text-tertiary text-xl">flight_land</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- In-flight Amenities & Flight Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Amenities -->
+                        <div class="space-y-4">
+                            <h3 class="font-headline text-xs uppercase tracking-widest text-slate-400 font-bold">In-Flight Amenities</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-sm">wifi</span>
+                                    <span class="text-xs text-slate-300">Free WiFi</span>
+                                </div>
+                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-sm">restaurant</span>
+                                    <span class="text-xs text-slate-300">Hot Meals</span>
+                                </div>
+                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-sm">power</span>
+                                    <span class="text-xs text-slate-300">USB Outlets</span>
+                                </div>
+                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                                    <span class="material-symbols-outlined text-primary text-sm">tv</span>
+                                    <span class="text-xs text-slate-300">Entertainment</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Baggage & Cabin -->
+                        <div class="space-y-4">
+                            <h3 class="font-headline text-xs uppercase tracking-widest text-slate-400 font-bold">Baggage & Cabin</h3>
+                            <div class="space-y-2 text-xs text-slate-300">
+                                <div class="flex justify-between py-1.5 border-b border-white/5">
+                                    <span class="text-slate-500">Cabin Class</span>
+                                    <span class="font-bold text-slate-200" id="ModalCabin">Economy Class</span>
+                                </div>
+                                <div class="flex justify-between py-1.5 border-b border-white/5">
+                                    <span class="text-slate-500">Carry-on Baggage</span>
+                                    <span class="font-bold text-slate-200">1x 7kg Included</span>
+                                </div>
+                                <div class="flex justify-between py-1.5">
+                                    <span class="text-slate-500">Checked Baggage</span>
+                                    <span class="font-bold text-slate-200">1x 23kg Included</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price and Action -->
+                    <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-white/5 gap-4">
+                        <div class="text-center sm:text-left">
+                            <span class="text-[9px] uppercase tracking-widest text-slate-500 block">Total Price</span>
+                            <span class="text-3xl font-headline font-extrabold text-tertiary" id="ModalPrice">$1,250</span>
+                        </div>
+                        
+                        <div class="flex gap-4 w-full sm:w-auto">
+                            <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-white/10 hover:bg-white/5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                                Cancel
+                            </button>
+                            <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="flex-1 sm:flex-initial">
+                                <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
+                                <input type="hidden" name="departureTime" id="HiddenDepartureTime" />
+                                <input type="hidden" name="origin" id="HiddenOrigin" />
+                                <input type="hidden" name="destination" id="HiddenDestination" />
+                                <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+                                    Book Flight
+                                </button>
+                            </form>
+                        </div>
+                    </footer>
+                </div>
             </div>
         </div>
     </div>
@@ -251,7 +376,127 @@
         }
 
         // Initial apply to set checkbox states
-        document.addEventListener('DOMContentLoaded', applyFilters);
+        document.addEventListener('DOMContentLoaded', () => {
+            applyFilters();
+            
+            // Toggle favorites
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const flightNumber = btn.dataset.flightNumber;
+                    const departureTime = btn.dataset.depTime;
+                    const price = btn.dataset.price;
+
+                    const formData = new FormData();
+                    formData.append('flightNumber', flightNumber);
+                    formData.append('departureTime', departureTime);
+                    formData.append('price', price);
+
+                    try {
+                        const response = await fetch('/Flight/ToggleFavorite', {
+                            method: 'POST',
+                            body: formData
+                        });
+
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                            return;
+                        }
+
+                        if (response.ok) {
+                            const data = await response.json();
+                            if (data.favorited) {
+                                btn.classList.add('text-red-500', 'border-red-500/50');
+                                btn.classList.remove('text-slate-400');
+                                btn.innerHTML = `<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">favorite</span> Favorited`;
+                            } else {
+                                btn.classList.remove('text-red-500', 'border-red-500/50');
+                                btn.classList.add('text-slate-400');
+                                btn.innerHTML = `<span class="material-symbols-outlined text-sm">favorite</span> Favorite`;
+                            }
+                        } else {
+                            window.location.href = "/Account/Login";
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("An error occurred. Please try again.");
+                    }
+                });
+            });
+
+            // Modal JS handling
+            const modal = document.getElementById('FlightDetailsModal');
+            const contentBox = document.getElementById('ModalContentBox');
+            const btnCloseModal = document.getElementById('btnCloseModal');
+            const btnCancelModal = document.getElementById('btnCancelModal');
+
+            const modalTitle = document.getElementById('ModalTitle');
+            const modalSubtitle = document.getElementById('ModalSubtitle');
+            const modalDepTime = document.getElementById('ModalDepTime');
+            const modalArrTime = document.getElementById('ModalArrTime');
+            const modalOrigin = document.getElementById('ModalOrigin');
+            const modalDestination = document.getElementById('ModalDestination');
+            const modalDuration = document.getElementById('ModalDuration');
+            const modalStops = document.getElementById('ModalStops');
+            const modalPrice = document.getElementById('ModalPrice');
+
+            const hiddenFlightNumber = document.getElementById('HiddenFlightNumber');
+            const hiddenDepartureTime = document.getElementById('HiddenDepartureTime');
+            const hiddenOrigin = document.getElementById('HiddenOrigin');
+            const hiddenDestination = document.getElementById('HiddenDestination');
+
+            document.querySelectorAll('.open-details-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const flightNumber = btn.dataset.flightNumber;
+                    const depTime = new Date(btn.dataset.depTime);
+                    const arrTime = new Date(btn.dataset.arrTime);
+                    const origin = btn.dataset.origin;
+                    const destination = btn.dataset.destination;
+                    const airline = btn.dataset.airline;
+                    const price = btn.dataset.price;
+                    const stops = parseInt(btn.dataset.stops);
+                    const duration = btn.dataset.duration;
+
+                    modalTitle.textContent = `${airline} • ${flightNumber}`;
+                    modalSubtitle.textContent = `${origin} to ${destination}`;
+                    modalDepTime.textContent = depTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                    modalArrTime.textContent = arrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                    modalOrigin.textContent = `${origin} Airport`;
+                    modalDestination.textContent = `${destination} Airport`;
+                    modalDuration.textContent = duration;
+                    modalStops.textContent = stops === 0 ? 'Non-stop' : `${stops} Stop${stops > 1 ? 's' : ''}`;
+                    modalPrice.textContent = `$${price}`;
+
+                    hiddenFlightNumber.value = flightNumber;
+                    hiddenDepartureTime.value = btn.dataset.depTime;
+                    hiddenOrigin.value = origin;
+                    hiddenDestination.value = destination;
+
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    setTimeout(() => {
+                        contentBox.classList.remove('scale-95');
+                        contentBox.classList.add('scale-100');
+                    }, 10);
+                });
+            });
+
+            function closeModal() {
+                contentBox.classList.remove('scale-100');
+                contentBox.classList.add('scale-95');
+                modal.classList.add('animate-out', 'fade-out');
+                setTimeout(() => {
+                    modal.classList.remove('flex', 'animate-out', 'fade-out');
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            btnCloseModal.addEventListener('click', closeModal);
+            btnCancelModal.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        });
     </script>
 }
 

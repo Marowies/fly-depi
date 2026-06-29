@@ -48,19 +48,18 @@
                 <div class="text-2xl font-black tracking-tighter text-[#BFC5E4] font-headline">SkyScan</div>
             </div>
             <div class="hidden md:flex items-center gap-10 font-manrope tracking-[-0.02em] font-medium text-[11px] uppercase">
-                <a class="text-[#DAC76A] font-bold border-b-2 border-[#DAC76A] pb-1" asp-controller="Flight" asp-action="Index">Explore</a>
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" href="#">Bookings</a>
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" href="#">Concierge</a>
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" href="#">Lounges</a>
+                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Flight" asp-action="Index">Explore</a>
+                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Booking" asp-action="MyBookings">Bookings</a>
+                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Account" asp-action="Profile">Profile</a>
             </div>
             <div class="flex items-center gap-6">
                 <button class="bg-[#F2F2F7] text-[#1C1C1E] font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider scale-95 active:scale-100 transition-transform">Elevate to First</button>
                 <div class="flex items-center gap-4">
-                    <button class="hover:text-[#DAC76A] transition-all duration-300">
-                        <span class="material-symbols-outlined text-[#BFC5E4] text-xl">notifications</span>
-                    </button>
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
+                        <button class="hover:text-[#DAC76A] transition-all duration-300" title="Notifications">
+                            <span class="material-symbols-outlined text-[#BFC5E4] text-xl">notifications</span>
+                        </button>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
                             <button type="submit" class="hover:text-[#DAC76A] transition-all duration-300 flex items-center gap-1" title="Sign Out">
                                 <span class="material-symbols-outlined text-[#BFC5E4] text-xl">logout</span>

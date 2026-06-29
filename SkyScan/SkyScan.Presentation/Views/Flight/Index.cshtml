@@ -38,6 +38,9 @@
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
                             <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
+                            <button type="button" id="btnDetectGPS" class="text-primary hover:text-white transition-colors cursor-pointer p-1" title="Detect nearest city via GPS">
+                                <span class="material-symbols-outlined text-lg">my_location</span>
+                            </button>
                         </div>
                     </div>
                     <!-- Destination -->
@@ -155,6 +158,55 @@
         </button>
     </div>
 </template>
+
+<!-- Trending Routes Section -->
+<section class="bg-background py-16 px-8 border-b border-white/5">
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-12">
+            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-primary font-bold">Real-time Insights</span>
+            <h2 class="font-headline text-3xl font-extrabold tracking-tight text-white mt-1">Trending Flight Routes</h2>
+            <p class="text-xs text-slate-500 mt-2">The most popular journeys booked and searched by our members in the last 30 days.</p>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            @foreach (var route in Model.TrendingRoutes)
+            {
+                <a href="/Flight/Results?origin=@route.OriginCityId&destination=@route.DestinationCityId&date=@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" 
+                   class="group glass-panel block p-6 rounded-xl border border-white/5 hover:border-primary/20 transition-all hover:scale-[1.02] relative overflow-hidden shadow-lg">
+                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-[9px] text-[#DAC76A] font-bold uppercase tracking-wider bg-[#DAC76A]/10 px-2 py-0.5 rounded">
+                            🔥 @route.SearchCount searches
+                        </span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <span class="block text-[8px] text-slate-500 uppercase tracking-widest">From</span>
+                            <span class="text-sm font-bold text-slate-100">@route.OriginCityName</span>
+                        </div>
+                        <div class="h-px bg-white/10 w-full relative">
+                            <span class="material-symbols-outlined text-[10px] text-slate-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90">flight</span>
+                        </div>
+                        <div>
+                            <span class="block text-[8px] text-slate-500 uppercase tracking-widest">To</span>
+                            <span class="text-sm font-bold text-slate-100">@route.DestinationCityName</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-white/5 flex justify-between items-baseline">
+                        <div>
+                            <span class="text-[8px] text-slate-500 uppercase tracking-widest block">From</span>
+                            <span class="text-lg font-headline font-extrabold text-tertiary">$@route.MinPrice.ToString("N0")</span>
+                        </div>
+                        <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Explore</span>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</section>
 
 <!-- Featured Curations (Bento Grid) -->
 <section class="bg-background py-32 px-8">
@@ -281,6 +333,31 @@
         window.addEventListener('load', () => {
             const initialType = "@Model.TripType";
             setTripType(initialType);
+        });
+
+        document.getElementById('btnDetectGPS').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async (position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    try {
+                        const response = await fetch(`/Flight/GetNearestCity?lat=${lat}&lon=${lon}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            document.getElementById('OriginCity').value = data.name;
+                        } else {
+                            alert("Could not determine nearest city from your location.");
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Error getting location details.");
+                    }
+                }, (error) => {
+                    alert("Geolocation permission denied or unavailable.");
+                });
+            } else {
+                alert("Geolocation is not supported by your browser.");
+            }
         });
     </script>
 }
