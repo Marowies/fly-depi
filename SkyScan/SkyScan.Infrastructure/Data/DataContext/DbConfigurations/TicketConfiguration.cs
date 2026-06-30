@@ -13,8 +13,8 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
             builder.Property(t => t.Price)
                 .HasColumnType("decimal(18,2)");
 
-            builder.Property(t => t.LuggageDescription)
-                .HasMaxLength(100);
+            builder.Property(t => t.Currency)
+                .HasMaxLength(3);
 
             builder.HasOne(t => t.Flight)
                 .WithMany(f => f.Tickets)

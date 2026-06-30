@@ -1,6 +1,5 @@
 using SkyScan.Core.Constants;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,14 +15,12 @@ namespace SkyScan.Core.Entities.AirLine
         [Range(0.01, 1000000, ErrorMessage = "Price must be greater than zero.")]
         public decimal Price { get; set; }
 
+        
+        [StringLength(3)]
+        public string? Currency { get; set; }
+
         [Required]
         public CabinType CabinClass { get; set; }
-
-        [StringLength(100)]
-        public string? LuggageDescription { get; set; }
-
-        [Range(0, 100, ErrorMessage = "Luggage weight must be between 0 and 100 (Kg).")]
-        public double? LuggageWeight { get; set; }
 
         public bool HasFood { get; set; } = false;
         public bool HasWifi { get; set; } = false;

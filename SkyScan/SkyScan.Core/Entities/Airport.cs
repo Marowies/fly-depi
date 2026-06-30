@@ -26,9 +26,6 @@ namespace SkyScan.Core.Entities
         [StringLength(50)]
         public string? Type { get; set; }
 
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
-        public int? ElevationFt { get; set; }
 
         [Required]
         public Guid CityId { get; set; }

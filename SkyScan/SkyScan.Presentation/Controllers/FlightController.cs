@@ -237,24 +237,60 @@ namespace SkyScan.Presentation.Controllers
             // Log Search to database for trending/popular analytics
             try
             {
-                var searchLog = new Search
-                {
-                    SearchId = Guid.NewGuid(),
-                    TimeStamp = DateTime.UtcNow,
-                    Type = Enum.TryParse(tripType, out TripType parsedType) ? parsedType : TripType.OneWay,
-                    DepartureDate = departureDate,
-                    OriginCityId = originId,
-                    DestinationCityId = destId
-                };
-
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    searchLog.UserId = user.Id;
-                }
+                    var tripTypeVal = Enum.TryParse(tripType, out TripType parsedType) ? parsedType : TripType.OneWay;
 
-                _context.Searches.Add(searchLog);
-                await _context.SaveChangesAsync();
+                    // Upsert: update existing route or insert new one
+                    var existing = await _context.Searches
+                        .FirstOrDefaultAsync(s => s.UserId == user.Id
+                                               && s.OriginCityId == originId
+                                               && s.DestinationCityId == destId);
+
+                    if (existing != null)
+                    {
+                        // Update existing route
+                        existing.TimeStamp = DateTime.UtcNow;
+                        existing.DepartureDate = departureDate;
+                        existing.Type = tripTypeVal;
+                    }
+                    else
+                    {
+                        // Insert new route
+                        var searchLog = new Search
+                        {
+                            TimeStamp = DateTime.UtcNow,
+                            Type = tripTypeVal,
+                            DepartureDate = departureDate,
+                            OriginCityId = originId,
+                            DestinationCityId = destId,
+                            UserId = user.Id
+                        };
+                        _context.Searches.Add(searchLog);
+
+                        // Enforce max 5 unique routes per user — remove oldest by TimeStamp
+                        var userSearches = await _context.Searches
+                            .Where(s => s.UserId == user.Id)
+                            .OrderByDescending(s => s.TimeStamp)
+                            .ToListAsync();
+
+                        if (userSearches.Count >= 5)
+                        {
+                            var toDelete = userSearches.Skip(4);
+                            _context.Searches.RemoveRange(toDelete);
+                        }
+                    }
+
+                    // Increment destination city search count for popularity tracking
+                    var destCity1 = await _context.Cities.FindAsync(destId);
+                    if (destCity1 != null)
+                    {
+                        destCity1.SearchCount++;
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -269,8 +305,15 @@ namespace SkyScan.Presentation.Controllers
             var destIatas = destAirports.Select(a => a.IataCode).Where(i => !string.IsNullOrEmpty(i)).ToList();
 
             // Resolve City Names from the first available airport or default
-            var originName = originAirports.FirstOrDefault()?.City?.Name ?? "Origin";
-            var destName = destAirports.FirstOrDefault()?.City?.Name ?? "Destination";
+            var originCity = originAirports.FirstOrDefault()?.City;
+            var originName = originCity != null 
+                ? $"{originCity.Name}, {originCity.Country?.Name ?? originCity.CountryCode}" 
+                : "Origin";
+
+            var destCity = destAirports.FirstOrDefault()?.City;
+            var destName = destCity != null 
+                ? $"{destCity.Name}, {destCity.Country?.Name ?? destCity.CountryCode}" 
+                : "Destination";
             
             // Search Flights via the provider (Mock or Real) with Caching
             var cacheKey = $"flights_{string.Join("-", originIatas)}_{string.Join("-", destIatas)}_{departureDate:yyyyMMdd}";

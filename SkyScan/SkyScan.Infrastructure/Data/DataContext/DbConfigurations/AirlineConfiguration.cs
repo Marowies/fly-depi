@@ -14,13 +14,10 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
                 .IsRequired()
                 .HasMaxLength(100);
 
-            builder.Property(a => a.HotlineNumber)
-                .IsRequired()
-                .HasMaxLength(20);
 
-            builder.Property(a => a.IataCode).HasMaxLength(10);
-            builder.Property(a => a.IcaoCode).HasMaxLength(10);
-            builder.Property(a => a.Callsign).HasMaxLength(50);
+            builder.Property(a => a.IataCode).HasMaxLength(3);
+
+            builder.HasIndex(a => a.IataCode).IsUnique(false);
         }
     }
 }

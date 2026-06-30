@@ -18,6 +18,10 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
                 .IsRequired()
                 .HasMaxLength(2);
 
+            builder.Property(c => c.IataCode)
+                .HasColumnName("CityIataCode")
+                .HasMaxLength(3);
+
             builder.HasOne(c => c.Country)
                 .WithMany(co => co.Cities)
                 .HasForeignKey(c => c.CountryCode)

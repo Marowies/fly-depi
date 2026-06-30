@@ -48,6 +48,22 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            ConcurrencyStamp = "11111111-1111-1111-1111-111111111111",
+                            Name = "Guest",
+                            NormalizedName = "GUEST"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            ConcurrencyStamp = "22222222-2222-2222-2222-222222222222",
+                            Name = "RegisteredUser",
+                            NormalizedName = "REGISTEREDUSER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -159,22 +175,13 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Callsign")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
                     b.Property<string>("HotlineNumber")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("IataCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<string>("IcaoCode")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -182,6 +189,8 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.HasKey("AirlineId");
+
+                    b.HasIndex("IataCode");
 
                     b.ToTable("Airlines");
                 });
@@ -192,73 +201,18 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AirlineId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CabinClasses")
+                    b.Property<string>("AircraftCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
-                    b.Property<DateOnly?>("EndDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("EngineType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Icao24")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("ManufactureCompany")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateOnly>("ManufactureDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("OwnerCompany")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("PlaneId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Registration")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<int>("Seats")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SerialNumber")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateOnly?>("StartDate")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Status")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                    b.Property<string>("AircraftName")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("AirplaneId");
 
-                    b.HasIndex("AirlineId");
-
-                    b.HasIndex("Icao24");
-
-                    b.HasIndex("PlaneId");
-
-                    b.HasIndex("Registration");
+                    b.HasIndex("AircraftCode");
 
                     b.ToTable("Airplanes");
                 });
@@ -323,6 +277,10 @@ namespace SkyScan.Infrastructure.Data.Migrations
                     b.Property<int>("CabinClass")
                         .HasColumnType("int");
 
+                    b.Property<string>("Currency")
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
+
                     b.Property<Guid>("FlightId")
                         .HasColumnType("uniqueidentifier");
 
@@ -334,13 +292,6 @@ namespace SkyScan.Infrastructure.Data.Migrations
 
                     b.Property<bool>("HasWifi")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LuggageDescription")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<double?>("LuggageWeight")
-                        .HasColumnType("float");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -447,6 +398,9 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int>("SearchCount")
+                        .HasColumnType("int");
+
                     b.HasKey("CityId");
 
                     b.HasIndex("CountryCode");
@@ -504,18 +458,17 @@ namespace SkyScan.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("SkyScan.Core.Entities.Search", b =>
                 {
-                    b.Property<Guid>("SearchId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DepartureDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("DestinationCityId")
+                    b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("OriginCityId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DestinationCityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("DepartureDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TimeStamp")
                         .HasColumnType("datetime2");
@@ -523,16 +476,11 @@ namespace SkyScan.Infrastructure.Data.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("SearchId");
+                    b.HasKey("UserId", "OriginCityId", "DestinationCityId");
 
                     b.HasIndex("DestinationCityId");
 
                     b.HasIndex("OriginCityId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Searches");
                 });
@@ -676,13 +624,6 @@ namespace SkyScan.Infrastructure.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SkyScan.Core.Entities.AirLine.Airplane", b =>
-                {
-                    b.HasOne("SkyScan.Core.Entities.AirLine.Airline", null)
-                        .WithMany("Airplanes")
-                        .HasForeignKey("AirlineId");
-                });
-
             modelBuilder.Entity("SkyScan.Core.Entities.AirLine.Flight", b =>
                 {
                     b.HasOne("SkyScan.Core.Entities.AirLine.Airline", "Airline")
@@ -822,8 +763,6 @@ namespace SkyScan.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("SkyScan.Core.Entities.AirLine.Airline", b =>
                 {
-                    b.Navigation("Airplanes");
-
                     b.Navigation("Flights");
                 });
 

@@ -8,7 +8,8 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
     {
         public void Configure(EntityTypeBuilder<Search> builder)
         {
-            builder.HasKey(s => s.SearchId);
+            // Composite PK: one record per unique route per user
+            builder.HasKey(s => new { s.UserId, s.OriginCityId, s.DestinationCityId });
 
             builder.Property(s => s.TimeStamp).IsRequired();
             builder.Property(s => s.DepartureDate).IsRequired();

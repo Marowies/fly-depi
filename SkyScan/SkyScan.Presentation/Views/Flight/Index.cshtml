@@ -31,9 +31,9 @@
 
             <div class="w-full glass-panel rounded-2xl p-1 md:p-2 border border-outline-variant/10">
                 <!-- Standard Search (OneWay / RoundTrip) -->
-                <div id="StandardSearchFields" class="flex flex-col lg:flex-row items-stretch gap-1">
+                <div id="StandardSearchFields" class="flex flex-col md:flex-row flex-wrap xl:flex-nowrap items-stretch gap-2 w-full">
                     <!-- Origin -->
-                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                    <div class="flex-1 min-w-[200px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
                         <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Origin</label>
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <!-- Destination -->
-                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                    <div class="flex-1 min-w-[200px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
                         <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <!-- Departure -->
-                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                    <div class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
                         <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <!-- Return Date -->
-                    <div id="ReturnDateField" class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative" style="display: none;">
+                    <div id="ReturnDateField" class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative" style="display: none;">
                         <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Return</label>
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-tertiary text-xl">event_repeat</span>
@@ -68,7 +68,7 @@
                         </div>
                     </div>
                     <!-- Cabin Class -->
-                    <div class="flex-1 bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
+                    <div class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
                         <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Cabin Class</label>
                         <div class="flex items-center gap-3">
                             <span class="material-symbols-outlined text-primary text-xl">star</span>
@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <!-- CTA -->
-                    <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-12 py-6 lg:py-0 rounded-xl transition-all active:scale-[0.98]">
+                    <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-12 py-6 xl:py-0 rounded-xl transition-all active:scale-[0.98] flex-1 xl:flex-none xl:w-48 min-h-[72px] xl:min-h-0">
                         Explore
                     </button>
                 </div>

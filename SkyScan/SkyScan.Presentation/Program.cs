@@ -23,7 +23,7 @@ namespace SkyScan.Presentation
 
             // ── Database ──────────────────────────────────────────────────────────
             builder.Services.AddDbContext<SkyScanDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("SmarterASPNetConnection")));
 
             // ── AutoMapper ────────────────────────────────────────────────────────
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
@@ -101,6 +101,7 @@ namespace SkyScan.Presentation
 
             builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();
+            builder.Services.AddHttpClient<ICurrencyConversionService, CurrencyConversionService>();
 
             // ─────────────────────────────────────────────────────────────────────
             var app = builder.Build();

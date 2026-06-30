@@ -46,6 +46,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         {
             return await _dbSet
                 .Include(a => a.City)
+                    .ThenInclude(c => c.Country)
                 .Where(a => a.CityId == cityId)
                 .AsNoTracking()
                 .ToListAsync();
@@ -53,23 +54,8 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
         public async Task<City?> GetNearestCityByCoordinatesAsync(double latitude, double longitude)
         {
-            double latRad = latitude * Math.PI / 180.0;
-            double lonRad = longitude * Math.PI / 180.0;
-            const double degToRad = Math.PI / 180.0;
-
-            var nearestAirport = await _dbSet
-                .Include(a => a.City)
-                .Where(a => a.Latitude.HasValue && a.Longitude.HasValue)
-                .OrderBy(a => 
-                    Math.Acos(
-                        Math.Sin(latRad) * Math.Sin(a.Latitude.Value * degToRad) +
-                        Math.Cos(latRad) * Math.Cos(a.Latitude.Value * degToRad) *
-                        Math.Cos((a.Longitude.Value * degToRad) - lonRad)
-                    )
-                )
-                .FirstOrDefaultAsync();
-
-            return nearestAirport?.City;
+            // Latitude and Longitude have been removed from the database schema.
+            return await Task.FromResult<City?>(null);
         }
     }
 }

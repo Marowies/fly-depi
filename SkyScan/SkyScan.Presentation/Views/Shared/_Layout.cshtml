@@ -43,17 +43,46 @@
     <!-- Top Navigation -->
     <nav class="fixed top-0 w-full z-50 bg-[#0B1229]/60 backdrop-blur-2xl shadow-[0px_24px_48px_rgba(6,13,36,0.4)]">
         <div class="flex justify-between items-center px-12 py-6 w-full max-w-screen-2xl mx-auto h-20">
-            <div class="flex items-center gap-4">
+            <a asp-controller="Flight" asp-action="Index" class="flex items-center gap-4 hover:opacity-90 transition-opacity">
                 <img alt="SkyScan Logo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE3YoV-bTiqbWTeJ5H9ZF2xASvIl5pQvAFUdV7bL55V12L4dN4XEyRIVXFwZtR2g_vU7STh65kAHVvr9Q7zJiexI8ZwwfUvBDXLdgzEBdnjMDLMiG1inSnqltW_N7vSXX48JjoP7lT4NpRt6KTiJ6dPPBNf8Gl7mEyMBiEIbLf8kbZKT3T9dEx7CwRyl8W4DZcqXFchICzuoza_A2IXwkyBIp9tffc9wpL1gi1sE-cPjK71kDv28DSgFeXtwHG9f8tPUGOpkQUsQ" />
                 <div class="text-2xl font-black tracking-tighter text-[#BFC5E4] font-headline">SkyScan</div>
-            </div>
+            </a>
             <div class="hidden md:flex items-center gap-10 font-manrope tracking-[-0.02em] font-medium text-[11px] uppercase">
                 <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Flight" asp-action="Index">Explore</a>
                 <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Booking" asp-action="MyBookings">Bookings</a>
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Account" asp-action="Profile">Profile</a>
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Account" asp-action="Profile">Profile</a>
+                }
             </div>
             <div class="flex items-center gap-6">
-                <button class="bg-[#F2F2F7] text-[#1C1C1E] font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider scale-95 active:scale-100 transition-transform">Elevate to First</button>
+                @{
+                    var selectedCurrency = Context.Request.Cookies["SelectedCurrency"] ?? "USD";
+                    var selectedLang = Context.Request.Cookies[Microsoft.AspNetCore.Localization.CookieRequestCultureProvider.DefaultCookieName] ?? "en";
+                    var isArabic = selectedLang.Contains("ar");
+                }
+                <div class="flex items-center gap-2">
+                    <!-- Language Switcher -->
+                    <form asp-controller="Language" asp-action="Toggle" method="post" class="inline">
+                        <button type="submit" class="flex items-center gap-1 bg-[#222941] border border-[#BFC5E4]/10 hover:border-[#DAC76A]/40 text-[#BFC5E4] hover:text-[#DAC76A] py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Toggle Language">
+                            <span class="material-symbols-outlined text-sm">language</span>
+                            <span>@(isArabic ? "EN" : "AR")</span>
+                        </button>
+                    </form>
+                    <!-- Currency Switcher Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 bg-[#222941] border border-[#BFC5E4]/10 hover:border-[#DAC76A]/40 text-[#BFC5E4] hover:text-[#DAC76A] py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Select Currency">
+                            <span class="material-symbols-outlined text-sm">payments</span>
+                            <span>@selectedCurrency</span>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-28 bg-[#141a32] border border-[#BFC5E4]/10 rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 py-1">
+                            <a href="/Currency/Set?code=USD" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">USD ($)</a>
+                            <a href="/Currency/Set?code=EGP" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">EGP (E£)</a>
+                            <a href="/Currency/Set?code=EUR" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">EUR (€)</a>
+                            <a href="/Currency/Set?code=GBP" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">GBP (£)</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="flex items-center gap-4">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
@@ -68,8 +97,8 @@
                     }
                     else
                     {
-                        <a asp-controller="Account" asp-action="Login" class="hover:text-[#DAC76A] transition-all duration-300 flex items-center gap-1" title="Sign In">
-                            <span class="material-symbols-outlined text-[#BFC5E4] text-xl">account_circle</span>
+                        <a asp-controller="Account" asp-action="Login" class="bg-[#DAC76A] text-[#0b1229] hover:bg-[#bfc5e4] transition-all font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider" title="Sign In">
+                            Sign In
                         </a>
                     }
                 </div>

@@ -70,6 +70,43 @@
                         </a>
                     }
                 </div>
+
+                <!-- Reset Password -->
+                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Reset Password</h2>
+                    <p class="text-xs text-slate-400 leading-relaxed">Change your login password regularly for safety.</p>
+
+                    @if (TempData["PasswordSuccess"] != null)
+                    {
+                        <div class="text-green-400 text-xs font-semibold bg-green-950/25 p-3 rounded-lg border border-green-500/25">
+                            @TempData["PasswordSuccess"]
+                        </div>
+                    }
+                    @if (TempData["PasswordError"] != null)
+                    {
+                        <div class="text-red-400 text-xs font-semibold bg-red-950/25 p-3 rounded-lg border border-red-500/25">
+                            @TempData["PasswordError"]
+                        </div>
+                    }
+
+                    <form asp-controller="Account" asp-action="ChangePassword" method="post" class="space-y-4">
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Current Password</label>
+                            <input name="OldPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">New Password</label>
+                            <input name="NewPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confirm New Password</label>
+                            <input name="ConfirmPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
             </section>
 
             <!-- Favorites and Search Log Dashboard (8 cols) -->

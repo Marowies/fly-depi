@@ -449,6 +449,36 @@ namespace SkyScan.Presentation.Controllers
         }
 
         // ══════════════════════════════════════════════════════════════════════════
+        // CHANGE PASSWORD
+        // ══════════════════════════════════════════════════════════════════════════
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["PasswordError"] = "Please fill in all fields correctly.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (!result.Succeeded)
+            {
+                TempData["PasswordError"] = string.Join(" ", result.Errors.Select(e => e.Description));
+                return RedirectToAction(nameof(Profile));
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            TempData["PasswordSuccess"] = "Your password has been changed successfully.";
+            return RedirectToAction(nameof(Profile));
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
         // PROFILE
         // ══════════════════════════════════════════════════════════════════════════
 
