@@ -11,48 +11,48 @@
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12">
         <!-- Filter Sidebar -->
         <aside class="w-full lg:w-72 flex-shrink-0 space-y-12">
-            <div class="bg-surface-variant/40 backdrop-blur-2xl p-8 rounded-xl border border-white/5">
-                <h2 class="font-headline text-[11px] tracking-[0.2em] uppercase text-on-surface-variant font-bold mb-8">Refine Journey</h2>
+            <div class="glass-panel p-8 rounded-2xl border border-white/5">
+                <h2 class="font-sans text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-8">Refine Journey</h2>
                 <div class="space-y-10">
                     <!-- Stops Filter -->
                     <div>
-                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Stops</label>
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-text-muted mb-4 font-bold">Stops</label>
                         <div class="flex flex-col gap-3">
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="0" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
-                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                    <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">Non-stop Only</span>
+                                <span class="text-xs text-text-muted group-hover:text-accent transition-colors">Non-stop Only</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="1" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
-                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                    <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">Up to 1 Stop</span>
+                                <span class="text-xs text-text-muted group-hover:text-accent transition-colors">Up to 1 Stop</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="2" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
-                                    <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                    <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-on-surface group-hover:text-primary transition-colors">2+ Stops</span>
+                                <span class="text-xs text-text-muted group-hover:text-accent transition-colors">2+ Stops</span>
                             </label>
                         </div>
                     </div>
                     <!-- Airlines Filter -->
                     <div>
-                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Airlines</label>
-                        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-primary">
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-text-muted mb-4 font-bold">Airlines</label>
+                        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-accent">
                             @foreach (var airline in Model.UniqueAirlines)
                             {
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <input type="checkbox" class="hidden airline-checkbox" value="@airline" checked onchange="applyFilters()" />
-                                    <div class="checkbox-box w-4 h-4 border border-primary flex items-center justify-center transition-colors">
-                                        <div class="checkbox-inner w-2 h-2 bg-primary"></div>
+                                    <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                        <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                     </div>
-                                    <span class="text-[11px] text-on-surface-variant group-hover:text-on-surface transition-colors truncate">@airline</span>
+                                    <span class="text-[11px] text-text-muted group-hover:text-text-light transition-colors truncate">@airline</span>
                                 </label>
                             }
                         </div>
@@ -63,30 +63,30 @@
                         var convertedMax = await CurrencyService.ConvertAsync(Model.MaxPrice, currency);
                     }
                     <div>
-                        <label class="block font-headline text-[10px] uppercase tracking-widest text-slate-500 mb-4">Max Price</label>
-                        <input type="range" class="w-full accent-primary bg-white/10 h-1 rounded-lg cursor-pointer" 
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-text-muted mb-4 font-bold">Max Price</label>
+                        <input type="range" class="w-full accent-accent bg-white/10 h-1 rounded-lg cursor-pointer" 
                                id="priceSlider" 
                                min="@Math.Floor(convertedMin)" 
                                max="@Math.Ceiling(convertedMax)" 
                                value="@Math.Ceiling(convertedMax)"
                                oninput="updatePriceLabel(this.value)" />
                         <div class="flex justify-between mt-4">
-                            <span class="text-[10px] font-bold text-on-surface-variant">@symbol@Math.Floor(convertedMin)</span>
-                            <span class="text-[10px] font-bold text-primary" id="priceLabel">@symbol@Math.Ceiling(convertedMax)</span>
+                            <span class="text-[10px] font-bold text-text-muted">@symbol@Math.Floor(convertedMin)</span>
+                            <span class="text-[10px] font-bold text-accent" id="priceLabel">@symbol@Math.Ceiling(convertedMax)</span>
                         </div>
                     </div>
                     
-                    <button class="w-full py-2 text-[9px] uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors border border-white/10 rounded-lg" onclick="resetFilters()">Reset Filters</button>
+                    <button class="w-full py-2 text-[9px] uppercase tracking-widest text-text-muted hover:text-accent transition-colors border border-white/10 rounded-lg cursor-pointer" onclick="resetFilters()">Reset Filters</button>
                 </div>
             </div>
             
-            <div class="p-8 rounded-xl bg-gradient-to-br from-surface-container-high to-surface-container-low border border-white/5 relative overflow-hidden group">
-                <img class="absolute inset-0 object-cover opacity-20 transition-transform duration-700 group-hover:scale-110" alt="luxury private jet" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADowYKZzfpaN69Ljt3K4Cv-EK83EDY2qO_SuZ3WfP2zzuIXfyH1f0f8qTqRNrdeRS8tdsUV54nFq6BG6PHeyEaqW-Dzm-qnYFY8IYeuGgFjX33GX6mlGzSp7enC3zMXko7ol_W3tk257SQDoyBZnRZCm7XSG_y6_PuZLG6VrQbpHYLU4HnVzptFsYI2y6W4DLJzUWcQ7y071U9cvV-HCw4TmhINlu0k54yBk85_rrnMy-m3z0db2xxeZnXSG-me83v9MgWAR90eA" />
+            <div class="p-8 rounded-2xl bg-gradient-to-br from-surface to-background border border-white/5 relative overflow-hidden group">
+                <img class="absolute inset-0 object-cover opacity-10 transition-transform duration-700 group-hover:scale-110" alt="luxury private jet" src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=800&q=80" />
                 <div class="relative z-10">
-                    <span class="text-tertiary font-headline text-[9px] font-extrabold uppercase tracking-[.3em]">Celestial Plus</span>
-                    <h3 class="text-xl font-headline font-bold text-slate-200 mt-2 mb-4 leading-tight">Upgrade to Private Access</h3>
-                    <p class="text-xs text-slate-400 mb-6 leading-relaxed">Skip the terminals. Enjoy direct apron transfers and private lounge access across 40 global hubs.</p>
-                    <button class="text-[10px] font-bold uppercase tracking-widest text-tertiary border-b border-tertiary/30 pb-1">Learn More</button>
+                    <span class="text-accent font-sans text-[9px] font-extrabold uppercase tracking-[.3em]">Celestial Plus</span>
+                    <h3 class="text-xl font-serif font-bold text-text-light mt-2 mb-4 leading-tight">Upgrade to Private Access</h3>
+                    <p class="text-xs text-text-muted mb-6 leading-relaxed">Skip the terminals. Enjoy direct apron transfers and private lounge access across 40 global hubs.</p>
+                    <button class="text-[10px] font-bold uppercase tracking-widest text-accent border-b border-accent/30 pb-1 cursor-pointer">Learn More</button>
                 </div>
             </div>
         </aside>
@@ -95,12 +95,12 @@
         <div class="flex-1 space-y-8">
             <header class="flex justify-between items-end pb-4 border-b border-white/5">
                 <div>
-                    <span class="text-[10px] tracking-[0.3em] font-bold text-primary uppercase">Select your path</span>
-                    <h1 class="text-4xl font-headline font-extrabold text-slate-200 mt-2 tracking-tight">@Model.OriginCity to @Model.DestinationCity</h1>
-                    <p class="text-[11px] text-slate-500 mt-1 uppercase tracking-widest">@Model.DepartureDate.ToString("MMMM dd, yyyy")</p>
+                    <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase">Select your path</span>
+                    <h1 class="text-4xl font-serif font-extrabold text-text-light mt-2 tracking-tight">@Model.OriginCity to @Model.DestinationCity</h1>
+                    <p class="text-[11px] text-text-muted mt-1 uppercase tracking-widest">@Model.DepartureDate.ToString("MMMM dd, yyyy")</p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] tracking-widest text-slate-500 uppercase">@Model.Flights.Count() Results Found</span>
+                    <span class="text-[10px] tracking-widest text-text-muted uppercase">@Model.Flights.Count() Results Found</span>
                 </div>
             </header>
 
@@ -108,7 +108,7 @@
                 @foreach (var flight in Model.Flights)
                 {
                     var flightPriceConverted = await CurrencyService.ConvertAsync(flight.Price, currency);
-                    <div class="flight-card group bg-surface-container-low hover:bg-surface-container-high transition-all duration-500 rounded-xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-slate-950/50 border border-white/5"
+                    <div class="flight-card group bg-[#111111]/80 hover:bg-[#111111] transition-all duration-500 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl border border-white/5 hover:border-accent/30"
                          data-price="@flightPriceConverted"
                          data-stops="@flight.Stops"
                          data-airline="@flight.AirlineName">
@@ -117,60 +117,59 @@
                             <div class="flex-1 p-8 md:p-10">
                                 <div class="flex justify-between items-start mb-10">
                                     <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-slate-200/5 rounded-full flex items-center justify-center border border-white/5">
+                                        <div class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
                                             <span class="material-symbols-outlined text-slate-400">flight_takeoff</span>
                                         </div>
                                         <div>
                                             <span class="text-[10px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.AirlineName</span>
                                             <p class="text-[11px] text-slate-400 font-medium">@flight.AirlineName.Substring(0, Math.Min(2, flight.AirlineName.Length)).ToUpper() @(new Random().Next(100, 999)) • Modern Fleet</p>
                                         </div>
-                                    </div>
-                                    @if (flight.Stops == 0)
+                                    </div>                                    @if (flight.Stops == 0)
                                     {
-                                        <div class="px-3 py-1 bg-tertiary/10 border border-tertiary/20 rounded-full">
-                                            <span class="text-[9px] font-bold text-tertiary uppercase tracking-wider">Fastest Route</span>
+                                        <div class="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full">
+                                            <span class="text-[9px] font-bold text-accent uppercase tracking-wider">Fastest Route</span>
                                         </div>
                                     }
                                 </div>
                                 <div class="flex items-center justify-between relative">
                                     <div class="text-center md:text-left z-10">
-                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.DepartureTime.ToString("HH:mm")</h4>
-                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.OriginAirport</span>
+                                        <h4 class="text-2xl font-serif font-bold text-text-light">@flight.DepartureTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-text-muted">@flight.OriginAirport</span>
                                     </div>
                                     <!-- Flight Path Decoration -->
                                     <div class="flex-1 px-8 relative">
-                                        <div class="h-[1px] w-full bg-slate-700/50 relative">
-                                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
-                                            <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-slate-700"></div>
-                                            <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-tertiary"></div>
+                                        <div class="h-[1px] w-full bg-white/10 relative">
+                                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
+                                            <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-white/20"></div>
+                                            <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-accent"></div>
                                             <!-- Plane Icon -->
-                                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-low group-hover:bg-surface-container-high transition-colors px-3">
-                                                <span class="material-symbols-outlined text-sm text-slate-500 rotate-90">flight</span>
+                                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#111111] group-hover:bg-[#111111] transition-colors px-3">
+                                                <span class="material-symbols-outlined text-sm text-accent rotate-90">flight</span>
                                             </div>
                                         </div>
                                         <div class="mt-4 text-center">
-                                            <span class="text-[9px] uppercase tracking-widest text-slate-500 font-medium">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m • @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} Stop{(flight.Stops > 1 ? "s" : "")}")</span>
+                                            <span class="text-[9px] uppercase tracking-widest text-text-muted font-medium">@((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m • @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} Stop{(flight.Stops > 1 ? "s" : "")}")</span>
                                         </div>
                                     </div>
                                     <div class="text-center md:text-right z-10">
-                                        <h4 class="text-2xl font-headline font-bold text-slate-200">@flight.ArrivalTime.ToString("HH:mm")</h4>
-                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-slate-500">@flight.DestinationAirport</span>
+                                        <h4 class="text-2xl font-serif font-bold text-text-light">@flight.ArrivalTime.ToString("HH:mm")</h4>
+                                        <span class="text-[11px] font-bold uppercase tracking-[.2em] text-text-muted">@flight.DestinationAirport</span>
                                         @if (flight.ArrivalTime.Date > flight.DepartureTime.Date)
                                         {
-                                            <p class="text-[9px] text-tertiary mt-1">+1 Day</p>
+                                            <p class="text-[9px] text-accent mt-1">+1 Day</p>
                                         }
                                     </div>
                                 </div>
                             </div>
                             <!-- Right Actions -->
-                            <div class="w-full md:w-64 bg-surface-container-high p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
+                            <div class="w-full md:w-64 bg-[#111111] p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
                                 <div class="flex items-baseline gap-1 mb-6">
-                                    <span class="text-[11px] font-bold text-slate-400">@symbol</span>
-                                    <span class="text-4xl font-headline font-extrabold text-tertiary tracking-tighter">@flightPriceConverted.ToString("N0")</span>
+                                    <span class="text-[11px] font-bold text-text-muted">@symbol</span>
+                                    <span class="text-4xl font-serif font-extrabold text-accent tracking-tighter">@flightPriceConverted.ToString("N0")</span>
                                 </div>
                                 
                                 <div class="flex items-center gap-3 w-full mb-3">
-                                    <button class="favorite-btn flex-1 py-3 border border-white/10 hover:border-red-500/50 text-slate-400 hover:text-red-500 rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer" 
+                                    <button class="favorite-btn flex-1 py-3 border border-white/10 hover:border-red-500/50 text-text-muted hover:text-red-500 rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer" 
                                             data-flight-number="@flight.FlightNumber" 
                                             data-dep-time="@flight.DepartureTime.ToString("o")" 
                                             data-price="@flightPriceConverted">
@@ -178,7 +177,7 @@
                                     </button>
                                 </div>
  
-                                <button class="w-full py-4 bg-primary text-on-primary rounded-xl text-xs font-extrabold uppercase text-center tracking-widest shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform duration-300 cursor-pointer open-details-btn"
+                                <button class="w-full py-4 bg-accent hover:bg-white text-background rounded-xl text-xs font-extrabold uppercase text-center tracking-widest hover:scale-[1.02] transition-all duration-300 cursor-pointer open-details-btn shadow-md"
                                         data-flight-number="@flight.FlightNumber"
                                         data-dep-time="@flight.DepartureTime.ToString("o")"
                                         data-arr-time="@flight.ArrivalTime.ToString("o")"
@@ -195,136 +194,138 @@
                         </div>
                     </div>
                 }
-
-                <div id="NoResultsMessage" class="bg-surface-container-low p-20 rounded-xl text-center border border-dashed border-white/10" style="display:none;">
-                    <span class="material-symbols-outlined text-4xl text-slate-700 mb-4">search_off</span>
-                    <h5 class="text-slate-200 font-headline font-bold text-xl mb-2">No Paths Found</h5>
-                    <p class="text-slate-500 text-sm mb-8">Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.</p>
-                    <button class="text-primary font-bold uppercase tracking-widest text-xs" onclick="resetFilters()">Reset All Filters</button>
+ 
+                <div id="NoResultsMessage" class="glass-panel p-20 rounded-2xl text-center border border-dashed border-white/10" style="display:none;">
+                    <span class="material-symbols-outlined text-4xl text-text-muted mb-4">search_off</span>
+                    <h5 class="text-text-light font-serif font-bold text-xl mb-2">No Paths Found</h5>
+                    <p class="text-text-muted text-sm mb-8">Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.</p>
+                    <button class="text-accent font-bold uppercase tracking-widest text-xs cursor-pointer" onclick="resetFilters()">Reset All Filters</button>
                 </div>
             </div>
+ 
+        </div>
+    </div>
+</main>
 
-            <!-- Flight Details Modal -->
-            <div id="FlightDetailsModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
-                <div class="glass-panel w-full max-w-2xl bg-[#141A32]/95 border border-white/10 rounded-2xl shadow-2xl p-8 text-on-background relative flex flex-col gap-6 max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300" id="ModalContentBox">
-                    <!-- Close Button -->
-                    <button id="btnCloseModal" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors cursor-pointer">
-                        <span class="material-symbols-outlined text-2xl">close</span>
-                    </button>
+<!-- Flight Details Modal (Moved outside main for proper stacking context above fixed navbar) -->
+<div id="FlightDetailsModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
+    <div class="glass-panel w-full max-w-2xl bg-[#111111]/95 border border-white/10 rounded-3xl shadow-2xl p-8 text-text-light relative flex flex-col gap-6 max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" id="ModalContentBox">
+        <!-- Close Button -->
+        <button id="btnCloseModal" class="absolute top-6 right-6 text-text-muted hover:text-white transition-colors cursor-pointer">
+            <span class="material-symbols-outlined text-2xl">close</span>
+        </button>
 
-                    <!-- Header -->
-                    <header class="space-y-1">
-                        <span class="text-[10px] tracking-[0.3em] font-bold text-tertiary uppercase" id="ModalSubtitle">SkyScan Itinerary</span>
-                        <h2 class="text-3xl font-headline font-extrabold text-white" id="ModalTitle">Flight Details</h2>
-                    </header>
+        <!-- Header -->
+        <header class="space-y-1">
+            <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase" id="ModalSubtitle">SkyScan Itinerary</span>
+            <h2 class="text-3xl font-serif font-extrabold text-white" id="ModalTitle">Flight Details</h2>
+        </header>
 
-                    <!-- Route timeline -->
-                    <div class="bg-surface-container-low/40 p-6 rounded-xl border border-white/5 space-y-6">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-3">
-                                <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
-                                <div>
-                                    <p class="text-[10px] uppercase text-slate-500 tracking-wider">Departure</p>
-                                    <p class="text-lg font-bold text-slate-100" id="ModalDepTime">10:15</p>
-                                    <p class="text-xs text-slate-400" id="ModalOrigin">Sydney (SYD)</p>
-                                </div>
-                            </div>
-                            <!-- Path Decoration -->
-                            <div class="flex-1 px-6 flex flex-col items-center">
-                                <span class="text-[9px] text-slate-500 font-semibold mb-1" id="ModalDuration">9h 20m</span>
-                                <div class="h-[1px] bg-white/10 w-full relative flex items-center justify-center">
-                                    <span class="material-symbols-outlined text-slate-500 text-sm rotate-90 bg-[#141A32] px-2">flight</span>
-                                </div>
-                                <span class="text-[9px] text-tertiary font-bold mt-1" id="ModalStops">Non-stop</span>
-                            </div>
-                            <div class="flex items-center gap-3 text-right">
-                                <div>
-                                    <p class="text-[10px] uppercase text-slate-500 tracking-wider">Arrival</p>
-                                    <p class="text-lg font-bold text-slate-100" id="ModalArrTime">19:35</p>
-                                    <p class="text-xs text-slate-400" id="ModalDestination">Bangkok (BKK)</p>
-                                </div>
-                                <span class="material-symbols-outlined text-tertiary text-xl">flight_land</span>
-                            </div>
-                        </div>
+        <!-- Route timeline -->
+        <div class="bg-white/5 p-6 rounded-2xl border border-white/5 space-y-6">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-accent text-xl">flight_takeoff</span>
+                    <div>
+                        <p class="text-[10px] uppercase text-text-muted tracking-wider">Departure</p>
+                        <p class="text-lg font-bold text-text-light" id="ModalDepTime">10:15</p>
+                        <p class="text-xs text-text-muted" id="ModalOrigin">Sydney (SYD)</p>
                     </div>
-
-                    <!-- In-flight Amenities & Flight Info -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Amenities -->
-                        <div class="space-y-4">
-                            <h3 class="font-headline text-xs uppercase tracking-widest text-slate-400 font-bold">In-Flight Amenities</h3>
-                            <div class="grid grid-cols-2 gap-3">
-                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
-                                    <span class="material-symbols-outlined text-primary text-sm">wifi</span>
-                                    <span class="text-xs text-slate-300">Free WiFi</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
-                                    <span class="material-symbols-outlined text-primary text-sm">restaurant</span>
-                                    <span class="text-xs text-slate-300">Hot Meals</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
-                                    <span class="material-symbols-outlined text-primary text-sm">power</span>
-                                    <span class="text-xs text-slate-300">USB Outlets</span>
-                                </div>
-                                <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
-                                    <span class="material-symbols-outlined text-primary text-sm">tv</span>
-                                    <span class="text-xs text-slate-300">Entertainment</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Baggage & Cabin -->
-                        <div class="space-y-4">
-                            <h3 class="font-headline text-xs uppercase tracking-widest text-slate-400 font-bold">Baggage & Cabin</h3>
-                            <div class="space-y-2 text-xs text-slate-300">
-                                <div class="flex justify-between py-1.5 border-b border-white/5">
-                                    <span class="text-slate-500">Cabin Class</span>
-                                    <span class="font-bold text-slate-200" id="ModalCabin">Economy Class</span>
-                                </div>
-                                <div class="flex justify-between py-1.5 border-b border-white/5">
-                                    <span class="text-slate-500">Carry-on Baggage</span>
-                                    <span class="font-bold text-slate-200">1x 7kg Included</span>
-                                </div>
-                                <div class="flex justify-between py-1.5">
-                                    <span class="text-slate-500">Checked Baggage</span>
-                                    <span class="font-bold text-slate-200">1x 23kg Included</span>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <!-- Path Decoration -->
+                <div class="flex-1 px-6 flex flex-col items-center">
+                    <span class="block text-center text-[9px] text-text-muted font-semibold mb-1" id="ModalDuration">9h 20m</span>
+                    <div class="h-[1px] bg-white/10 w-full relative flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-sm rotate-90 bg-opacity-100 px-2">flight</span>
                     </div>
-
-                    <!-- Price and Action -->
-                    <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-white/5 gap-4">
-                        <div class="text-center sm:text-left">
-                            <span class="text-[9px] uppercase tracking-widest text-slate-500 block">Total Price</span>
-                            <span class="text-3xl font-headline font-extrabold text-tertiary" id="ModalPrice">$1,250</span>
-                        </div>
-                        
-                        <div class="flex gap-4 w-full sm:w-auto">
-                            <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-white/10 hover:bg-white/5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
-                                Cancel
-                            </button>
-                            <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="flex-1 sm:flex-initial">
-                                <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
-                                <input type="hidden" name="departureTime" id="HiddenDepartureTime" />
-                                <input type="hidden" name="origin" id="HiddenOrigin" />
-                                <input type="hidden" name="destination" id="HiddenDestination" />
-                                <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
-                                    Book Flight
-                                </button>
-                            </form>
-                        </div>
-                    </footer>
+                    <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalStops">Non-stop</span>
+                </div>
+                <div class="flex items-center gap-3 text-right">
+                    <div>
+                        <p class="text-[10px] uppercase text-text-muted tracking-wider">Arrival</p>
+                        <p class="text-lg font-bold text-text-light" id="ModalArrTime">19:35</p>
+                        <p class="text-xs text-text-muted" id="ModalDestination">Bangkok (BKK)</p>
+                    </div>
+                    <span class="material-symbols-outlined text-accent text-xl">flight_land</span>
                 </div>
             </div>
         </div>
+
+        <!-- In-flight Amenities & Flight Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Amenities -->
+            <div class="space-y-4">
+                <h3 class="font-serif text-xs uppercase tracking-widest text-text-muted font-bold">In-Flight Amenities</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                        <span class="material-symbols-outlined text-accent text-sm">wifi</span>
+                        <span class="text-xs text-text-light">Free WiFi</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                        <span class="material-symbols-outlined text-accent text-sm">restaurant</span>
+                        <span class="text-xs text-text-light">Hot Meals</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                        <span class="material-symbols-outlined text-accent text-sm">power</span>
+                        <span class="text-xs text-text-light">USB Outlets</span>
+                    </div>
+                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg">
+                        <span class="material-symbols-outlined text-accent text-sm">tv</span>
+                        <span class="text-xs text-text-light">Entertainment</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baggage & Cabin -->
+            <div class="space-y-4">
+                <h3 class="font-serif text-xs uppercase tracking-widest text-text-muted font-bold">Baggage & Cabin</h3>
+                <div class="space-y-2 text-xs text-text-light">
+                    <div class="flex justify-between py-1.5 border-b border-white/5">
+                        <span class="text-text-muted">Cabin Class</span>
+                        <span class="font-bold text-text-light" id="ModalCabin">Economy Class</span>
+                    </div>
+                    <div class="flex justify-between py-1.5 border-b border-white/5">
+                        <span class="text-text-muted">Carry-on Baggage</span>
+                        <span class="font-bold text-text-light">1x 7kg Included</span>
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                        <span class="text-text-muted">Checked Baggage</span>
+                        <span class="font-bold text-text-light">1x 23kg Included</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Price and Action -->
+        <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-white/5 gap-4">
+            <div class="text-center sm:text-left">
+                <span class="text-[9px] uppercase tracking-widest text-text-muted block">Total Price</span>
+                <span class="text-3xl font-serif font-extrabold text-accent" id="ModalPrice">$1,250</span>
+            </div>
+            
+            <div class="flex gap-4 w-full sm:w-auto">
+                <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-white/10 hover:bg-white/5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                    Cancel
+                </button>
+                <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="flex-1 sm:flex-initial">
+                    <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
+                    <input type="hidden" name="departureTime" id="HiddenDepartureTime" />
+                    <input type="hidden" name="origin" id="HiddenOrigin" />
+                    <input type="hidden" name="destination" id="HiddenDestination" />
+                    <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-accent hover:bg-white text-background rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+                        Book Flight
+                    </button>
+                </form>
+            </div>
+        </footer>
     </div>
+</div>
 </main>
 
 @section Scripts {
     <script>
         function updatePriceLabel(val) {
-            document.getElementById('priceLabel').textContent = `$${val}`;
+            document.getElementById('priceLabel').textContent = '@Html.Raw(symbol)' + val;
             applyFilters();
         }
 
@@ -473,7 +474,7 @@
                     modalDestination.textContent = `${destination} Airport`;
                     modalDuration.textContent = duration;
                     modalStops.textContent = stops === 0 ? 'Non-stop' : `${stops} Stop${stops > 1 ? 's' : ''}`;
-                    modalPrice.textContent = '@symbol' + price;
+                    modalPrice.textContent = '@Html.Raw(symbol)' + price;
 
                     hiddenFlightNumber.value = flightNumber;
                     hiddenDepartureTime.value = btn.dataset.depTime;

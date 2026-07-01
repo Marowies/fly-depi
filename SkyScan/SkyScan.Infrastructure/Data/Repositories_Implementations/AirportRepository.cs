@@ -31,15 +31,15 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .FirstOrDefaultAsync(a => a.IataCode == iataCode);
         }
 
-        public async Task<IEnumerable<(Guid CityId, string CityName)>> GetCityDropdownItemsAsync()
+        public async Task<IEnumerable<(Guid CityId, string CityName, string CountryName)>> GetCityDropdownItemsAsync()
         {
             var cities = await _context.Cities
                 .Where(c => c.Airports.Any())
-                .Select(c => new { c.CityId, c.Name })
+                .Select(c => new { c.CityId, c.Name, CountryName = c.Country != null ? c.Country.Name : c.CountryCode })
                 .AsNoTracking()
                 .ToListAsync();
 
-            return cities.Select(c => (c.CityId, c.Name));
+            return cities.Select(c => (c.CityId, c.Name, c.CountryName));
         }
 
         public async Task<IEnumerable<Airport>> GetAirportsByCityIdAsync(Guid cityId)

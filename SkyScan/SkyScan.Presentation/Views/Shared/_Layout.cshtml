@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SkyScan Celestial</title>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script id="tailwind-config">
@@ -13,20 +13,19 @@
             theme: {
                 extend: {
                     "colors": {
-                        "tertiary": "#dac76a",
-                        "primary": "#bfc5e4",
-                        "on-primary": "#292f48",
-                        "surface-dim": "#0b1229",
-                        "background": "#0b1229",
-                        "on-background": "#dce1ff",
-                        "surface-container-low": "#141a32",
-                        "surface-container-high": "#222941",
-                        "outline-variant": "#46464d"
+                        "background": "#050505",
+                        "surface": "#111111",
+                        "accent": "#D8B46A",
+                        "bronze": "#8A5A2B",
+                        "text-light": "#F8F8F8",
+                        "text-muted": "#B9B9B9",
+                        "border-light": "rgba(255,255,255,0.08)",
+                        "glass": "rgba(255,255,255,0.05)"
                     },
                     "fontFamily": {
-                        "headline": ["Manrope"],
-                        "body": ["Inter"],
-                        "manrope": ["Manrope"]
+                        "serif": ["Playfair Display", "serif"],
+                        "sans": ["Inter", "sans-serif"],
+                        "manrope": ["Manrope", "sans-serif"]
                     }
                 },
             },
@@ -34,25 +33,25 @@
     </script>
     <style>
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
-        .glass-panel { background: rgba(45, 52, 76, 0.4); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); }
-        .atmospheric-layer { background: linear-gradient(180deg, rgba(11, 18, 41, 0) 0%, rgba(11, 18, 41, 0.95) 100%); }
-        body { background-color: #0b1229; color: #dce1ff; }
+        .glass-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .atmospheric-layer { background: linear-gradient(180deg, rgba(5, 5, 5, 0) 0%, rgba(5, 5, 5, 0.95) 100%); }
+        body { background-color: #050505; color: #F8F8F8; font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-background text-on-background font-body selection:bg-tertiary selection:text-on-tertiary">
+<body class="bg-background text-text-light font-sans selection:bg-accent selection:text-background">
     <!-- Top Navigation -->
-    <nav class="fixed top-0 w-full z-50 bg-[#0B1229]/60 backdrop-blur-2xl shadow-[0px_24px_48px_rgba(6,13,36,0.4)]">
+    <nav class="fixed top-0 w-full z-50 bg-[#050505]/40 backdrop-blur-md border-b border-white/5">
         <div class="flex justify-between items-center px-12 py-6 w-full max-w-screen-2xl mx-auto h-20">
-            <a asp-controller="Flight" asp-action="Index" class="flex items-center gap-4 hover:opacity-90 transition-opacity">
-                <img alt="SkyScan Logo" class="w-8 h-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE3YoV-bTiqbWTeJ5H9ZF2xASvIl5pQvAFUdV7bL55V12L4dN4XEyRIVXFwZtR2g_vU7STh65kAHVvr9Q7zJiexI8ZwwfUvBDXLdgzEBdnjMDLMiG1inSnqltW_N7vSXX48JjoP7lT4NpRt6KTiJ6dPPBNf8Gl7mEyMBiEIbLf8kbZKT3T9dEx7CwRyl8W4DZcqXFchICzuoza_A2IXwkyBIp9tffc9wpL1gi1sE-cPjK71kDv28DSgFeXtwHG9f8tPUGOpkQUsQ" />
-                <div class="text-2xl font-black tracking-tighter text-[#BFC5E4] font-headline">SkyScan</div>
+            <a asp-controller="Flight" asp-action="Index" class="flex items-center gap-3 hover:opacity-90 transition-opacity">
+                <img alt="SkyScan Logo" class="w-8 h-8 object-contain filter brightness-[1.2]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE3YoV-bTiqbWTeJ5H9ZF2xASvIl5pQvAFUdV7bL55V12L4dN4XEyRIVXFwZtR2g_vU7STh65kAHVvr9Q7zJiexI8ZwwfUvBDXLdgzEBdnjMDLMiG1inSnqltW_N7vSXX48JjoP7lT4NpRt6KTiJ6dPPBNf8Gl7mEyMBiEIbLf8kbZKT3T9dEx7CwRyl8W4DZcqXFchICzuoza_A2IXwkyBIp9tffc9wpL1gi1sE-cPjK71kDv28DSgFeXtwHG9f8tPUGOpkQUsQ" />
+                <div class="text-2xl font-black tracking-tight text-accent font-serif">SkyScan</div>
             </a>
-            <div class="hidden md:flex items-center gap-10 font-manrope tracking-[-0.02em] font-medium text-[11px] uppercase">
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Flight" asp-action="Index">Explore</a>
-                <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Booking" asp-action="MyBookings">Bookings</a>
+            <div class="hidden md:flex items-center gap-10 font-manrope tracking-[0.05em] font-medium text-[11px] uppercase">
+                <a class="text-text-muted hover:text-accent transition-colors duration-300" asp-controller="Flight" asp-action="Index">Flights</a>
+                <a class="text-text-muted hover:text-accent transition-colors duration-300" asp-controller="Booking" asp-action="MyBookings">Bookings</a>
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    <a class="text-[#BFC5E4]/70 hover:text-[#DAC76A] transition-all duration-300" asp-controller="Account" asp-action="Profile">Profile</a>
+                    <a class="text-text-muted hover:text-accent transition-colors duration-300" asp-controller="Account" asp-action="Profile">Profile</a>
                 }
             </div>
             <div class="flex items-center gap-6">
@@ -64,40 +63,40 @@
                 <div class="flex items-center gap-2">
                     <!-- Language Switcher -->
                     <form asp-controller="Language" asp-action="Toggle" method="post" class="inline">
-                        <button type="submit" class="flex items-center gap-1 bg-[#222941] border border-[#BFC5E4]/10 hover:border-[#DAC76A]/40 text-[#BFC5E4] hover:text-[#DAC76A] py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Toggle Language">
+                        <button type="submit" class="flex items-center gap-1 bg-[#111111] border border-white/10 hover:border-accent/40 text-text-light hover:text-accent py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Toggle Language">
                             <span class="material-symbols-outlined text-sm">language</span>
                             <span>@(isArabic ? "EN" : "AR")</span>
                         </button>
                     </form>
                     <!-- Currency Switcher Dropdown -->
                     <div class="relative group">
-                        <button class="flex items-center gap-1 bg-[#222941] border border-[#BFC5E4]/10 hover:border-[#DAC76A]/40 text-[#BFC5E4] hover:text-[#DAC76A] py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Select Currency">
+                        <button class="flex items-center gap-1 bg-[#111111] border border-white/10 hover:border-accent/40 text-text-light hover:text-accent py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Select Currency">
                             <span class="material-symbols-outlined text-sm">payments</span>
                             <span>@selectedCurrency</span>
                         </button>
-                        <div class="absolute right-0 mt-2 w-28 bg-[#141a32] border border-[#BFC5E4]/10 rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 py-1">
-                            <a href="/Currency/Set?code=USD" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">USD ($)</a>
-                            <a href="/Currency/Set?code=EGP" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">EGP (E£)</a>
-                            <a href="/Currency/Set?code=EUR" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">EUR (€)</a>
-                            <a href="/Currency/Set?code=GBP" class="block px-4 py-2 text-[10px] text-[#BFC5E4] hover:bg-[#222941] hover:text-[#DAC76A] transition-all">GBP (£)</a>
+                        <div class="absolute right-0 mt-2 w-28 bg-[#111111] border border-white/10 rounded-xl shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50 py-1">
+                            <a href="/Currency/Set?code=USD" class="block px-4 py-2 text-[10px] text-text-light hover:bg-white/5 hover:text-accent transition-all">USD ($)</a>
+                            <a href="/Currency/Set?code=EGP" class="block px-4 py-2 text-[10px] text-text-light hover:bg-white/5 hover:text-accent transition-all">EGP (E£)</a>
+                            <a href="/Currency/Set?code=EUR" class="block px-4 py-2 text-[10px] text-text-light hover:bg-white/5 hover:text-accent transition-all">EUR (€)</a>
+                            <a href="/Currency/Set?code=GBP" class="block px-4 py-2 text-[10px] text-text-light hover:bg-white/5 hover:text-accent transition-all">GBP (£)</a>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center gap-4">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <button class="hover:text-[#DAC76A] transition-all duration-300" title="Notifications">
-                            <span class="material-symbols-outlined text-[#BFC5E4] text-xl">notifications</span>
+                        <button class="hover:text-accent transition-all duration-300" title="Notifications">
+                            <span class="material-symbols-outlined text-text-light text-xl">notifications</span>
                         </button>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
-                            <button type="submit" class="hover:text-[#DAC76A] transition-all duration-300 flex items-center gap-1" title="Sign Out">
-                                <span class="material-symbols-outlined text-[#BFC5E4] text-xl">logout</span>
+                            <button type="submit" class="hover:text-accent transition-all duration-300 flex items-center gap-1" title="Sign Out">
+                                <span class="material-symbols-outlined text-text-light text-xl">logout</span>
                             </button>
                         </form>
                     }
                     else
                     {
-                        <a asp-controller="Account" asp-action="Login" class="bg-[#DAC76A] text-[#0b1229] hover:bg-[#bfc5e4] transition-all font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider" title="Sign In">
+                        <a asp-controller="Account" asp-action="Login" class="bg-accent text-background hover:bg-white hover:text-background transition-all font-bold py-2 px-6 rounded-full text-[10px] uppercase tracking-wider" title="Sign In">
                             Sign In
                         </a>
                     }
@@ -105,30 +104,30 @@
             </div>
         </div>
     </nav>
-
+ 
     @RenderBody()
-
+ 
     <!-- Footer -->
-    <footer class="bg-[#0B1229] w-full py-16 border-t border-[#BFC5E4]/10">
+    <footer class="bg-[#050505] w-full py-16 border-t border-white/5">
         <div class="flex flex-col md:flex-row justify-between items-center px-12 space-y-8 md:space-y-0 max-w-screen-2xl mx-auto">
             <div class="flex flex-col items-center md:items-start gap-2">
                 <div class="flex items-center gap-3">
-                    <img alt="SkyScan Logo" class="w-6 h-6 object-contain opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE3YoV-bTiqbWTeJ5H9ZF2xASvIl5pQvAFUdV7bL55V12L4dN4XEyRIVXFwZtR2g_vU7STh65kAHVvr9Q7zJiexI8ZwwfUvBDXLdgzEBdnjMDLMiG1inSnqltW_N7vSXX48JjoP7lT4NpRt6KTiJ6dPPBNf8Gl7mEyMBiEIbLf8kbZKT3T9dEx7CwRyl8W4DZcqXFchICzuoza_A2IXwkyBIp9tffc9wpL1gi1sE-cPjK71kDv28DSgFeXtwHG9f8tPUGOpkQUsQ" />
-                    <span class="font-manrope font-bold text-[#BFC5E4]/60 text-lg">SkyScan</span>
+                    <img alt="SkyScan Logo" class="w-6 h-6 object-contain opacity-60 filter brightness-[1.2]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE3YoV-bTiqbWTeJ5H9ZF2xASvIl5pQvAFUdV7bL55V12L4dN4XEyRIVXFwZtR2g_vU7STh65kAHVvr9Q7zJiexI8ZwwfUvBDXLdgzEBdnjMDLMiG1inSnqltW_N7vSXX48JjoP7lT4NpRt6KTiJ6dPPBNf8Gl7mEyMBiEIbLf8kbZKT3T9dEx7CwRyl8W4DZcqXFchICzuoza_A2IXwkyBIp9tffc9wpL1gi1sE-cPjK71kDv28DSgFeXtwHG9f8tPUGOpkQUsQ" />
+                    <span class="font-serif font-bold text-accent text-lg">SkyScan</span>
                 </div>
-                <div class="font-inter text-[10px] uppercase tracking-[0.2em] leading-relaxed text-[#BFC5E4]/30">
-                    © 2024 SkyScan Celestial Concierge. All rights reserved.
+                <div class="font-sans text-[10px] uppercase tracking-[0.2em] leading-relaxed text-text-muted/40">
+                    © 2026 SkyScan luxury aviation. All rights reserved.
                 </div>
             </div>
-            <div class="flex gap-10 font-inter text-[10px] uppercase tracking-[0.2em] leading-relaxed">
-                <a class="text-[#BFC5E4]/30 hover:text-[#DAC76A] transition-colors" href="#">Privacy Policy</a>
-                <a class="text-[#BFC5E4]/30 hover:text-[#DAC76A] transition-colors" href="#">Terms of Service</a>
-                <a class="text-[#BFC5E4]/30 hover:text-[#DAC76A] transition-colors" href="#">Luxury Partners</a>
-                <a class="text-[#BFC5E4]/30 hover:text-[#DAC76A] transition-colors" href="#">Support</a>
+            <div class="flex gap-10 font-sans text-[10px] uppercase tracking-[0.2em] leading-relaxed">
+                <a class="text-text-muted/60 hover:text-accent transition-colors" href="#">Privacy Policy</a>
+                <a class="text-text-muted/60 hover:text-accent transition-colors" href="#">Terms of Service</a>
+                <a class="text-text-muted/60 hover:text-accent transition-colors" href="#">Luxury Partners</a>
+                <a class="text-text-muted/60 hover:text-accent transition-colors" href="#">Support</a>
             </div>
             <div class="flex items-center gap-4">
-                <span class="material-symbols-outlined text-[#BFC5E4]/30 text-xl cursor-pointer hover:text-[#DAC76A]">language</span>
-                <span class="text-[#DAC76A]/80 font-inter text-[10px] uppercase tracking-[0.2em] font-bold">Global Access</span>
+                <span class="material-symbols-outlined text-text-muted/40 text-xl cursor-pointer hover:text-accent">language</span>
+                <span class="text-accent/80 font-sans text-[10px] uppercase tracking-[0.2em] font-bold">Global Access</span>
             </div>
         </div>
     </footer>

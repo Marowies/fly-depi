@@ -40,72 +40,84 @@
 
                 <!-- Two-Factor Authentication Management -->
                 <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Security & Authenticator</h2>
-                    <p class="text-xs text-slate-400 leading-relaxed">Enhance your SkyScan profile security by enabling Two-Factor Authentication (2FA).</p>
+                    <button type="button" onclick="toggleTwoFactor()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 focus:outline-none text-left cursor-pointer">
+                        <span>Security & Authenticator</span>
+                        <span id="twoFactorArrow" class="material-symbols-outlined transition-transform duration-300 transform">expand_more</span>
+                    </button>
                     
-                    <div class="flex items-center justify-between py-2">
-                        <span class="text-xs font-bold text-slate-300">2FA Status</span>
+                    <div id="twoFactorContent" class="hidden space-y-6 transition-all duration-300">
+                        <p class="text-xs text-slate-400 leading-relaxed">Enhance your SkyScan profile security by enabling Two-Factor Authentication (2FA).</p>
+                        
+                        <div class="flex items-center justify-between py-2">
+                            <span class="text-xs font-bold text-slate-300">2FA Status</span>
+                            @if (Model.TwoFactorEnabled)
+                            {
+                                <span class="text-[10px] font-bold text-green-400 bg-green-950/20 px-3 py-1 rounded-full border border-green-500/20 uppercase tracking-wider">Enabled</span>
+                            }
+                            else
+                            {
+                                <span class="text-[10px] font-bold text-amber-400 bg-amber-950/20 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-wider">Disabled</span>
+                            }
+                        </div>
+
                         @if (Model.TwoFactorEnabled)
                         {
-                            <span class="text-[10px] font-bold text-green-400 bg-green-950/20 px-3 py-1 rounded-full border border-green-500/20 uppercase tracking-wider">Enabled</span>
+                            <form asp-controller="Account" asp-action="DisableTwoFactor" method="post">
+                                <button type="submit" class="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
+                                    Disable Two-Factor Auth
+                                </button>
+                            </form>
                         }
                         else
                         {
-                            <span class="text-[10px] font-bold text-amber-400 bg-amber-950/20 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-wider">Disabled</span>
+                            <a asp-controller="Account" asp-action="EnableTwoFactor" class="block text-center w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
+                                Set Up Two-Factor Auth
+                            </a>
                         }
                     </div>
-
-                    @if (Model.TwoFactorEnabled)
-                    {
-                        <form asp-controller="Account" asp-action="DisableTwoFactor" method="post">
-                            <button type="submit" class="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                                Disable Two-Factor Auth
-                            </button>
-                        </form>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="EnableTwoFactor" class="block text-center w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                            Set Up Two-Factor Auth
-                        </a>
-                    }
                 </div>
 
                 <!-- Reset Password -->
                 <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Reset Password</h2>
-                    <p class="text-xs text-slate-400 leading-relaxed">Change your login password regularly for safety.</p>
+                    <button type="button" onclick="toggleResetPassword()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 focus:outline-none text-left cursor-pointer">
+                        <span>Reset Password</span>
+                        <span id="resetPasswordArrow" class="material-symbols-outlined transition-transform duration-300 transform">expand_more</span>
+                    </button>
+                    
+                    <div id="resetPasswordContent" class="hidden space-y-6 transition-all duration-300">
+                        <p class="text-xs text-slate-400 leading-relaxed">Change your login password regularly for safety.</p>
 
-                    @if (TempData["PasswordSuccess"] != null)
-                    {
-                        <div class="text-green-400 text-xs font-semibold bg-green-950/25 p-3 rounded-lg border border-green-500/25">
-                            @TempData["PasswordSuccess"]
-                        </div>
-                    }
-                    @if (TempData["PasswordError"] != null)
-                    {
-                        <div class="text-red-400 text-xs font-semibold bg-red-950/25 p-3 rounded-lg border border-red-500/25">
-                            @TempData["PasswordError"]
-                        </div>
-                    }
+                        @if (TempData["PasswordSuccess"] != null)
+                        {
+                            <div class="text-green-400 text-xs font-semibold bg-green-950/25 p-3 rounded-lg border border-green-500/25">
+                                @TempData["PasswordSuccess"]
+                            </div>
+                        }
+                        @if (TempData["PasswordError"] != null)
+                        {
+                            <div class="text-red-400 text-xs font-semibold bg-red-950/25 p-3 rounded-lg border border-red-500/25">
+                                @TempData["PasswordError"]
+                            </div>
+                        }
 
-                    <form asp-controller="Account" asp-action="ChangePassword" method="post" class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Current Password</label>
-                            <input name="OldPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">New Password</label>
-                            <input name="NewPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confirm New Password</label>
-                            <input name="ConfirmPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
-                        </div>
-                        <button type="submit" class="w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
-                            Update Password
-                        </button>
-                    </form>
+                        <form asp-controller="Account" asp-action="ChangePassword" method="post" class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Current Password</label>
+                                <input name="OldPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">New Password</label>
+                                <input name="NewPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                            </div>
+                            <div>
+                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confirm New Password</label>
+                                <input name="ConfirmPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                                Update Password
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </section>
 
@@ -255,5 +267,37 @@
                 }
             });
         });
+
+        function toggleResetPassword() {
+            const content = document.getElementById('resetPasswordContent');
+            const arrow = document.getElementById('resetPasswordArrow');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+
+        function toggleTwoFactor() {
+            const content = document.getElementById('twoFactorContent');
+            const arrow = document.getElementById('twoFactorArrow');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+
+        // Auto-expand if there is an active feedback message
+        @if (TempData["PasswordSuccess"] != null || TempData["PasswordError"] != null)
+        {
+            <text>
+            toggleResetPassword();
+            </text>
+        }
     </script>
 }

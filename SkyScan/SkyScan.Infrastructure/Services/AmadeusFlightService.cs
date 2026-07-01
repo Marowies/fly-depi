@@ -106,21 +106,21 @@ namespace SkyScan.Infrastructure.Services
                             var departureTime = DateTime.Parse(firstSegment.GetProperty("departure").GetProperty("at").GetString() ?? DateTime.Now.ToString());
                             var arrivalTime = DateTime.Parse(lastSegment.GetProperty("arrival").GetProperty("at").GetString() ?? DateTime.Now.ToString());
 
-                            // Find or Create Airline in local DB
+                            // Airline is static reference data — persist only if this carrier hasn't been seen before
                             var airline = await dbContext.Airlines.FirstOrDefaultAsync(a => a.IataCode == carrierCode);
                             if (airline == null)
                             {
-                                airline = new Airline 
-                                { 
-                                    AirlineId = Guid.NewGuid(), 
-                                    Name = carrierCode + " Airlines", 
+                                airline = new Airline
+                                {
+                                    AirlineId = Guid.NewGuid(),
+                                    Name = carrierCode + " Airlines",
                                     IataCode = carrierCode
                                 };
                                 dbContext.Airlines.Add(airline);
                                 await dbContext.SaveChangesAsync();
                             }
 
-                            // Find or Create Airplane in local DB using aircraft type code from Amadeus
+                            // Aircraft type is static reference data — persist only if this type hasn't been seen before
                             var aircraftCode = firstSegment.TryGetProperty("aircraft", out var acEl)
                                 && acEl.TryGetProperty("code", out var acCodeEl)
                                 ? acCodeEl.GetString() ?? "UNK"
@@ -129,8 +129,8 @@ namespace SkyScan.Infrastructure.Services
                                 .FirstOrDefaultAsync(a => a.AircraftCode == aircraftCode);
                             if (airplane == null)
                             {
-                                airplane = new Airplane 
-                                { 
+                                airplane = new Airplane
+                                {
                                     AirplaneId = Guid.NewGuid(),
                                     AircraftCode = aircraftCode,
                                     AircraftName = AircraftNameLookup.GetName(aircraftCode)
@@ -139,7 +139,7 @@ namespace SkyScan.Infrastructure.Services
                                 await dbContext.SaveChangesAsync();
                             }
 
-                            // Find departure and arrival airport
+                            // Airports are seeded reference data — look up only, never created here
                             var depAirport = await dbContext.Airports
                                 .Include(a => a.City)
                                     .ThenInclude(c => c.Country)
@@ -154,49 +154,13 @@ namespace SkyScan.Infrastructure.Services
                             // Dynamic Google Flights redirection link
                             var redirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{dateStr}";
 
-                            // Persist to local DB if not exists
-                            var flight = await dbContext.Flights
-                                .Include(f => f.Tickets)
-                                .FirstOrDefaultAsync(f => f.FlightNumber == $"{carrierCode} {flightNum}" && f.DepartureTime == departureTime);
-
-                            if (flight == null)
-                            {
-                                flight = new Flight
-                                {
-                                    FlightId = Guid.NewGuid(),
-                                    AirlineId = airline.AirlineId,
-                                    AirplaneId = airplane.AirplaneId,
-                                    FlightNumber = $"{carrierCode} {flightNum}",
-                                    DepartureAirportId = depAirport.AirportId,
-                                    ArrivalAirportId = arrAirport.AirportId,
-                                    DepartureTime = departureTime,
-                                    ArrivalTime = arrivalTime,
-                                    RedirectURL = redirectUrl
-                                };
-
-                                dbContext.Flights.Add(flight);
-                                await dbContext.SaveChangesAsync();
-
-                                // Add a Ticket
-                                var ticket = new Ticket
-                                {
-                                    TicketId = Guid.NewGuid(),
-                                    Price = price,
-                                    CabinClass = Core.Constants.CabinType.Economy,
-                                    FlightId = flight.FlightId,
-                                    HasFood = true,
-                                    HasWifi = true
-                                };
-                                dbContext.Tickets.Add(ticket);
-                                await dbContext.SaveChangesAsync();
-                            }
-
+                            // Flight schedule/price are dynamic per search result — not persisted, built straight into the DTO
                             flightDtos.Add(new FlightDto
                             {
                                 AirlineName = airline.Name,
-                                FlightNumber = flight.FlightNumber,
-                                OriginAirport = depAirport != null ? $"{depAirport.Name} ({depAirport.IataCode})" : origin,
-                                DestinationAirport = arrAirport != null ? $"{arrAirport.Name} ({arrAirport.IataCode})" : destination,
+                                FlightNumber = $"{carrierCode} {flightNum}",
+                                OriginAirport = $"{depAirport.Name} ({depAirport.IataCode})",
+                                DestinationAirport = $"{arrAirport.Name} ({arrAirport.IataCode})",
                                 DepartureTime = departureTime,
                                 ArrivalTime = arrivalTime,
                                 Price = price,

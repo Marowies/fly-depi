@@ -5,202 +5,174 @@
 }
 
 <!-- Hero Canvas -->
+<!-- Hero Canvas -->
 <main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
     <!-- Background Imagery with Dark Overlay -->
     <div class="absolute inset-0 z-0">
-        <img class="w-full h-full object-cover" alt="ultra-luxury private jet cabin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvo3-nC_IOyG1LhxX6eREWDVtr017HJtBYfW7dGmMauwSsZCpZQKSIii0xBUz2PinJY810vxWxHOMZSP8WXxlf9Uq_I8dvqbR6TJHOek5S-IYW5-YADULfFUqMFaoiEhe7B1RCrLUSLlu4ZUVXoEL93hfIqgquw4S-eK4cbyFX7ZP-wMhnIo3hQoVDL9oCqyHdRwYnbM6EwulQEqezYBZop00qLNLFM9f4pWehMaXO7wa5fvJPP6fW_jUtuxoEciOrXO6YATxDIQ" />
-        <div class="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background"></div>
+        <img class="w-full h-full object-cover scale-105" alt="private jet flying at sunset" src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=1920&q=80" />
+        <div class="absolute inset-0 bg-gradient-to-r from-background/95 via-background/60 to-background/30"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50"></div>
+        <!-- Warm sunset lighting overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-transparent pointer-events-none"></div>
     </div>
     
-    <!-- Hero Content Section -->
-    <section class="relative z-10 w-full max-w-7xl px-8 flex flex-col items-start gap-12">
-        <div class="max-w-3xl">
-            <h1 class="font-headline text-5xl md:text-[80px] font-extrabold tracking-tighter text-on-surface leading-[1.0] mb-8">
-                SKYSCAN: WHERE TO <br /><span class="text-primary italic font-light opacity-90">NEXT?</span>
-            </h1>
-            <p class="text-on-surface-variant text-lg md:text-xl font-light max-w-xl leading-relaxed opacity-80">
-                Experience the zenith of aviation with SkyScan. Curated itineraries for those who view the horizon not as a boundary, but as a beginning.
-            </p>
+    <!-- Hero Content Section (Split layout on large viewports) -->
+    <section class="relative z-10 w-full max-w-7xl px-8 py-20 flex flex-col lg:flex-row items-center justify-between gap-16">
+        <!-- Left Side: Cinematic Title and Branding -->
+        <div class="flex-1 space-y-10 text-left">
+            <div class="space-y-4">
+                <div class="inline-block overflow-hidden whitespace-nowrap">
+                    <span class="text-accent font-manrope text-[10px] uppercase tracking-[0.4em] font-bold block typewriter">Every Destination, One Search.</span>
+                </div>
+                <h1 class="font-serif text-5xl md:text-[80px] font-extrabold tracking-tight text-text-light leading-[1.1] flex flex-col overflow-hidden">
+                    <span class="inline-block animate-slide-left">Fly Beyond</span>
+                    <span class="inline-block italic font-light opacity-90 text-accent animate-slide-right mt-1">Time & Sky</span>
+                </h1>
+                <p id="heroSubtitle" class="text-text-muted text-base md:text-lg font-light max-w-md leading-relaxed flex flex-wrap gap-x-[0.3em] gap-y-1">
+                    Every destination deserves a seamless beginning. Compare flights, explore new horizons, and travel with comfort, confidence, and style.
+                </p>
+            </div>
+            
+            <!-- Global Reach Badges -->
+            <div class="pt-10 flex items-center gap-4 border-t border-white/5 max-w-xs">
+                <div class="w-12 h-12 bg-white/5 rounded-full border border-white/10 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-accent text-xl">public</span>
+                </div>
+                <div>
+                    <span class="block text-[8px] uppercase tracking-widest text-text-muted font-bold">Global Reach</span>
+                    <span class="text-2xl font-serif font-bold text-text-light">5,000+</span>
+                    <span class="block text-[8px] text-text-muted">Airports Worldwide</span>
+                </div>
+            </div>
         </div>
 
-        <!-- Floating Glassmorphism Search Engine -->
-        <form asp-controller="Flight" asp-action="Search" method="post" id="searchForm" class="w-full">
-            <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
-            
-            <div asp-validation-summary="ModelOnly" class="text-red-400 text-sm mb-4 font-bold bg-red-950/20 p-4 rounded-xl border border-red-500/20 backdrop-blur-md"></div>
+        <!-- Right Side: Premium Glassmorphism Booking Engine -->
+        <div class="w-full lg:w-[460px] flex-shrink-0 z-20" id="bookingCard">
+            <form asp-controller="Flight" asp-action="Search" method="post" id="searchForm" class="w-full">
+                <input type="hidden" asp-for="TripType" id="TripTypeHidden" value="OneWay" />
+                
+                <div asp-validation-summary="ModelOnly" class="text-red-400 text-xs mb-4 font-bold bg-red-950/20 p-4 rounded-xl border border-red-500/20 backdrop-blur-md"></div>
 
-            <div class="w-full glass-panel rounded-2xl p-1 md:p-2 border border-outline-variant/10">
-                <!-- Standard Search (OneWay / RoundTrip) -->
-                <div id="StandardSearchFields" class="flex flex-col md:flex-row flex-wrap xl:flex-nowrap items-stretch gap-2 w-full">
-                    <!-- Origin -->
-                    <div class="flex-1 min-w-[200px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
-                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Origin</label>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
-                            <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
-                            <button type="button" id="btnDetectGPS" class="text-primary hover:text-white transition-colors cursor-pointer p-1" title="Detect nearest city via GPS">
-                                <span class="material-symbols-outlined text-lg">my_location</span>
-                            </button>
+                <div class="glass-panel rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+                    <!-- Soft gold highlight in background of card -->
+                    <div class="absolute -right-20 -top-20 w-40 h-40 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <h3 class="font-serif text-base font-bold text-text-light mb-6 uppercase tracking-wider text-center border-b border-white/5 pb-3">Search Flights </h3>
+                    
+                    <!-- Vertical Stack of Inputs -->
+                    <div class="space-y-4">
+                        <!-- Origin -->
+                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">From</label>
+                            <div class="flex items-center justify-between gap-3">
+                                <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="Origin City..." type="text" />
+                                <button type="button" id="btnDetectGPS" class="text-accent hover:text-white transition-colors cursor-pointer" title="Detect Location">
+                                    <span class="material-symbols-outlined text-base">my_location</span>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    <!-- Destination -->
-                    <div class="flex-1 min-w-[200px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
-                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
-                            <input asp-for="DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="Enter City..." type="text" />
-                        </div>
-                    </div>
-                    <!-- Departure -->
-                    <div class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
-                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
-                            <input asp-for="DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none text-light" />
-                        </div>
-                    </div>
-                    <!-- Return Date -->
-                    <div id="ReturnDateField" class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative" style="display: none;">
-                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Return</label>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-tertiary text-xl">event_repeat</span>
-                            <input asp-for="ReturnDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none [color-scheme:dark]" />
-                        </div>
-                    </div>
-                    <!-- Cabin Class -->
-                    <div class="flex-1 min-w-[180px] bg-surface-container-low/60 hover:bg-surface-container-high transition-colors p-6 rounded-xl group relative">
-                        <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Cabin Class</label>
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-outlined text-primary text-xl">star</span>
-                            <select asp-for="CabinClass" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full cursor-pointer appearance-none uppercase outline-none">
-                                <option value="first" class="bg-surface-container-high text-white">First Class</option>
-                                <option value="business" class="bg-surface-container-high text-white">Business</option>
-                                <option value="premium" class="bg-surface-container-high text-white">Premium</option>
-                                <option value="economy" class="bg-surface-container-high text-white">Economy</option>
-                            </select>
-                            
-                        </div>
-                    </div>
-                    <!-- CTA -->
-                    <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-12 py-6 xl:py-0 rounded-xl transition-all active:scale-[0.98] flex-1 xl:flex-none xl:w-48 min-h-[72px] xl:min-h-0">
-                        Explore
-                    </button>
-                </div>
 
-                <!-- Multi-City Search -->
-                <div id="MultiCitySearchFields" class="p-4 space-y-4" style="display: none;">
-                    <div id="MultiCityLegsContainer" class="space-y-4">
-                        <!-- Legs will be added here -->
-                    </div>
-                    <div class="flex justify-between items-center mt-6">
-                        <button type="button" onclick="addMultiCityLeg()" class="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest hover:text-white transition-colors">
-                            <span class="material-symbols-outlined text-lg">add_circle</span>
-                            Add Destination
-                        </button>
-                        <button type="submit" class="bg-[#BFC5E4] hover:bg-white text-[#292F48] font-headline font-bold uppercase tracking-widest text-lg px-16 py-4 rounded-xl transition-all active:scale-[0.98]">
-                            Explore Journey
+                        <!-- Destination -->
+                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">To</label>
+                            <div class="flex items-center justify-between gap-3">
+                                <input asp-for="DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="Destination City..." type="text" />
+                                <span class="material-symbols-outlined text-accent text-base">location_on</span>
+                            </div>
+                        </div>
+
+                        <!-- Dates Section -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Departure</label>
+                                <input asp-for="DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none [color-scheme:dark]" />
+                            </div>
+                            <div id="ReturnDateField" class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative" style="display: none;">
+                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Return</label>
+                                <input asp-for="ReturnDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none [color-scheme:dark]" />
+                            </div>
+                        </div>
+
+                        <!-- Cabin Class -->
+                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Cabin Class</label>
+                            <div class="flex items-center justify-between">
+                                <select asp-for="CabinClass" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-sm w-full cursor-pointer appearance-none uppercase outline-none">
+                                    <option value="first" class="bg-surface text-white">First Class</option>
+                                    <option value="business" class="bg-surface text-white">Business</option>
+                                    <option value="premium" class="bg-surface text-white">Premium</option>
+                                    <option value="economy" class="bg-surface text-white">Economy</option>
+                                </select>
+                                <span class="material-symbols-outlined text-accent text-base">star</span>
+                            </div>
+                        </div>
+
+                        <!-- Search Button -->
+                        <button type="submit" class="w-full bg-accent hover:bg-white text-background font-manrope font-bold uppercase tracking-widest text-[11px] py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 scale-98 active:scale-100">
+                            Search Flights <span class="material-symbols-outlined text-sm">arrow_right_alt</span>
                         </button>
                     </div>
                 </div>
-            </div>
-            
-            <!-- Quick Filter Chips -->
-            <div class="flex flex-wrap gap-4 mt-6 ml-2">
-                <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-white text-black px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer transition-all">One Way</button>
-                <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Round Trip</button>
-                <button type="button" onclick="setTripType('MultiWay')" id="btnMultiWay" class="trip-type-btn bg-white/10 text-white/40 px-6 py-2 rounded-full font-label text-[10px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/20 transition-all">Multi-City</button>
-                <div class="flex items-center gap-2 ml-auto text-[#DAC76A] cursor-pointer hover:opacity-80 transition-opacity">
-                    <span class="material-symbols-outlined text-lg">auto_awesome</span>
-                    <span class="font-label text-[10px] uppercase tracking-widest font-bold">SkyScan VIP Concierge</span>
+
+                <!-- Trip Type Selectors -->
+                <div class="flex justify-center gap-4 mt-6">
+                    <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-white text-black px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer transition-all">One Way</button>
+                    <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-white/5 text-text-muted/60 px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/10 transition-all">Round Trip</button>
                 </div>
-            </div>
-            
-            <!-- City List Datalist -->
-            <datalist id="cityList">
-                @if (Model.CitiesWithAirports != null)
-                {
-                    foreach (var city in Model.CitiesWithAirports)
+
+                <!-- City Autocomplete Datalist -->
+                <datalist id="cityList">
+                    @if (Model.CitiesWithAirports != null)
                     {
-                        <option value="@city.Text"></option>
+                        foreach (var city in Model.CitiesWithAirports)
+                        {
+                            <option value="@city.Text"></option>
+                        }
                     }
-                }
-            </datalist>
-        </form>
+                </datalist>
+            </form>
+        </div>
     </section>
+
 </main>
-
-<!-- Template for Multi-City Leg -->
-<template id="MultiCityLegTemplate">
-    <div class="multi-city-leg flex flex-col lg:flex-row items-stretch gap-1 animate-in fade-in slide-in-from-left-4 duration-500">
-        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
-            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Leg {index} Origin</label>
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-xl">flight_takeoff</span>
-                <input name="MultiCityLegs[{index}].OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
-            </div>
-        </div>
-        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
-            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Destination</label>
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-tertiary text-xl">location_on</span>
-                <input name="MultiCityLegs[{index}].DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl placeholder:text-on-surface-variant/30 w-full uppercase outline-none" placeholder="CITY" required />
-            </div>
-        </div>
-        <div class="flex-1 bg-surface-container-low/60 p-6 rounded-xl group relative border border-white/5">
-            <label class="block font-label text-[10px] uppercase tracking-[0.3em] text-on-surface-variant mb-2 font-bold">Departure</label>
-            <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary text-xl">calendar_today</span>
-                <input name="MultiCityLegs[{index}].DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-headline font-bold text-xl w-full outline-none [color-scheme:dark]" required />
-            </div>
-        </div>
-        <button type="button" onclick="removeMultiCityLeg(this)" class="bg-red-500/10 hover:bg-red-500/20 text-red-500 px-6 rounded-xl transition-all">
-            <span class="material-symbols-outlined">delete</span>
-        </button>
-    </div>
-</template>
-
 <!-- Trending Routes Section -->
-<section class="bg-background py-16 px-8 border-b border-white/5">
+<section class="bg-[#050505] py-24 px-8 border-b border-white/5">
     <div class="max-w-7xl mx-auto">
         <header class="mb-12">
-            <span class="font-label text-[10px] uppercase tracking-[0.4em] text-primary font-bold">Real-time Insights</span>
-            <h2 class="font-headline text-3xl font-extrabold tracking-tight text-white mt-1">Trending Flight Routes</h2>
-            <p class="text-xs text-slate-500 mt-2">The most popular journeys booked and searched by our members in the last 30 days.</p>
+            <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">Real-time Insights</span>
+            <h2 class="font-serif text-3xl font-extrabold tracking-tight text-text-light mt-1">Trending Flight Routes</h2>
+            <p class="text-xs text-text-muted mt-2">The most popular journeys booked and searched by our members.</p>
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             @foreach (var route in Model.TrendingRoutes)
             {
                 <a href="/Flight/Results?origin=@route.OriginCityId&destination=@route.DestinationCityId&date=@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" 
-                   class="group glass-panel block p-6 rounded-xl border border-white/5 hover:border-primary/20 transition-all hover:scale-[1.02] relative overflow-hidden shadow-lg">
-                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-gradient-to-br from-primary/10 to-transparent rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                   class="group glass-panel block p-6 rounded-2xl border border-white/5 hover:border-accent/40 hover:shadow-[0_0_20px_rgba(216,180,106,0.1)] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
+                    <div class="absolute -right-8 -top-8 w-24 h-24 bg-gradient-to-br from-accent/10 to-transparent rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-[9px] text-[#DAC76A] font-bold uppercase tracking-wider bg-[#DAC76A]/10 px-2 py-0.5 rounded">
-                            🔥 @route.SearchCount searches
-                        </span>
-                    </div>
+                    <div class="h-4"></div>
 
                     <div class="space-y-4">
                         <div>
-                            <span class="block text-[8px] text-slate-500 uppercase tracking-widest">From</span>
-                            <span class="text-sm font-bold text-slate-100">@route.OriginCityName</span>
+                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">From</span>
+                            <span class="text-sm font-serif font-bold text-text-light">@route.OriginCityName</span>
                         </div>
                         <div class="h-px bg-white/10 w-full relative">
-                            <span class="material-symbols-outlined text-[10px] text-slate-500 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90">flight</span>
+                            <span class="material-symbols-outlined text-[10px] text-accent absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90">flight</span>
                         </div>
                         <div>
-                            <span class="block text-[8px] text-slate-500 uppercase tracking-widest">To</span>
-                            <span class="text-sm font-bold text-slate-100">@route.DestinationCityName</span>
+                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">To</span>
+                            <span class="text-sm font-serif font-bold text-text-light">@route.DestinationCityName</span>
                         </div>
                     </div>
 
                     <div class="mt-8 pt-4 border-t border-white/5 flex justify-between items-baseline">
                         <div>
-                            <span class="text-[8px] text-slate-500 uppercase tracking-widest block">From</span>
-                            <span class="text-lg font-headline font-extrabold text-tertiary">$@route.MinPrice.ToString("N0")</span>
+                            <span class="text-[8px] text-text-muted uppercase tracking-widest block">From</span>
+                            <span class="text-lg font-serif font-extrabold text-accent">$@route.MinPrice.ToString("N0")</span>
                         </div>
-                        <span class="text-[10px] text-primary font-bold uppercase tracking-wider">Explore</span>
+                        <span class="text-[10px] text-accent font-bold uppercase tracking-wider group-hover:underline">Explore</span>
                     </div>
                 </a>
             }
@@ -209,44 +181,44 @@
 </section>
 
 <!-- Featured Curations (Bento Grid) -->
-<section class="bg-background py-32 px-8">
+<section class="bg-[#050505] py-32 px-8">
     <div class="max-w-7xl mx-auto">
         <header class="flex justify-between items-end mb-16">
             <div class="space-y-2">
-                <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">SkyScan Curated</span>
-                <h2 class="font-headline text-4xl font-bold tracking-tight text-white">The Horizon Collection</h2>
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">SkyScan Curated</span>
+                <h2 class="font-serif text-4xl font-bold tracking-tight text-white">The Horizon Collection</h2>
             </div>
-            <a class="font-label text-[10px] uppercase tracking-widest text-white/40 hover:text-white transition-all border-b border-white/10 pb-1" href="#">View All Destinations</a>
+            <a class="font-sans text-[10px] uppercase tracking-widest text-text-muted/60 hover:text-accent transition-all border-b border-white/10 pb-1" href="#">View All Destinations</a>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 h-auto md:h-[600px]">
             <!-- Tokyo -->
-            <div class="md:col-span-7 group relative overflow-hidden rounded-2xl bg-surface-container-low shadow-2xl transition-all duration-700 border border-white/5">
+            <div class="md:col-span-7 group relative overflow-hidden rounded-3xl bg-[#111111] shadow-2xl transition-all duration-700 border border-white/5">
                 <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Tokyo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrb19dtuO7CAKXUwjUlpTeTR4x6Y1ABKrvnkEFas2hIbnikxewmi6GULMGztdKanilwIrzN27rrYAWiM0WXJutHCewHfyZmfq-IiEL8w3VlJabHtZhxSXSTMdl5HrwY3rOzTLoDWW797z1S4r3BEz_tCLN9nM78cHJOBZF2ftgNey_m5-xgBJ3wIPQM8vpNYoD_FpxQmZYMdrMIt2zDzPq-XsT0_rjotLMslSYVVJwTGzTWzD_zGbo9t7hhNMPfGKqbaS2fxGTrQ" />
-                <div class="absolute inset-0 atmospheric-layer opacity-80 group-hover:opacity-90 transition-opacity"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
                 <div class="absolute bottom-0 left-0 p-10 z-10">
-                    <span class="bg-tertiary text-[#211B00] px-3 py-1 rounded font-label text-[9px] uppercase font-bold tracking-widest mb-4 inline-block shadow-lg">New Opening</span>
-                    <h3 class="font-headline text-3xl font-bold mb-2 text-white">Tokyo Nocturne</h3>
-                    <p class="text-white/60 text-xs font-light max-w-sm">Experience the neon-soaked luxury of the Ginza District's newest private lounge.</p>
+                    <span class="bg-accent text-background px-3 py-1 rounded font-sans text-[9px] uppercase font-bold tracking-widest mb-4 inline-block shadow-lg">New Opening</span>
+                    <h3 class="font-serif text-3xl font-bold mb-2 text-white">Tokyo Nocturne</h3>
+                    <p class="text-text-muted text-xs font-light max-w-sm">Experience the neon-soaked luxury of the Ginza District's newest private lounge.</p>
                 </div>
             </div>
 
             <!-- Swiss Alps & Dubai -->
             <div class="md:col-span-5 flex flex-col gap-8">
-                <div class="flex-1 group relative overflow-hidden rounded-2xl bg-surface-container-low border border-white/5">
+                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5">
                     <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB4BpL1Rp_v0LLqR9hOWUcIH1TMXWEQaf1smsv4N98Cx0hjqtXgUpY3Q94MClfuvaBzlNvu3S5R6R7ihhEMf8WCgBJXE49nndV13IBflOLiym-a0wM1zR2NtsOwCz3df-UQjsx0SMVuP46dyJhmXfSTCroA_M72ucYsQheExvQ1T1PdrD2naJXhoWELOUaKrhttHCKf1-AzGdCSZtZukNdFRDdGBxuvIyF8UYbc5lIXFedaNkxLoifEEPbniAs9dSqilrsreoGLQ" />
-                    <div class="absolute inset-0 atmospheric-layer opacity-80"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85"></div>
                     <div class="absolute bottom-0 left-0 p-8 z-10">
-                        <h3 class="font-headline text-xl font-bold text-white mb-1">Alpine Sanctuary</h3>
-                        <p class="text-white/40 text-[9px] uppercase tracking-widest">St. Moritz, Switzerland</p>
+                        <h3 class="font-serif text-xl font-bold text-white mb-1">Alpine Sanctuary</h3>
+                        <p class="text-accent text-[9px] uppercase tracking-widest font-bold">St. Moritz, Switzerland</p>
                     </div>
                 </div>
-                <div class="flex-1 group relative overflow-hidden rounded-2xl bg-surface-container-low border border-white/5">
+                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5">
                     <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Dubai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4TVeapnSBk381Ot3ATr1whVHFWv2cctTleGNd9fmKeTH181xMFPkbKMUWDzNfjXd4bO4EunMTiR7IDbhgIoX73puKrvddB73Fzn3wvNYqmHWVi__p6lwCEto_0CFlc9Us95YW8EuagLkc5Z6NmLkCjR849Z2_t-rwJLd0E9EiUOGoJZidTywTmOmP4vceUmh6UR85S4eiKvPr_k3iEQ6r8p0ThIDerEv4C6MWFWIPBtZBSatc1rfr7bqqBd74tZWISHSMxPrExA" />
-                    <div class="absolute inset-0 atmospheric-layer opacity-80"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85"></div>
                     <div class="absolute bottom-0 left-0 p-8 z-10">
-                        <h3 class="font-headline text-xl font-bold text-white mb-1">Desert Mirage</h3>
-                        <p class="text-white/40 text-[9px] uppercase tracking-widest">Dubai, UAE</p>
+                        <h3 class="font-serif text-xl font-bold text-white mb-1">Desert Mirage</h3>
+                        <p class="text-accent text-[9px] uppercase tracking-widest font-bold">Dubai, UAE</p>
                     </div>
                 </div>
             </div>
@@ -255,78 +227,42 @@
 </section>
 
 <!-- Luxury Stats -->
-<section class="bg-background py-24 px-8 border-t border-white/5">
+<section class="bg-[#050505] py-24 px-8 border-t border-white/5">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
         <div class="text-center md:text-left space-y-2">
-            <div class="text-tertiary font-headline text-6xl font-extrabold tracking-tighter">98.4%</div>
-            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">SkyScan On-Time Arrival</div>
+            <div class="text-accent font-serif text-6xl font-extrabold tracking-tighter">98.4%</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">SkyScan On-Time Arrival</div>
         </div>
         <div class="w-px h-16 bg-white/10 hidden md:block"></div>
         <div class="text-center md:text-left space-y-2">
-            <div class="text-white font-headline text-6xl font-extrabold tracking-tighter">150+</div>
-            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">Global SkyScan Lounges</div>
+            <div class="text-text-light font-serif text-6xl font-extrabold tracking-tighter">150+</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">Global SkyScan Lounges</div>
         </div>
         <div class="w-px h-16 bg-white/10 hidden md:block"></div>
         <div class="text-center md:text-left space-y-2">
-            <div class="text-white font-headline text-6xl font-extrabold tracking-tighter">24/7</div>
-            <div class="font-label text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">SkyScan Concierge</div>
+            <div class="text-text-light font-serif text-6xl font-extrabold tracking-tighter">24/7</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">SkyScan Concierge</div>
         </div>
     </div>
 </section>
 
 @section Scripts {
     <script>
-        let multiCityCount = 0;
-
         function setTripType(type) {
             document.getElementById('TripTypeHidden').value = type;
             const buttons = document.querySelectorAll('.trip-type-btn');
             buttons.forEach(btn => {
                 btn.classList.remove('bg-white', 'text-black');
-                btn.classList.add('bg-white/10', 'text-white/40');
+                btn.classList.add('bg-white/5', 'text-text-muted/60');
             });
             const selectedBtn = document.getElementById('btn' + type);
             if (selectedBtn) {
-                selectedBtn.classList.remove('bg-white/10', 'text-white/40');
+                selectedBtn.classList.remove('bg-white/5', 'text-text-muted/60');
                 selectedBtn.classList.add('bg-white', 'text-black');
             }
 
-            // Toggle Search Fields
-            const standardFields = document.getElementById('StandardSearchFields');
-            const multiCityFields = document.getElementById('MultiCitySearchFields');
             const returnField = document.getElementById('ReturnDateField');
-
-            if (type === 'MultiWay') {
-                standardFields.style.display = 'none';
-                multiCityFields.style.display = 'block';
-                if (multiCityCount === 0) {
-                    addMultiCityLeg();
-                    addMultiCityLeg();
-                }
-            } else {
-                standardFields.style.display = 'flex';
-                multiCityFields.style.display = 'none';
-                returnField.style.display = (type === 'RoundTrip') ? 'block' : 'none';
-            }
-        }
-
-        function addMultiCityLeg() {
-            const container = document.getElementById('MultiCityLegsContainer');
-            const template = document.getElementById('MultiCityLegTemplate').innerHTML;
-            const legHtml = template.replace(/{index}/g, multiCityCount);
-            
-            const div = document.createElement('div');
-            div.innerHTML = legHtml;
-            container.appendChild(div.firstElementChild);
-            multiCityCount++;
-        }
-
-        function removeMultiCityLeg(btn) {
-            if (document.querySelectorAll('.multi-city-leg').length > 2) {
-                btn.closest('.multi-city-leg').remove();
-            } else {
-                alert('SkyScan Premium: Minimum 2 legs required for Multi-City itineraries.');
-            }
+            returnField.style.display = (type === 'RoundTrip') ? 'block' : 'none';
         }
         
         // Check TripType from Model on load
@@ -359,5 +295,107 @@
                 alert("Geolocation is not supported by your browser.");
             }
         });
+
+        // Staggered word reveal animation logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const subtitle = document.getElementById('heroSubtitle');
+            if (subtitle) {
+                const words = subtitle.textContent.trim().split(/\s+/);
+                // Wrap each word in a custom transition span
+                subtitle.innerHTML = words.map(word => 
+                    `<span class="word-span inline-block opacity-0 filter blur-[12px] translate-y-[15px] transition-all duration-[700ms] will-change-[transform,opacity,filter]">${word}</span>`
+                ).join(' ');
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const spans = subtitle.querySelectorAll('.word-span');
+                            spans.forEach((span, index) => {
+                                // Delay matches: starts together with title slide-in at 1.2s. 50ms stagger per word.
+                                const delay = (index * 0.05) + 1.2; 
+                                span.style.transitionTimingFunction = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                                span.style.transitionDelay = `${delay}s`;
+                                
+                                requestAnimationFrame(() => {
+                                    span.classList.remove('opacity-0', 'blur-[12px]', 'translate-y-[15px]');
+                                    span.classList.add('opacity-100', 'blur-0', 'translate-y-0');
+                                });
+                            });
+                            // Run once: unobserve immediately
+                            observer.unobserve(subtitle);
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                observer.observe(subtitle);
+            }
+        });
     </script>
 }
+
+<style>
+    /* Typewriter animation (0s to 1.5s) */
+    .typewriter {
+        display: inline-block;
+        overflow: hidden;
+        border-right: 2px solid #D8B46A;
+        white-space: nowrap;
+        width: 0;
+        animation: 
+            typing 1.5s steps(30, end) forwards,
+            blink-caret 0.75s step-end infinite;
+    }
+
+    @@keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
+    @@keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: #D8B46A; }
+    }
+
+    /* Fly Beyond (Slide left to right: starts at 1.2s) */
+    .animate-slide-left {
+        opacity: 0;
+        transform: translateX(-40px);
+        filter: blur(8px);
+        animation: slideLeft 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+    }
+
+    @@keyframes slideLeft {
+        0% {
+            opacity: 0;
+            transform: translateX(-40px);
+            filter: blur(8px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+            filter: blur(0);
+        }
+    }
+
+    /* Time & Sky (Slide right to left: starts at 1.2s) */
+    .animate-slide-right {
+        opacity: 0;
+        transform: translateX(40px);
+        filter: blur(8px);
+        animation: slideRight 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.2s forwards;
+    }
+
+    @@keyframes slideRight {
+        0% {
+            opacity: 0;
+            transform: translateX(40px);
+            filter: blur(8px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+            filter: blur(0);
+        }
+    }
+</style>
+

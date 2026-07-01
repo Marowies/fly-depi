@@ -88,24 +88,16 @@ namespace SkyScan.Presentation.Controllers
                 }
             }
 
-            if (trendingRoutesList.Count < 4)
+            // If we don't have 5 routes from searches, fallback to pairing database cities to guarantee exactly 5 routes
+            if (trendingRoutesList.Count < 5)
             {
-                var dbCities = await _context.Cities.Take(10).ToListAsync();
+                var dbCities = await _context.Cities.OrderByDescending(c => c.SearchCount).Take(20).ToListAsync();
                 if (dbCities.Count >= 2)
                 {
-                    var defaults = new[]
+                    for (int i = 0; i < dbCities.Count - 1 && trendingRoutesList.Count < 5; i++)
                     {
-                        new { OriginName = "Sydney", DestName = "Bangkok", Price = 450.0 },
-                        new { OriginName = "Tokyo", DestName = "Singapore", Price = 620.0 },
-                        new { OriginName = "London", DestName = "Dubai", Price = 590.0 },
-                        new { OriginName = "Paris", DestName = "New York", Price = 780.0 }
-                    };
-
-                    foreach (var def in defaults)
-                    {
-                        var origin = dbCities.FirstOrDefault(c => c.Name.Contains(def.OriginName, StringComparison.OrdinalIgnoreCase)) ?? dbCities[0];
-                        var dest = dbCities.FirstOrDefault(c => c.Name.Contains(def.DestName, StringComparison.OrdinalIgnoreCase)) ?? dbCities[Math.Min(1, dbCities.Count - 1)];
-
+                        var origin = dbCities[i];
+                        var dest = dbCities[i + 1];
                         if (origin.CityId != dest.CityId && !trendingRoutesList.Any(r => r.OriginCityId == origin.CityId && r.DestinationCityId == dest.CityId))
                         {
                             trendingRoutesList.Add(new TrendingRouteViewModel
@@ -114,8 +106,8 @@ namespace SkyScan.Presentation.Controllers
                                 DestinationCityId = dest.CityId,
                                 OriginCityName = origin.Name,
                                 DestinationCityName = dest.Name,
-                                SearchCount = 12 + new Random().Next(1, 40),
-                                MinPrice = def.Price
+                                SearchCount = origin.SearchCount + dest.SearchCount,
+                                MinPrice = 190 + new Random().Next(40, 450)
                             });
                         }
                     }
@@ -418,7 +410,7 @@ namespace SkyScan.Presentation.Controllers
                 cachedItems = cities.Select(c => new SelectListItem
                 {
                     Value = c.CityId.ToString(),
-                    Text  = $"{c.CityName}"
+                    Text  = $"{c.CityName}, {c.CountryName}"
                 }).OrderBy(c => c.Text).ToList();
 
                 _cache.Set(AirportCacheKey, cachedItems, AirportCacheDuration);

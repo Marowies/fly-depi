@@ -1,1 +1,40 @@
 /* Styles moved to Tailwind and project-specific CSS */
+.welcome-box {
+    font-size: 2.5rem;
+    font-weight: bold;
+    display: flex;
+    overflow: hidden;
+    height: 60px;
+}
+
+.word-rotator {
+    padding-left: 10px;
+    color: #007bff; /* Change to match your site theme */
+    animation: rotateWords 10s infinite ease-in-out;
+}
+
+@keyframes rotateWords {
+    0%, 15% {
+        transform: translateY(0);
+    }
+
+    20%, 35% {
+        transform: translateY(-60px);
+    }
+
+    40%, 55% {
+        transform: translateY(-120px);
+    }
+
+    60%, 75% {
+        transform: translateY(-180px);
+    }
+
+    80%, 95% {
+        transform: translateY(-240px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}

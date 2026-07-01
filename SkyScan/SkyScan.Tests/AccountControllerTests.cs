@@ -46,8 +46,7 @@ namespace SkyScan.Tests
                 _mockEmailService.Object,
                 _mockUrlEncoder.Object,
                 _mockUserManager.Object,
-                _mockSignInManager.Object,
-                new Mock<SkyScanDbContext>().Object);
+                _mockSignInManager.Object);
 
             _controller.ControllerContext = new ControllerContext
             {
