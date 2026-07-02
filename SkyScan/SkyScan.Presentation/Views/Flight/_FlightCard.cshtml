@@ -166,7 +166,7 @@
                     data-redirect="@flight.RedirectURL"
                     data-amenities-wifi="@(flight.HasWifi ? "true" : "false")"
                     data-amenities-meals="@(flight.HasFood ? "true" : "false")"
-                    data-amenities-power="@((flight.HasWifi || flight.HasEntertainment) ? "true" : "false")"
+                    data-amenities-power="@(flight.HasPower ? "true" : "false")"
                     data-amenities-entertainment="@(flight.HasEntertainment ? "true" : "false")"
                     @if (flight.ReturnLeg != null)
                     {
@@ -184,7 +184,7 @@
                         data-return-duration="@(((int)flight.ReturnLeg.Duration.TotalHours) + "h " + flight.ReturnLeg.Duration.Minutes + "m")"
                         data-return-amenities-wifi="@(flight.ReturnLeg.HasWifi ? "true" : "false")"
                         data-return-amenities-meals="@(flight.ReturnLeg.HasFood ? "true" : "false")"
-                        data-return-amenities-power="@((flight.ReturnLeg.HasWifi || flight.ReturnLeg.HasEntertainment) ? "true" : "false")"
+                        data-return-amenities-power="@(flight.ReturnLeg.HasPower ? "true" : "false")"
                         data-return-amenities-entertainment="@(flight.ReturnLeg.HasEntertainment ? "true" : "false")"
                         </text>
                     }>

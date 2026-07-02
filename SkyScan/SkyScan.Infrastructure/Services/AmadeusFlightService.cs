@@ -226,7 +226,8 @@ namespace SkyScan.Infrastructure.Services
                                             RedirectURL = returnRedirectUrl,
                                             HasWifi = returnAmenities.Contains("WiFi"),
                                             HasFood = returnAmenities.Contains("Meals"),
-                                            HasEntertainment = returnAmenities.Contains("Entertainment")
+                                            HasEntertainment = returnAmenities.Contains("Entertainment"),
+                                            HasPower = returnAmenities.Contains("Power")
                                         };
                                     }
                                 }
@@ -253,7 +254,8 @@ namespace SkyScan.Infrastructure.Services
                                     ReturnLeg = returnFlightDto,
                                     HasWifi = outboundAmenities.Contains("WiFi"),
                                     HasFood = outboundAmenities.Contains("Meals"),
-                                    HasEntertainment = outboundAmenities.Contains("Entertainment")
+                                    HasEntertainment = outboundAmenities.Contains("Entertainment"),
+                                    HasPower = outboundAmenities.Contains("Power")
                                 });
                             }
                         }
@@ -353,16 +355,7 @@ namespace SkyScan.Infrastructure.Services
             };
             var isBudget = budgetCarriers.Contains(carrierCode);
 
-            var hasWiFi = !isBudget && (
-                aircraftCode.StartsWith("78") || 
-                aircraftCode.StartsWith("77") || 
-                aircraftCode.StartsWith("35") || 
-                aircraftCode.StartsWith("38") || 
-                aircraftCode == "333" || 
-                aircraftCode == "339" ||
-                carrierCode.Equals("EK", StringComparison.OrdinalIgnoreCase) ||
-                carrierCode.Equals("QR", StringComparison.OrdinalIgnoreCase)
-            );
+            var hasWiFi = !isBudget;
             if (hasWiFi) amenities.Add("WiFi");
 
             if (!isBudget)
@@ -370,23 +363,10 @@ namespace SkyScan.Infrastructure.Services
                 amenities.Add("Meals");
             }
 
-            var hasPower = aircraftCode.StartsWith("78") || 
-                           aircraftCode.StartsWith("77") || 
-                           aircraftCode.StartsWith("35") || 
-                           aircraftCode.StartsWith("38") || 
-                           aircraftCode.StartsWith("32") || 
-                           aircraftCode.StartsWith("73") || 
-                           !isBudget;
+            var hasPower = !isBudget;
             if (hasPower) amenities.Add("Power");
 
-            var hasEntertainment = !isBudget && (
-                aircraftCode.StartsWith("78") || 
-                aircraftCode.StartsWith("77") || 
-                aircraftCode.StartsWith("35") || 
-                aircraftCode.StartsWith("38") ||
-                aircraftCode == "333" ||
-                aircraftCode == "339"
-            );
+            var hasEntertainment = !isBudget;
             if (hasEntertainment) amenities.Add("Entertainment");
 
             if (amenities.Count == 0)

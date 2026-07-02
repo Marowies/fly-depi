@@ -594,6 +594,10 @@
     }
     .checkbox-inner {
         transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transform: scale(0);
+    }
+    input[type="checkbox"]:checked + .checkbox-box .checkbox-inner {
+        transform: scale(1);
     }
     .scrollbar-thin::-webkit-scrollbar {
         width: 4px;

@@ -17,5 +17,6 @@ namespace SkyScan.Application.DTOs
         public bool HasWifi { get; set; }
         public bool HasFood { get; set; }
         public bool HasEntertainment { get; set; }
+        public bool HasPower { get; set; }
     }
 }
