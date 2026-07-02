@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Infrastructure.Identity;
 using SkyScan.Presentation.Controllers;
 using SkyScan.Presentation.Models;
 using System.Text.Encodings.Web;
@@ -18,8 +19,8 @@ namespace SkyScan.Tests
         private readonly Mock<IUserRepository> _mockUserRepo;
         private readonly Mock<IEmailService> _mockEmailService;
         private readonly Mock<UrlEncoder> _mockUrlEncoder;
-        private readonly Mock<UserManager<User>> _mockUserManager;
-        private readonly Mock<SignInManager<User>> _mockSignInManager;
+        private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+        private readonly Mock<SignInManager<ApplicationUser>> _mockSignInManager;
         private readonly AccountController _controller;
 
         public AccountControllerTests()
@@ -27,15 +28,15 @@ namespace SkyScan.Tests
             _mockUserRepo = new Mock<IUserRepository>();
             _mockEmailService = new Mock<IEmailService>();
             _mockUrlEncoder = new Mock<UrlEncoder>();
-            
+
             // Mocking UserManager
-            var store = new Mock<IUserStore<User>>();
-            _mockUserManager = new Mock<UserManager<User>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
+            var store = new Mock<IUserStore<ApplicationUser>>();
+            _mockUserManager = new Mock<UserManager<ApplicationUser>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
 
             // Mocking SignInManager
             var contextAccessor = new Mock<IHttpContextAccessor>();
-            var claimsFactory = new Mock<IUserClaimsPrincipalFactory<User>>();
-            _mockSignInManager = new Mock<SignInManager<User>>(
+            var claimsFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
+            _mockSignInManager = new Mock<SignInManager<ApplicationUser>>(
                 _mockUserManager.Object,
                 contextAccessor.Object,
                 claimsFactory.Object,
@@ -46,7 +47,8 @@ namespace SkyScan.Tests
                 _mockEmailService.Object,
                 _mockUrlEncoder.Object,
                 _mockUserManager.Object,
-                _mockSignInManager.Object);
+                _mockSignInManager.Object,
+                new Mock<SkyScanDbContext>().Object);
 
             _controller.ControllerContext = new ControllerContext
             {
@@ -80,7 +82,7 @@ namespace SkyScan.Tests
             // Arrange
             var model = new RegisterViewModel { Email = "test@example.com", Password = "Password123!", Name = "Test User" };
             _mockUserRepo.Setup(r => r.RegisterUserAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success);
+                .ReturnsAsync(AuthResult.Success());
             _mockUserRepo.Setup(r => r.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
                 .ReturnsAsync("token");
 
@@ -114,7 +116,7 @@ namespace SkyScan.Tests
             // Arrange
             var model = new LoginViewModel { Email = "test@example.com", Password = "Password123!" };
             _mockUserRepo.Setup(r => r.LoginUserAsync(model.Email, model.Password, model.RememberMe))
-                .ReturnsAsync(Microsoft.AspNetCore.Identity.SignInResult.Success);
+                .ReturnsAsync(AuthResult.Success());
 
             // Act
             var result = await _controller.Login(model);
@@ -131,9 +133,10 @@ namespace SkyScan.Tests
             // Arrange
             string userId = "user123";
             string token = "token123";
-            var user = new User { Id = Guid.NewGuid() };
-            _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(user);
-            _mockUserRepo.Setup(r => r.ConfirmEmailAsync(user, token)).ReturnsAsync(IdentityResult.Success);
+            var appUser = new ApplicationUser { Id = Guid.NewGuid(), Name = "Test", Email = "test@example.com" };
+            _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(appUser);
+            _mockUserRepo.Setup(r => r.ConfirmEmailAsync(It.Is<User>(u => u.Id == appUser.Id), token))
+                .ReturnsAsync(AuthResult.Success());
 
             // Act
             var result = await _controller.ConfirmEmail(userId, token);

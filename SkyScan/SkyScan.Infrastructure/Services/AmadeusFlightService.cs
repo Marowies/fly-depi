@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using SkyScan.Application.DTOs;
 using SkyScan.Application.Interfaces;
 using SkyScan.Core.Entities;
@@ -21,17 +20,17 @@ namespace SkyScan.Infrastructure.Services
         private readonly HttpClient _httpClient;
         private readonly string _clientId;
         private readonly string _clientSecret;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly SkyScanDbContext _dbContext;
         private string? _accessToken;
         private DateTime _tokenExpiration = DateTime.MinValue;
 
-        public AmadeusFlightService(HttpClient httpClient, IConfiguration configuration, IServiceProvider serviceProvider)
+        public AmadeusFlightService(HttpClient httpClient, IConfiguration configuration, SkyScanDbContext dbContext)
         {
             _httpClient = httpClient;
             _clientId = configuration["Amadeus:ClientId"] ?? "";
             _clientSecret = configuration["Amadeus:ClientSecret"] ?? "";
-            _serviceProvider = serviceProvider;
-            
+            _dbContext = dbContext;
+
             var baseUrl = configuration["Amadeus:BaseUrl"] ?? "https://test.api.amadeus.com/";
             _httpClient.BaseAddress = new Uri(baseUrl);
         }
@@ -64,19 +63,76 @@ namespace SkyScan.Infrastructure.Services
             _tokenExpiration = DateTime.UtcNow.AddSeconds(expiresIn - 10);
         }
 
-        public async Task<IEnumerable<FlightDto>> SearchFlightsAsync(IEnumerable<string> originIatas, IEnumerable<string> destinationIatas, DateTime departureDate)
+        public async Task<string?> GetAirlineNameAsync(string iataCode)
+        {
+            await EnsureAccessTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
+
+            var url = $"v1/reference-data/airlines?airlineCodes={iataCode}";
+            try
+            {
+                var response = await _httpClient.GetAsync(url);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return null;
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                using var doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("data", out var dataArray) && dataArray.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var element in dataArray.EnumerateArray())
+                    {
+                        var responseIata = element.TryGetProperty("iataCode", out var iataEl) ? iataEl.GetString() : null;
+                        if (string.Equals(responseIata, iataCode, StringComparison.OrdinalIgnoreCase))
+                        {
+                            if (element.TryGetProperty("commonName", out var commonNameEl) && !string.IsNullOrWhiteSpace(commonNameEl.GetString()))
+                            {
+                                return commonNameEl.GetString();
+                            }
+                            if (element.TryGetProperty("businessName", out var businessNameEl) && !string.IsNullOrWhiteSpace(businessNameEl.GetString()))
+                            {
+                                return businessNameEl.GetString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error retrieving airline name for IATA code {iataCode}: {ex.Message}");
+            }
+
+            return null;
+        }
+
+        public async Task<IEnumerable<FlightDto>> SearchFlightsAsync(
+            IEnumerable<string> originIatas, 
+            IEnumerable<string> destinationIatas, 
+            DateTime departureDate, 
+            DateTime? returnDate = null)
         {
             var flightDtos = new List<FlightDto>();
             await EnsureAccessTokenAsync();
 
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _accessToken);
 
+            // In-memory cache to prevent redundant DB/API lookup overhead for recurring carriers in the same query
+            var localAirlineCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
             foreach (var origin in originIatas)
             {
                 foreach (var destination in destinationIatas)
                 {
                     var dateStr = departureDate.ToString("yyyy-MM-dd");
-                    var url = $"v2/shopping/flight-offers?originLocationCode={origin}&destinationLocationCode={destination}&departureDate={dateStr}&adults=1&max=10";
+                    var url = $"v2/shopping/flight-offers?originLocationCode={origin}&destinationLocationCode={destination}&departureDate={dateStr}";
+                    
+                    if (returnDate.HasValue)
+                    {
+                        url += $"&returnDate={returnDate.Value.ToString("yyyy-MM-dd")}";
+                    }
+                    
+                    url += "&adults=1&max=10";
 
                     try
                     {
@@ -87,87 +143,119 @@ namespace SkyScan.Infrastructure.Services
                         using var doc = JsonDocument.Parse(json);
                         if (!doc.RootElement.TryGetProperty("data", out var dataArray)) continue;
 
-                        using var scope = _serviceProvider.CreateScope();
-                        var dbContext = scope.ServiceProvider.GetRequiredService<SkyScanDbContext>();
-
                         foreach (var offer in dataArray.EnumerateArray())
                         {
                             var price = decimal.Parse(offer.GetProperty("price").GetProperty("grandTotal").GetString() ?? "0.00");
-                            var firstItinerary = offer.GetProperty("itineraries").EnumerateArray().First();
-                            var segments = firstItinerary.GetProperty("segments").EnumerateArray().ToList();
-
-                            if (!segments.Any()) continue;
-
-                            var firstSegment = segments.First();
-                            var lastSegment = segments.Last();
-
-                            var carrierCode = firstSegment.GetProperty("carrierCode").GetString() ?? "XX";
-                            var flightNum = firstSegment.GetProperty("number").GetString() ?? "000";
-                            var departureTime = DateTime.Parse(firstSegment.GetProperty("departure").GetProperty("at").GetString() ?? DateTime.Now.ToString());
-                            var arrivalTime = DateTime.Parse(lastSegment.GetProperty("arrival").GetProperty("at").GetString() ?? DateTime.Now.ToString());
-
-                            // Airline is static reference data — persist only if this carrier hasn't been seen before
-                            var airline = await dbContext.Airlines.FirstOrDefaultAsync(a => a.IataCode == carrierCode);
-                            if (airline == null)
+                            
+                            if (!offer.TryGetProperty("itineraries", out var itinerariesEl) || itinerariesEl.ValueKind != JsonValueKind.Array)
                             {
-                                airline = new Airline
-                                {
-                                    AirlineId = Guid.NewGuid(),
-                                    Name = carrierCode + " Airlines",
-                                    IataCode = carrierCode
-                                };
-                                dbContext.Airlines.Add(airline);
-                                await dbContext.SaveChangesAsync();
+                                continue;
                             }
 
-                            // Aircraft type is static reference data — persist only if this type hasn't been seen before
-                            var aircraftCode = firstSegment.TryGetProperty("aircraft", out var acEl)
-                                && acEl.TryGetProperty("code", out var acCodeEl)
-                                ? acCodeEl.GetString() ?? "UNK"
+                            var itineraries = itinerariesEl.EnumerateArray().ToList();
+                            if (!itineraries.Any()) continue;
+
+                            // 1. Outbound Leg
+                            var outboundItinerary = itineraries[0];
+                            var outboundSegments = outboundItinerary.GetProperty("segments").EnumerateArray().ToList();
+                            if (!outboundSegments.Any()) continue;
+
+                            var outboundFirstSegment = outboundSegments.First();
+                            var outboundLastSegment = outboundSegments.Last();
+
+                            var outboundCarrierCode = outboundFirstSegment.GetProperty("carrierCode").GetString() ?? "XX";
+                            var outboundFlightNum = outboundFirstSegment.GetProperty("number").GetString() ?? "000";
+                            var outboundDepartureTime = DateTime.Parse(outboundFirstSegment.GetProperty("departure").GetProperty("at").GetString() ?? DateTime.Now.ToString());
+                            var outboundArrivalTime = DateTime.Parse(outboundLastSegment.GetProperty("arrival").GetProperty("at").GetString() ?? DateTime.Now.ToString());
+
+                            var outboundAirlineName = await ResolveAirlineNameWithCacheAsync(outboundCarrierCode, localAirlineCache);
+
+                            var outboundAircraftCode = outboundFirstSegment.TryGetProperty("aircraft", out var outboundAcEl)
+                                && outboundAcEl.TryGetProperty("code", out var outboundAcCodeEl)
+                                ? outboundAcCodeEl.GetString() ?? "UNK"
                                 : "UNK";
-                            var airplane = await dbContext.Airplanes
-                                .FirstOrDefaultAsync(a => a.AircraftCode == aircraftCode);
-                            if (airplane == null)
+                            
+                            var outboundAirplane = await ResolveAirplaneAsync(outboundAircraftCode);
+                            var outboundDepAirport = await ResolveAirportAsync(origin);
+                            var outboundArrAirport = await ResolveAirportAsync(destination);
+
+                            // 2. Return Leg (Native Round-Trip)
+                            FlightDto? returnFlightDto = null;
+                            if (itineraries.Count > 1 && returnDate.HasValue)
                             {
-                                airplane = new Airplane
+                                var returnItinerary = itineraries[1];
+                                var returnSegments = returnItinerary.GetProperty("segments").EnumerateArray().ToList();
+                                if (returnSegments.Any())
                                 {
-                                    AirplaneId = Guid.NewGuid(),
-                                    AircraftCode = aircraftCode,
-                                    AircraftName = AircraftNameLookup.GetName(aircraftCode)
-                                };
-                                dbContext.Airplanes.Add(airplane);
-                                await dbContext.SaveChangesAsync();
+                                    var returnFirstSegment = returnSegments.First();
+                                    var returnLastSegment = returnSegments.Last();
+
+                                    var returnCarrierCode = returnFirstSegment.GetProperty("carrierCode").GetString() ?? "XX";
+                                    var returnFlightNum = returnFirstSegment.GetProperty("number").GetString() ?? "000";
+                                    var returnDepartureTime = DateTime.Parse(returnFirstSegment.GetProperty("departure").GetProperty("at").GetString() ?? DateTime.Now.ToString());
+                                    var returnArrivalTime = DateTime.Parse(returnLastSegment.GetProperty("arrival").GetProperty("at").GetString() ?? DateTime.Now.ToString());
+
+                                    var returnAirlineName = await ResolveAirlineNameWithCacheAsync(returnCarrierCode, localAirlineCache);
+
+                                    var returnAircraftCode = returnFirstSegment.TryGetProperty("aircraft", out var returnAcEl)
+                                        && returnAcEl.TryGetProperty("code", out var returnAcCodeEl)
+                                        ? returnAcCodeEl.GetString() ?? "UNK"
+                                        : "UNK";
+
+                                    var returnAirplane = await ResolveAirplaneAsync(returnAircraftCode);
+                                    var returnDepAirport = await ResolveAirportAsync(destination);
+                                    var returnArrAirport = await ResolveAirportAsync(origin);
+
+                                    if (returnDepAirport != null && returnArrAirport != null)
+                                    {
+                                        var returnRedirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{origin}%20from%20{destination}%20on%20{returnDate.Value:yyyy-MM-dd}";
+
+                                        var returnAmenities = GetAmenities(returnCarrierCode, returnAircraftCode);
+
+                                        returnFlightDto = new FlightDto
+                                        {
+                                            AirlineName = returnAirlineName,
+                                            FlightNumber = $"{returnCarrierCode} {returnFlightNum}",
+                                            OriginAirport = $"{returnDepAirport.Name} ({returnDepAirport.IataCode})",
+                                            DestinationAirport = $"{returnArrAirport.Name} ({returnArrAirport.IataCode})",
+                                            DepartureTime = returnDepartureTime,
+                                            ArrivalTime = returnArrivalTime,
+                                            Price = 0.00M, // Indicated as "Included" in the view as price is bundled
+                                            Stops = Math.Max(0, returnSegments.Count - 1),
+                                            Status = "Active",
+                                            RedirectURL = returnRedirectUrl,
+                                            HasWifi = returnAmenities.Contains("WiFi"),
+                                            HasFood = returnAmenities.Contains("Meals"),
+                                            HasEntertainment = returnAmenities.Contains("Entertainment")
+                                        };
+                                    }
+                                }
                             }
 
-                            // Airports are seeded reference data — look up only, never created here
-                            var depAirport = await dbContext.Airports
-                                .Include(a => a.City)
-                                    .ThenInclude(c => c.Country)
-                                .FirstOrDefaultAsync(a => a.IataCode == origin);
-                            var arrAirport = await dbContext.Airports
-                                .Include(a => a.City)
-                                    .ThenInclude(c => c.Country)
-                                .FirstOrDefaultAsync(a => a.IataCode == destination);
-
-                            if (depAirport == null || arrAirport == null) continue;
-
-                            // Dynamic Google Flights redirection link
-                            var redirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{dateStr}";
-
-                            // Flight schedule/price are dynamic per search result — not persisted, built straight into the DTO
-                            flightDtos.Add(new FlightDto
+                            if (outboundDepAirport != null && outboundArrAirport != null)
                             {
-                                AirlineName = airline.Name,
-                                FlightNumber = $"{carrierCode} {flightNum}",
-                                OriginAirport = $"{depAirport.Name} ({depAirport.IataCode})",
-                                DestinationAirport = $"{arrAirport.Name} ({arrAirport.IataCode})",
-                                DepartureTime = departureTime,
-                                ArrivalTime = arrivalTime,
-                                Price = price,
-                                Stops = Math.Max(0, segments.Count - 1),
-                                Status = "Active",
-                                RedirectURL = redirectUrl
-                            });
+                                var outboundRedirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{dateStr}";
+
+                                var outboundAmenities = GetAmenities(outboundCarrierCode, outboundAircraftCode);
+
+                                flightDtos.Add(new FlightDto
+                                {
+                                    AirlineName = outboundAirlineName,
+                                    FlightNumber = $"{outboundCarrierCode} {outboundFlightNum}",
+                                    OriginAirport = $"{outboundDepAirport.Name} ({outboundDepAirport.IataCode})",
+                                    DestinationAirport = $"{outboundArrAirport.Name} ({outboundArrAirport.IataCode})",
+                                    DepartureTime = outboundDepartureTime,
+                                    ArrivalTime = outboundArrivalTime,
+                                    Price = price, // Show total combined fare on outbound
+                                    Stops = Math.Max(0, outboundSegments.Count - 1),
+                                    Status = "Active",
+                                    RedirectURL = outboundRedirectUrl,
+                                    ReturnLeg = returnFlightDto,
+                                    HasWifi = outboundAmenities.Contains("WiFi"),
+                                    HasFood = outboundAmenities.Contains("Meals"),
+                                    HasEntertainment = outboundAmenities.Contains("Entertainment")
+                                });
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -178,6 +266,134 @@ namespace SkyScan.Infrastructure.Services
             }
 
             return flightDtos;
+        }
+
+        private async Task<string> ResolveAirlineNameWithCacheAsync(string carrierCode, Dictionary<string, string> localCache)
+        {
+            if (localCache.TryGetValue(carrierCode, out var cachedName))
+            {
+                return cachedName;
+            }
+
+            // 1. Check DB first (Low Cost)
+            var airline = await _dbContext.Airlines.FirstOrDefaultAsync(a => a.IataCode == carrierCode);
+            if (airline != null)
+            {
+                localCache[carrierCode] = airline.Name;
+                return airline.Name;
+            }
+
+            // 2. Query Amadeus Airline Code Lookup API
+            string resolvedName = carrierCode + " Airlines"; // fallback
+            var apiName = await GetAirlineNameAsync(carrierCode);
+            if (!string.IsNullOrEmpty(apiName))
+            {
+                resolvedName = apiName;
+            }
+
+            // 3. Store in DB
+            try
+            {
+                airline = new Airline
+                {
+                    AirlineId = Guid.NewGuid(),
+                    Name = resolvedName,
+                    IataCode = carrierCode
+                };
+                _dbContext.Airlines.Add(airline);
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving airline {carrierCode} ({resolvedName}) to DB: {ex.Message}");
+            }
+
+            localCache[carrierCode] = resolvedName;
+            return resolvedName;
+        }
+
+        private async Task<Airplane> ResolveAirplaneAsync(string aircraftCode)
+        {
+            var airplane = await _dbContext.Airplanes.FirstOrDefaultAsync(a => a.AircraftCode == aircraftCode);
+            if (airplane == null)
+            {
+                try
+                {
+                    airplane = new Airplane
+                    {
+                        AirplaneId = Guid.NewGuid(),
+                        AircraftCode = aircraftCode,
+                        AircraftName = AircraftNameLookup.GetName(aircraftCode)
+                    };
+                    _dbContext.Airplanes.Add(airplane);
+                    await _dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving airplane {aircraftCode} to DB: {ex.Message}");
+                }
+            }
+            return airplane ?? new Airplane { AircraftCode = aircraftCode, AircraftName = AircraftNameLookup.GetName(aircraftCode) };
+        }
+
+        private async Task<Airport?> ResolveAirportAsync(string iataCode)
+        {
+            return await _dbContext.Airports
+                .Include(a => a.City)
+                    .ThenInclude(c => c.Country)
+                .FirstOrDefaultAsync(a => a.IataCode == iataCode);
+        }
+
+        private List<string> GetAmenities(string carrierCode, string aircraftCode)
+        {
+            var amenities = new List<string>();
+            var budgetCarriers = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+            { 
+                "FR", "W6", "U2", "NK", "F9", "VY", "TO", "HV", "PC", "W3", "DY", "D8", "D7"
+            };
+            var isBudget = budgetCarriers.Contains(carrierCode);
+
+            var hasWiFi = !isBudget && (
+                aircraftCode.StartsWith("78") || 
+                aircraftCode.StartsWith("77") || 
+                aircraftCode.StartsWith("35") || 
+                aircraftCode.StartsWith("38") || 
+                aircraftCode == "333" || 
+                aircraftCode == "339" ||
+                carrierCode.Equals("EK", StringComparison.OrdinalIgnoreCase) ||
+                carrierCode.Equals("QR", StringComparison.OrdinalIgnoreCase)
+            );
+            if (hasWiFi) amenities.Add("WiFi");
+
+            if (!isBudget)
+            {
+                amenities.Add("Meals");
+            }
+
+            var hasPower = aircraftCode.StartsWith("78") || 
+                           aircraftCode.StartsWith("77") || 
+                           aircraftCode.StartsWith("35") || 
+                           aircraftCode.StartsWith("38") || 
+                           aircraftCode.StartsWith("32") || 
+                           aircraftCode.StartsWith("73") || 
+                           !isBudget;
+            if (hasPower) amenities.Add("Power");
+
+            var hasEntertainment = !isBudget && (
+                aircraftCode.StartsWith("78") || 
+                aircraftCode.StartsWith("77") || 
+                aircraftCode.StartsWith("35") || 
+                aircraftCode.StartsWith("38") ||
+                aircraftCode == "333" ||
+                aircraftCode == "339"
+            );
+            if (hasEntertainment) amenities.Add("Entertainment");
+
+            if (amenities.Count == 0)
+            {
+                amenities.Add("Power");
+            }
+            return amenities;
         }
     }
 

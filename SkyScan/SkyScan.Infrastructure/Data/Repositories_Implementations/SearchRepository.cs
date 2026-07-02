@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using SkyScan.Core.Constants;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Data.Data_Sources;
@@ -46,6 +47,65 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 if (search != null) trendingSearches.Add(search);
             }
             return trendingSearches;
+        }
+
+        public async Task<IEnumerable<Search>> GetTrendingRoutesSinceAsync(DateTime since, int count = 5)
+        {
+            var topRoutes = await _dbSet
+                .Where(s => s.TimeStamp >= since)
+                .GroupBy(s => new { s.OriginCityId, s.DestinationCityId })
+                .Select(g => new { g.Key.OriginCityId, g.Key.DestinationCityId, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(count)
+                .ToListAsync();
+
+            var routes = new List<Search>();
+            foreach (var route in topRoutes)
+            {
+                var search = await _dbSet
+                    .Include(s => s.OriginCity)
+                    .Include(s => s.DestinationCity)
+                    .FirstOrDefaultAsync(s => s.OriginCityId == route.OriginCityId && s.DestinationCityId == route.DestinationCityId);
+                if (search != null) routes.Add(search);
+            }
+            return routes;
+        }
+
+        public async Task LogSearchAsync(Guid userId, Guid originCityId, Guid destinationCityId, DateTime departureDate, TripType type, int maxPerUser = 5)
+        {
+            var existing = await _dbSet.FirstOrDefaultAsync(s =>
+                s.UserId == userId && s.OriginCityId == originCityId && s.DestinationCityId == destinationCityId);
+
+            if (existing != null)
+            {
+                existing.TimeStamp = DateTime.UtcNow;
+                existing.DepartureDate = departureDate;
+                existing.Type = type;
+            }
+            else
+            {
+                _dbSet.Add(new Search
+                {
+                    TimeStamp = DateTime.UtcNow,
+                    Type = type,
+                    DepartureDate = departureDate,
+                    OriginCityId = originCityId,
+                    DestinationCityId = destinationCityId,
+                    UserId = userId
+                });
+
+                var userSearches = await _dbSet
+                    .Where(s => s.UserId == userId)
+                    .OrderByDescending(s => s.TimeStamp)
+                    .ToListAsync();
+
+                if (userSearches.Count >= maxPerUser)
+                {
+                    _dbSet.RemoveRange(userSearches.Skip(maxPerUser - 1));
+                }
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

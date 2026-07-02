@@ -13,5 +13,9 @@ namespace SkyScan.Application.DTOs
         public TimeSpan Duration => ArrivalTime - DepartureTime;
         public string Status { get; set; } = string.Empty;
         public string? RedirectURL { get; set; }
+        public FlightDto? ReturnLeg { get; set; }
+        public bool HasWifi { get; set; }
+        public bool HasFood { get; set; }
+        public bool HasEntertainment { get; set; }
     }
 }

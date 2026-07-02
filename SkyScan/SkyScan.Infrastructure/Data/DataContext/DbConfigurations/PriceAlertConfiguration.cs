@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SkyScan.Core.Entities;
+using SkyScan.Infrastructure.Identity;
 
 namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
 {
@@ -14,7 +15,9 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
                 .HasColumnType("decimal(18,2)")
                 .IsRequired();
 
-            builder.HasOne(p => p.User)
+            // FK-only — Core.PriceAlert doesn't hold a navigation to the Infrastructure-owned
+            // ApplicationUser; the collection nav lives on ApplicationUser.
+            builder.HasOne<ApplicationUser>()
                 .WithMany(u => u.PriceAlerts)
                 .HasForeignKey(p => p.UserId)
                 .OnDelete(DeleteBehavior.Cascade);

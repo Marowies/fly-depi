@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
+using SkyScan.Infrastructure.Identity;
 using System;
 
 namespace SkyScan.Infrastructure.Data.Data_Sources
 {
-    public class SkyScanDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
+    public class SkyScanDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
     {
         public SkyScanDbContext() : base()
         {
@@ -27,7 +28,7 @@ namespace SkyScan.Infrastructure.Data.Data_Sources
         public DbSet<Search> Searches { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Trip> Trips { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<ApplicationUser> Users { get; set; }
         public DbSet<Booking> Bookings { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

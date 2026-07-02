@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Infrastructure.Identity;
 using SkyScan.Presentation.Models;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -17,16 +18,16 @@ namespace SkyScan.Presentation.Controllers
         private readonly IUserRepository   _userRepository;
         private readonly IEmailService     _emailService;
         private readonly UrlEncoder        _urlEncoder;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly SkyScanDbContext  _context;
 
         public AccountController(
             IUserRepository    userRepository,
             IEmailService      emailService,
             UrlEncoder         urlEncoder,
-            UserManager<User>  userManager,
-            SignInManager<User> signInManager,
+            UserManager<ApplicationUser>  userManager,
+            SignInManager<ApplicationUser> signInManager,
             SkyScanDbContext   context)
         {
             _userRepository = userRepository;
@@ -52,16 +53,15 @@ namespace SkyScan.Presentation.Controllers
 
             var user = new User
             {
-                UserName = model.Email,
-                Email    = model.Email,
-                Name     = model.Name
+                Email = model.Email,
+                Name  = model.Name
             };
 
             var result = await _userRepository.RegisterUserAsync(user, model.Password);
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, error);
                 return View(model);
             }
 
@@ -73,7 +73,7 @@ namespace SkyScan.Presentation.Controllers
                 protocol: Request.Scheme)!;
 
             await _emailService.SendEmailAsync(
-                user.Email!,
+                user.Email,
                 "SkyScan – Confirm Your Email",
                 BuildConfirmEmailBody(user.Name, confirmUrl));
 
@@ -93,11 +93,11 @@ namespace SkyScan.Presentation.Controllers
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
                 return RedirectToAction(nameof(ConfirmEmailError));
 
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null)
+            var appUser = await _userManager.FindByIdAsync(userId);
+            if (appUser == null)
                 return RedirectToAction(nameof(ConfirmEmailError));
 
-            var result = await _userRepository.ConfirmEmailAsync(user, token);
+            var result = await _userRepository.ConfirmEmailAsync(appUser.ToDomain(), token);
             return result.Succeeded
                 ? View("ConfirmEmailSuccess")
                 : View("ConfirmEmailError");
@@ -125,7 +125,7 @@ namespace SkyScan.Presentation.Controllers
                     protocol: Request.Scheme)!;
 
                 await _emailService.SendEmailAsync(
-                    user.Email!,
+                    user.Email,
                     "SkyScan – Confirm Your Email",
                     BuildConfirmEmailBody(user.Name, confirmUrl));
             }
@@ -207,7 +207,7 @@ namespace SkyScan.Presentation.Controllers
                     protocol: Request.Scheme)!;
 
                 await _emailService.SendEmailAsync(
-                    user.Email!,
+                    user.Email,
                     "SkyScan – Reset Your Password",
                     BuildResetPasswordBody(user.Name, resetUrl));
             }
@@ -246,7 +246,7 @@ namespace SkyScan.Presentation.Controllers
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, error);
                 return View(model);
             }
 
@@ -265,9 +265,9 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RefreshCookie(string? returnUrl = null)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user != null)
-                await _userRepository.RefreshSignInAsync(user);
+            var appUser = await _userManager.GetUserAsync(User);
+            if (appUser != null)
+                await _userRepository.RefreshSignInAsync(appUser.ToDomain());
 
             TempData["Message"] = "Session refreshed successfully.";
             return LocalRedirectOrHome(returnUrl);
@@ -315,8 +315,9 @@ namespace SkyScan.Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> EnableTwoFactor()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
+            var appUser = await _userManager.GetUserAsync(User);
+            if (appUser == null) return Challenge();
+            var user = appUser.ToDomain();
 
             var key = await _userRepository.GetAuthenticatorKeyAsync(user);
             if (string.IsNullOrEmpty(key))
@@ -326,7 +327,7 @@ namespace SkyScan.Presentation.Controllers
             }
 
             var formattedKey = FormatKey(key!);
-            var authenticatorUri = GenerateQrCodeUri(user.Email!, key!);
+            var authenticatorUri = GenerateQrCodeUri(user.Email, key!);
 
             return View(new EnableTwoFactorViewModel
             {
@@ -340,14 +341,15 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableTwoFactor(EnableTwoFactorViewModel model)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
+            var appUser = await _userManager.GetUserAsync(User);
+            if (appUser == null) return Challenge();
+            var user = appUser.ToDomain();
 
             if (!ModelState.IsValid)
             {
                 var key = await _userRepository.GetAuthenticatorKeyAsync(user);
                 model.SharedKey        = FormatKey(key ?? "");
-                model.AuthenticatorUri = GenerateQrCodeUri(user.Email!, key ?? "");
+                model.AuthenticatorUri = GenerateQrCodeUri(user.Email, key ?? "");
                 return View(model);
             }
 
@@ -359,7 +361,7 @@ namespace SkyScan.Presentation.Controllers
                 ModelState.AddModelError(string.Empty, "Verification code is invalid.");
                 var key = await _userRepository.GetAuthenticatorKeyAsync(user);
                 model.SharedKey        = FormatKey(key ?? "");
-                model.AuthenticatorUri = GenerateQrCodeUri(user.Email!, key ?? "");
+                model.AuthenticatorUri = GenerateQrCodeUri(user.Email, key ?? "");
                 return View(model);
             }
 
@@ -377,10 +379,10 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableTwoFactor()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
+            var appUser = await _userManager.GetUserAsync(User);
+            if (appUser == null) return Challenge();
 
-            await _userRepository.SetTwoFactorEnabledAsync(user, false);
+            await _userRepository.SetTwoFactorEnabledAsync(appUser.ToDomain(), false);
             TempData["Message"] = "Two-factor authentication has been disabled.";
             return RedirectToAction("Index", "Home");
         }
@@ -426,7 +428,6 @@ namespace SkyScan.Presentation.Controllers
                 {
                     user = new User
                     {
-                        UserName       = email,
                         Email          = email,
                         Name           = name,
                         EmailConfirmed = true   // Google emails are already verified
@@ -439,8 +440,15 @@ namespace SkyScan.Presentation.Controllers
                     }
                 }
 
-                await _userManager.AddLoginAsync(user, new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName));
-                await _signInManager.SignInAsync(user, isPersistent: false);
+                var appUser = await _userManager.FindByIdAsync(user.Id.ToString());
+                if (appUser == null)
+                {
+                    TempData["Error"] = "Unable to complete Google sign-in.";
+                    return RedirectToAction(nameof(Login));
+                }
+
+                await _userManager.AddLoginAsync(appUser, new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName));
+                await _signInManager.SignInAsync(appUser, isPersistent: false);
                 return LocalRedirectOrHome(returnUrl);
             }
 

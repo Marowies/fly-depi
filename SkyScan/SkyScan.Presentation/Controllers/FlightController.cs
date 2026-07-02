@@ -13,6 +13,7 @@ using SkyScan.Presentation.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using SkyScan.Infrastructure.Data.Data_Sources;
+using SkyScan.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace SkyScan.Presentation.Controllers
@@ -22,28 +23,41 @@ namespace SkyScan.Presentation.Controllers
         private readonly IAirportRepository _airportRepository;
         private readonly ISearchRepository _searchRepository;
         private readonly IFlightRepository _flightRepository;
+        private readonly IPriceAlertRepository _priceAlertRepository;
+        private readonly IGenericRepository<Airline> _airlineRepository;
+        private readonly IGenericRepository<Airplane> _airplaneRepository;
         private readonly IFlightProviderService _flightProviderService;
+        private readonly ILocationLookupService _locationLookupService;
         private readonly IMemoryCache _cache;
-        private readonly SkyScanDbContext _context;
-        private readonly UserManager<User> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         // Airport dropdown is static reference data — cache for 6 hours
         private const string AirportCacheKey = "airports_dropdown";
         private static readonly TimeSpan AirportCacheDuration = TimeSpan.FromHours(6);
+        private static readonly TimeSpan SearchCacheDuration = TimeSpan.FromMinutes(15);
+        private const string UnknownAircraftCode = "UNK";
 
         public FlightController(
             IAirportRepository airportRepository,
+            ISearchRepository searchRepository,
             IFlightRepository flightRepository,
+            IPriceAlertRepository priceAlertRepository,
+            IGenericRepository<Airline> airlineRepository,
+            IGenericRepository<Airplane> airplaneRepository,
             IFlightProviderService flightProviderService,
+            ILocationLookupService locationLookupService,
             IMemoryCache cache,
-            SkyScanDbContext context,
-            UserManager<User> userManager)
+            UserManager<ApplicationUser> userManager)
         {
             _flightRepository = flightRepository;
             _airportRepository = airportRepository;
+            _searchRepository = searchRepository;
+            _priceAlertRepository = priceAlertRepository;
+            _airlineRepository = airlineRepository;
+            _airplaneRepository = airplaneRepository;
             _flightProviderService = flightProviderService;
+            _locationLookupService = locationLookupService;
             _cache = cache;
-            _context = context;
             _userManager = userManager;
         }
 
@@ -56,42 +70,26 @@ namespace SkyScan.Presentation.Controllers
             };
 
             var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
-            var trending = await _context.Searches
-                .Where(s => s.TimeStamp >= thirtyDaysAgo)
-                .GroupBy(s => new { s.OriginCityId, s.DestinationCityId })
-                .Select(g => new
-                {
-                    OriginId = g.Key.OriginCityId,
-                    DestId = g.Key.DestinationCityId,
-                    Count = g.Count()
-                })
-                .OrderByDescending(x => x.Count)
-                .Take(5)
-                .ToListAsync();
+            var trending = await _searchRepository.GetTrendingRoutesSinceAsync(thirtyDaysAgo, 5);
 
-            var trendingRoutesList = new List<TrendingRouteViewModel>();
-            foreach (var route in trending)
-            {
-                var originCity = await _context.Cities.FindAsync(route.OriginId);
-                var destCity = await _context.Cities.FindAsync(route.DestId);
-                if (originCity != null && destCity != null)
+            // GetTrendingRoutesSinceAsync already returns one Search per distinct route (top 5 by count)
+            var trendingRoutesList = trending
+                .Where(s => s.OriginCity != null && s.DestinationCity != null)
+                .Select(s => new TrendingRouteViewModel
                 {
-                    trendingRoutesList.Add(new TrendingRouteViewModel
-                    {
-                        OriginCityId = route.OriginId,
-                        DestinationCityId = route.DestId,
-                        OriginCityName = originCity.Name,
-                        DestinationCityName = destCity.Name,
-                        SearchCount = route.Count,
-                        MinPrice = 150 + new Random().Next(50, 400)
-                    });
-                }
-            }
+                    OriginCityId = s.OriginCityId,
+                    DestinationCityId = s.DestinationCityId,
+                    OriginCityName = s.OriginCity.Name,
+                    DestinationCityName = s.DestinationCity.Name,
+                    SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount,
+                    MinPrice = 150 + new Random().Next(50, 400)
+                })
+                .ToList();
 
             // If we don't have 5 routes from searches, fallback to pairing database cities to guarantee exactly 5 routes
             if (trendingRoutesList.Count < 5)
             {
-                var dbCities = await _context.Cities.OrderByDescending(c => c.SearchCount).Take(20).ToListAsync();
+                var dbCities = (await _airportRepository.GetTopCitiesBySearchCountAsync(20)).ToList();
                 if (dbCities.Count >= 2)
                 {
                     for (int i = 0; i < dbCities.Count - 1 && trendingRoutesList.Count < 5; i++)
@@ -207,12 +205,13 @@ namespace SkyScan.Presentation.Controllers
                 origin      = finalOriginId.Value.ToString(),
                 destination = finalDestId.Value.ToString(),
                 date        = model.DepartureDate.ToString("yyyy-MM-dd"),
-                tripType    = model.TripType.ToString()
+                tripType    = model.TripType.ToString(),
+                returnDate  = searchRequest.ReturnDate?.ToString("yyyy-MM-dd")
             });
         }
 
         [HttpGet]
-        public async Task<IActionResult> Results(string origin, string destination, string date, string tripType = "OneWay")
+        public async Task<IActionResult> Results(string origin, string destination, string date, string tripType = "OneWay", string? returnDate = null)
         {
             if (!DateTime.TryParse(date, out DateTime departureDate))
             {
@@ -226,62 +225,19 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction("Index");
             }
 
+            DateTime returnDepartureDate = DateTime.Now.AddDays(7);
+
+            var tripTypeVal = Enum.TryParse(tripType, out TripType parsedTripType) ? parsedTripType : TripType.OneWay;
+            var isRoundTrip = tripTypeVal == TripType.RoundTrip && DateTime.TryParse(returnDate, out  returnDepartureDate);
+
             // Log Search to database for trending/popular analytics
             try
             {
                 var user = await _userManager.GetUserAsync(User);
                 if (user != null)
                 {
-                    var tripTypeVal = Enum.TryParse(tripType, out TripType parsedType) ? parsedType : TripType.OneWay;
-
-                    // Upsert: update existing route or insert new one
-                    var existing = await _context.Searches
-                        .FirstOrDefaultAsync(s => s.UserId == user.Id
-                                               && s.OriginCityId == originId
-                                               && s.DestinationCityId == destId);
-
-                    if (existing != null)
-                    {
-                        // Update existing route
-                        existing.TimeStamp = DateTime.UtcNow;
-                        existing.DepartureDate = departureDate;
-                        existing.Type = tripTypeVal;
-                    }
-                    else
-                    {
-                        // Insert new route
-                        var searchLog = new Search
-                        {
-                            TimeStamp = DateTime.UtcNow,
-                            Type = tripTypeVal,
-                            DepartureDate = departureDate,
-                            OriginCityId = originId,
-                            DestinationCityId = destId,
-                            UserId = user.Id
-                        };
-                        _context.Searches.Add(searchLog);
-
-                        // Enforce max 5 unique routes per user — remove oldest by TimeStamp
-                        var userSearches = await _context.Searches
-                            .Where(s => s.UserId == user.Id)
-                            .OrderByDescending(s => s.TimeStamp)
-                            .ToListAsync();
-
-                        if (userSearches.Count >= 5)
-                        {
-                            var toDelete = userSearches.Skip(4);
-                            _context.Searches.RemoveRange(toDelete);
-                        }
-                    }
-
-                    // Increment destination city search count for popularity tracking
-                    var destCity1 = await _context.Cities.FindAsync(destId);
-                    if (destCity1 != null)
-                    {
-                        destCity1.SearchCount++;
-                    }
-
-                    await _context.SaveChangesAsync();
+                    await _searchRepository.LogSearchAsync(user.Id, originId, destId, departureDate, tripTypeVal);
+                    await _airportRepository.IncrementCitySearchCountAsync(destId);
                 }
             }
             catch (Exception ex)
@@ -308,14 +264,6 @@ namespace SkyScan.Presentation.Controllers
                 : "Destination";
             
             // Search Flights via the provider (Mock or Real) with Caching
-            var cacheKey = $"flights_{string.Join("-", originIatas)}_{string.Join("-", destIatas)}_{departureDate:yyyyMMdd}";
-            if (!_cache.TryGetValue(cacheKey, out List<FlightDto>? flightsList) || flightsList == null)
-            {
-                var freshFlights = await _flightProviderService.SearchFlightsAsync(originIatas!, destIatas!, departureDate);
-                flightsList = freshFlights.ToList();
-                _cache.Set(cacheKey, flightsList, TimeSpan.FromMinutes(15));
-            }
-
             var viewModel = new FlightResultsViewModel
             {
                 OriginIata      = string.Join("/", originIatas),
@@ -323,16 +271,44 @@ namespace SkyScan.Presentation.Controllers
                 OriginCity      = originName,
                 DestinationCity = destName,
                 DepartureDate   = departureDate,
-                Flights         = flightsList
+                IsRoundTrip     = isRoundTrip
             };
 
+            if (isRoundTrip)
+            {
+                viewModel.ReturnDate = returnDepartureDate;
+                viewModel.Flights = await SearchLegAsync(originIatas!, destIatas!, departureDate, returnDepartureDate);
+            }
+            else
+            {
+                viewModel.Flights = await SearchLegAsync(originIatas!, destIatas!, departureDate);
+            }
+
             return View(viewModel);
+        }
+
+        /// <summary>
+        /// Searches one direction of a journey (a set of origin airports to a set of destination
+        /// airports on a given date), transparently caching the provider response for 15 minutes.
+        /// </summary>
+        private async Task<List<FlightDto>> SearchLegAsync(IEnumerable<string> originIatas, IEnumerable<string> destIatas, DateTime date, DateTime? returnDate = null)
+        {
+            var cacheKey = $"flights_{string.Join("-", originIatas)}_{string.Join("-", destIatas)}_{date:yyyyMMdd}" + (returnDate.HasValue ? $"_{returnDate.Value:yyyyMMdd}" : "");
+            if (_cache.TryGetValue(cacheKey, out List<FlightDto>? cached) && cached != null)
+            {
+                return cached;
+            }
+
+            var freshFlights = await _flightProviderService.SearchFlightsAsync(originIatas, destIatas, date, returnDate);
+            var flights = freshFlights.ToList();
+            _cache.Set(cacheKey, flights, SearchCacheDuration);
+            return flights;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetNearestCity(double lat, double lon)
         {
-            var city = await _airportRepository.GetNearestCityByCoordinatesAsync(lat, lon);
+            var city = await _locationLookupService.GetNearestCityAsync(lat, lon);
             if (city == null)
             {
                 return NotFound("No nearby city found.");
@@ -342,57 +318,46 @@ namespace SkyScan.Presentation.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> ToggleFavorite(string flightNumber, string departureTime, decimal price)
+        public async Task<IActionResult> ToggleFavorite(ToggleFavoriteRequest request)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Challenge();
 
-            if (!DateTime.TryParse(departureTime, out var depTime)) return BadRequest("Invalid date format");
+            if (!DateTime.TryParse(request.DepartureTime, out var depTime))
+                return BadRequest("Invalid date format");
 
-            // Find the flight in our database
-            var dbFlight = await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber && f.DepartureTime == depTime);
-            if (dbFlight == null) return NotFound("Flight not found in database");
+            DateTime.TryParse(request.ArrivalTime, out var arrTime);
 
-            // Find or Create Trip for this flight
-            var trip = await _context.Trips
-                .Include(t => t.Flights)
-                .FirstOrDefaultAsync(t => t.Flights.Any(f => f.FlightId == dbFlight.FlightId));
+            var flight = await _flightRepository.EnsureFlightExistsAsync(
+                request.FlightNumber,
+                depTime,
+                request.OriginIata,
+                request.DestinationIata,
+                request.AirlineName,
+                arrTime == default ? depTime : arrTime,
+                request.RedirectUrl ?? string.Empty
+            );
 
-            if (trip == null)
+            if (flight == null)
+                return BadRequest("Could not resolve this flight's airports.");
+
+            var trip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, request.Price);
+
+            var existing = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, trip.TripId);
+            if (existing != null)
             {
-                trip = new Trip
-                {
-                    TripId = Guid.NewGuid(),
-                    TotalPrice = (double)price,
-                    Flights = new List<Flight> { dbFlight }
-                };
-                _context.Trips.Add(trip);
-                await _context.SaveChangesAsync();
-            }
-
-            // Check if price alert / favorite already exists
-            var alert = await _context.PriceAlerts
-                .FirstOrDefaultAsync(pa => pa.UserId == user.Id && pa.TripId == trip.TripId);
-
-            if (alert != null)
-            {
-                _context.PriceAlerts.Remove(alert);
-                await _context.SaveChangesAsync();
+                await _priceAlertRepository.DeleteAsync(existing);
                 return Json(new { favorited = false });
             }
-            else
+
+            await _priceAlertRepository.AddAsync(new PriceAlert
             {
-                alert = new PriceAlert
-                {
-                    Id = Guid.NewGuid(),
-                    UserId = user.Id,
-                    TripId = trip.TripId,
-                    TargetPrice = price
-                };
-                _context.PriceAlerts.Add(alert);
-                await _context.SaveChangesAsync();
-                return Json(new { favorited = true });
-            }
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                TripId = trip.TripId,
+                TargetPrice = request.Price
+            });
+            return Json(new { favorited = true });
         }
 
         // --- Private Helpers ---

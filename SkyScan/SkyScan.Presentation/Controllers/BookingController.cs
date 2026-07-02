@@ -1,150 +1,266 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SkyScan.Core.Entities;
-using SkyScan.Infrastructure.Data.Data_Sources;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
-using SkyScan.Infrastructure.Data.Data_Sources;
+using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-    namespace SkyScan.Presentation.Controllers
+namespace SkyScan.Presentation.Controllers
+{
+    public class BookingController : Controller
     {
-        public class BookingController : Controller
+        private readonly IFlightRepository _flightRepository;
+        private readonly IBookingRepository _bookingRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IPriceAlertRepository _priceAlertRepository;
+        private const string GuestBookingsCookieName = "SkyScan_GuestBookings";
+
+        public BookingController(
+            IFlightRepository flightRepository, 
+            IBookingRepository bookingRepository, 
+            UserManager<ApplicationUser> userManager,
+            IPriceAlertRepository priceAlertRepository)
         {
-            private readonly SkyScanDbContext _dbContext;
-            private readonly UserManager<User> _userManager;
-            private const string GuestBookingsCookieName = "SkyScan_GuestBookings";
+            _flightRepository = flightRepository;
+            _bookingRepository = bookingRepository;
+            _userManager = userManager;
+            _priceAlertRepository = priceAlertRepository;
+        }
 
-            public BookingController(SkyScanDbContext dbContext, UserManager<User> userManager)
+        // Helper class to serialize guest bookings in cookie
+        public class GuestBookingCookieModel
+        {
+            public Guid BookingId { get; set; }
+            public DateTime BookingDate { get; set; }
+            public string FlightNumber { get; set; }
+            public DateTime DepartureTime { get; set; }
+            public DateTime ArrivalTime { get; set; }
+            public string OriginCityName { get; set; }
+            public string OriginIata { get; set; }
+            public string DestinationCityName { get; set; }
+            public string DestinationIata { get; set; }
+            public string AirlineName { get; set; }
+            public string RedirectUrl { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Book(
+            string flightNumber,
+            string departureTime,
+            string origin,
+            string destination,
+            string originIata,
+            string destinationIata,
+            string airlineName,
+            string arrivalTime,
+            decimal price,
+            string redirectUrl,
+            bool hasWifi = false,
+            bool hasFood = false,
+            bool hasEntertainment = false,
+            string? returnFlightNumber = null,
+            string? returnDepartureTime = null,
+            string? returnOrigin = null,
+            string? returnDestination = null,
+            string? returnOriginIata = null,
+            string? returnDestinationIata = null,
+            string? returnAirlineName = null,
+            string? returnArrivalTime = null,
+            bool returnHasWifi = false,
+            bool returnHasFood = false,
+            bool returnHasEntertainment = false)
+        {
+            if (!DateTime.TryParse(departureTime, out var depTime))
             {
-                _dbContext = dbContext;
-                _userManager = userManager;
+                return BadRequest("Invalid departure date.");
             }
 
-            // Helper class to serialize guest bookings in cookie
-            public class GuestBookingCookieModel
+            var flight = await _flightRepository.GetByFlightNumberAndDepartureAsync(flightNumber, depTime);
+            if (flight == null)
             {
-                public Guid BookingId { get; set; }
-                public DateTime BookingDate { get; set; }
-                public string FlightNumber { get; set; }
-                public DateTime DepartureTime { get; set; }
-                public DateTime ArrivalTime { get; set; }
-                public string OriginCityName { get; set; }
-                public string OriginIata { get; set; }
-                public string DestinationCityName { get; set; }
-                public string DestinationIata { get; set; }
-                public string AirlineName { get; set; }
-                public string RedirectUrl { get; set; }
+                // Materialize flight on demand
+                DateTime.TryParse(arrivalTime, out var arrTime);
+                flight = await _flightRepository.EnsureFlightExistsAsync(
+                    flightNumber,
+                    depTime,
+                    originIata,
+                    destinationIata,
+                    airlineName,
+                    arrTime == default ? depTime : arrTime,
+                    redirectUrl,
+                    price,
+                    hasWifi,
+                    hasFood,
+                    hasEntertainment
+                );
             }
 
-            [HttpPost]
-            public async Task<IActionResult> Book(string flightNumber, string departureTime, string origin, string destination)
+            if (flight == null)
             {
-                if (!DateTime.TryParse(departureTime, out var depTime))
+                return NotFound("Selected outbound flight could not be found or materialized.");
+            }
+
+            Flight? returnFlight = null;
+            if (!string.IsNullOrEmpty(returnFlightNumber) && DateTime.TryParse(returnDepartureTime, out var retDepTime))
+            {
+                returnFlight = await _flightRepository.GetByFlightNumberAndDepartureAsync(returnFlightNumber, retDepTime);
+                if (returnFlight == null)
                 {
-                    return BadRequest("Invalid departure date.");
+                    DateTime.TryParse(returnArrivalTime, out var retArrTime);
+                    returnFlight = await _flightRepository.EnsureFlightExistsAsync(
+                        returnFlightNumber,
+                        retDepTime,
+                        returnOriginIata!,
+                        returnDestinationIata!,
+                        returnAirlineName!,
+                        retArrTime == default ? retDepTime : retArrTime,
+                        redirectUrl,
+                        0.00M, // return price is included in outbound package price
+                        returnHasWifi,
+                        returnHasFood,
+                        returnHasEntertainment
+                    );
+                }
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                await _bookingRepository.AddAsync(new Booking
+                {
+                    BookingId = Guid.NewGuid(),
+                    UserId = user.Id,
+                    FlightId = flight.FlightId,
+                    BookingDate = DateTime.UtcNow
+                });
+
+                // Auto-Favorite Outbound Flight via interface
+                var outboundTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, price);
+                var existingOutboundAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, outboundTrip.TripId);
+                if (existingOutboundAlert == null)
+                {
+                    await _priceAlertRepository.AddAsync(new PriceAlert
+                    {
+                        Id = Guid.NewGuid(),
+                        UserId = user.Id,
+                        TripId = outboundTrip.TripId,
+                        TargetPrice = price
+                    });
                 }
 
-                // Find the flight in our database with details
-                var flight = await _dbContext.Flights
-                    .Include(f => f.Airline)
-                    .Include(f => f.DepartureAirport).ThenInclude(a => a.City)
-                    .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
-                    .FirstOrDefaultAsync(f => f.FlightNumber == flightNumber && f.DepartureTime == depTime);
-
-                if (flight == null)
+                if (returnFlight != null)
                 {
-                    return NotFound("Selected flight could not be found.");
-                }
-
-                var user = await _userManager.GetUserAsync(User);
-                if (user != null)
-                {
-                    // Create DB Booking for logged-in user
-                    var booking = new Booking
+                    await _bookingRepository.AddAsync(new Booking
                     {
                         BookingId = Guid.NewGuid(),
                         UserId = user.Id,
-                        FlightId = flight.FlightId,
+                        FlightId = returnFlight.FlightId,
                         BookingDate = DateTime.UtcNow
-                    };
+                    });
 
-                    _dbContext.Bookings.Add(booking);
-                    await _dbContext.SaveChangesAsync();
+                    // Auto-Favorite Return Flight via interface
+                    var returnTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(returnFlight.FlightId, 0.00M);
+                    var existingReturnAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, returnTrip.TripId);
+                    if (existingReturnAlert == null)
+                    {
+                        await _priceAlertRepository.AddAsync(new PriceAlert
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = user.Id,
+                            TripId = returnTrip.TripId,
+                            TargetPrice = 0.00M
+                        });
+                    }
                 }
-                else
+            }
+            else
+            {
+                // Guest Booking - save to cookie
+                var guestBookings = GetGuestBookingsFromCookie();
+
+                guestBookings.Add(new GuestBookingCookieModel
                 {
-                    // Guest Booking - save to cookie
-                    var guestBookings = GetGuestBookingsFromCookie();
+                    BookingId = Guid.NewGuid(),
+                    BookingDate = DateTime.UtcNow,
+                    FlightNumber = flight.FlightNumber,
+                    DepartureTime = flight.DepartureTime,
+                    ArrivalTime = flight.ArrivalTime,
+                    OriginCityName = flight.DepartureAirport?.City?.Name ?? origin,
+                    OriginIata = flight.DepartureAirport?.IataCode ?? origin,
+                    DestinationCityName = flight.ArrivalAirport?.City?.Name ?? destination,
+                    DestinationIata = flight.ArrivalAirport?.IataCode ?? destination,
+                    AirlineName = flight.Airline?.Name ?? airlineName,
+                    RedirectUrl = flight.RedirectURL ?? redirectUrl
+                });
+
+                if (returnFlight != null)
+                {
                     guestBookings.Add(new GuestBookingCookieModel
                     {
                         BookingId = Guid.NewGuid(),
                         BookingDate = DateTime.UtcNow,
-                        FlightNumber = flight.FlightNumber,
-                        DepartureTime = flight.DepartureTime,
-                        ArrivalTime = flight.ArrivalTime,
-                        OriginCityName = flight.DepartureAirport?.City?.Name ?? origin,
-                        OriginIata = flight.DepartureAirport?.IataCode ?? origin,
-                        DestinationCityName = flight.ArrivalAirport?.City?.Name ?? destination,
-                        DestinationIata = flight.ArrivalAirport?.IataCode ?? destination,
-                        AirlineName = flight.Airline?.Name ?? "Airlines",
-                        RedirectUrl = flight.RedirectURL ?? $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{depTime:yyyy-MM-dd}"
+                        FlightNumber = returnFlight.FlightNumber,
+                        DepartureTime = returnFlight.DepartureTime,
+                        ArrivalTime = returnFlight.ArrivalTime,
+                        OriginCityName = returnFlight.DepartureAirport?.City?.Name ?? returnOrigin ?? destination,
+                        OriginIata = returnFlight.DepartureAirport?.IataCode ?? returnOriginIata ?? destinationIata,
+                        DestinationCityName = returnFlight.ArrivalAirport?.City?.Name ?? returnDestination ?? origin,
+                        DestinationIata = returnFlight.ArrivalAirport?.IataCode ?? returnDestinationIata ?? originIata,
+                        AirlineName = returnFlight.Airline?.Name ?? returnAirlineName ?? airlineName,
+                        RedirectUrl = returnFlight.RedirectURL ?? redirectUrl
                     });
-
-                    SaveGuestBookingsToCookie(guestBookings);
                 }
 
-                // Redirect user to the flight redirect URL (Google Flights link)
-                var redirectUrl = flight.RedirectURL;
-                if (string.IsNullOrEmpty(redirectUrl))
-                {
-                    redirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{depTime:yyyy-MM-dd}";
-                }
-
-                return Redirect(redirectUrl);
+                SaveGuestBookingsToCookie(guestBookings);
             }
 
-            [HttpGet]
-            public async Task<IActionResult> MyBookings()
+            // Redirect user to the flight redirect URL (Google Flights link)
+            var finalRedirectUrl = flight.RedirectURL;
+            if (string.IsNullOrEmpty(finalRedirectUrl))
             {
-                var user = await _userManager.GetUserAsync(User);
-                var bookings = new List<Booking>();
+                finalRedirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{depTime:yyyy-MM-dd}";
+            }
 
-                if (user != null)
+            return Redirect(finalRedirectUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyBookings()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var bookings = new List<Booking>();
+            var now = DateTime.UtcNow;
+
+            if (user != null)
+            {
+                var allBookings = (await _bookingRepository.GetBookingsByUserIdAsync(user.Id)).ToList();
+                foreach (var b in allBookings)
                 {
-                    // Retrieve from database
-                    bookings = await _dbContext.Bookings
-                        .Include(b => b.Flight)
-                            .ThenInclude(f => f.Airline)
-                        .Include(b => b.Flight)
-                            .ThenInclude(f => f.DepartureAirport)
-                                .ThenInclude(a => a.City)
-                        .Include(b => b.Flight)
-                            .ThenInclude(f => f.ArrivalAirport)
-                                .ThenInclude(a => a.City)
-                        .Include(b => b.Flight)
-                            .ThenInclude(f => f.Tickets)
-                        .Where(b => b.UserId == user.Id)
-                        .OrderByDescending(b => b.BookingDate)
-                        .ToListAsync();
-                }
-                else
-                {
-                    // Guest user - Retrieve from cookies and map to Booking model objects for view compatibility
-                    var guestBookings = GetGuestBookingsFromCookie();
-                    foreach (var gb in guestBookings)
+                    if (b.Flight != null && b.Flight.DepartureTime < now)
                     {
+                        await _bookingRepository.DeleteAsync(b);
+                    }
+                    else
+                    {
+                        bookings.Add(b);
+                    }
+                }
+            }
+            else
+            {
+                // Guest user - Retrieve from cookies, filter out expired flights, and save
+                var guestBookings = GetGuestBookingsFromCookie();
+                var updatedGuests = new List<GuestBookingCookieModel>();
+                foreach (var gb in guestBookings)
+                {
+                    if (gb.DepartureTime >= now)
+                    {
+                        updatedGuests.Add(gb);
                         bookings.Add(new Booking
                         {
                             BookingId = gb.BookingId,
@@ -170,38 +286,39 @@ using System.Threading.Tasks;
                         });
                     }
                 }
-
-                return View(bookings);
+                SaveGuestBookingsToCookie(updatedGuests);
             }
 
-            private List<GuestBookingCookieModel> GetGuestBookingsFromCookie()
-            {
-                var cookie = Request.Cookies[GuestBookingsCookieName];
-                if (string.IsNullOrEmpty(cookie))
-                {
-                    return new List<GuestBookingCookieModel>();
-                }
+            return View(bookings);
+        }
 
-                try
-                {
-                    return JsonSerializer.Deserialize<List<GuestBookingCookieModel>>(cookie) ?? new List<GuestBookingCookieModel>();
-                }
-                catch
-                {
-                    return new List<GuestBookingCookieModel>();
-                }
+        private List<GuestBookingCookieModel> GetGuestBookingsFromCookie()
+        {
+            var cookie = Request.Cookies[GuestBookingsCookieName];
+            if (string.IsNullOrEmpty(cookie))
+            {
+                return new List<GuestBookingCookieModel>();
             }
 
-            private void SaveGuestBookingsToCookie(List<GuestBookingCookieModel> bookings)
+            try
             {
-                var json = JsonSerializer.Serialize(bookings);
-                Response.Cookies.Append(GuestBookingsCookieName, json, new CookieOptions
-                {
-                    Expires = DateTimeOffset.UtcNow.AddYears(1),
-                    HttpOnly = true,
-                    Secure = true
-                });
+                return JsonSerializer.Deserialize<List<GuestBookingCookieModel>>(cookie) ?? new List<GuestBookingCookieModel>();
+            }
+            catch
+            {
+                return new List<GuestBookingCookieModel>();
             }
         }
-    }
 
+        private void SaveGuestBookingsToCookie(List<GuestBookingCookieModel> bookings)
+        {
+            var json = JsonSerializer.Serialize(bookings);
+            Response.Cookies.Append(GuestBookingsCookieName, json, new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+                HttpOnly = true,
+                Secure = true
+            });
+        }
+    }
+}

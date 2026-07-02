@@ -1,4 +1,4 @@
-@model SkyScan.Core.Entities.User
+@model SkyScan.Infrastructure.Identity.ApplicationUser
 @{
     ViewData["Title"] = "Your SkyScan Profile";
     Layout = "_Layout";
@@ -163,14 +163,13 @@
                                         </div>
                                         <div class="flex items-center gap-6">
                                             <div class="text-right">
-                                                <span class="block text-[9px] text-slate-500 uppercase tracking-widest">Saved Price</span>
+                                                <span class="block text-[9px] text-slate-500 uppercase tracking-widest">Target Price</span>
                                                 <span class="text-tertiary font-bold text-lg">$@alert.TargetPrice.ToString("N0")</span>
                                             </div>
-                                            
-                                            <button class="remove-fav-btn text-slate-500 hover:text-red-500 transition-colors p-2 cursor-pointer" 
-                                                    data-flight-number="@flight.FlightNumber" 
-                                                    data-dep-time="@flight.DepartureTime.ToString("o")" 
-                                                    data-price="@alert.TargetPrice"
+
+                                            <button class="remove-fav-btn text-slate-500 hover:text-red-500 transition-colors p-2 cursor-pointer"
+                                                    data-flight-number="@flight.FlightNumber"
+                                                    data-dep-time="@flight.DepartureTime.ToString("o")"
                                                     title="Remove from favorites">
                                                 <span class="material-symbols-outlined">delete</span>
                                             </button>
@@ -240,14 +239,9 @@
         document.querySelectorAll('.remove-fav-btn').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
-                const flightNumber = btn.dataset.flightNumber;
-                const departureTime = btn.dataset.depTime;
-                const price = btn.dataset.price;
-
                 const formData = new FormData();
-                formData.append('flightNumber', flightNumber);
-                formData.append('departureTime', departureTime);
-                formData.append('price', price);
+                formData.append('flightNumber', btn.dataset.flightNumber);
+                formData.append('departureTime', btn.dataset.depTime);
 
                 try {
                     const response = await fetch('/Flight/ToggleFavorite', {

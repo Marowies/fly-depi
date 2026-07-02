@@ -11,7 +11,6 @@ namespace SkyScan.Core.Entities
 
         [Required]
         public Guid UserId { get; set; }
-        public User User { get; set; }
 
         [Required]
         public Guid FlightId { get; set; }

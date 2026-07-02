@@ -57,5 +57,23 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
             // Latitude and Longitude have been removed from the database schema.
             return await Task.FromResult<City?>(null);
         }
+
+        public async Task IncrementCitySearchCountAsync(Guid cityId)
+        {
+            var city = await _context.Cities.FindAsync(cityId);
+            if (city == null) return;
+
+            city.SearchCount++;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<City>> GetTopCitiesBySearchCountAsync(int count = 20)
+        {
+            return await _context.Cities
+                .OrderByDescending(c => c.SearchCount)
+                .Take(count)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }

@@ -2,12 +2,14 @@ using Microsoft.EntityFrameworkCore;
 using SkyScan.Infrastructure.Data.Data_Sources;
 using SkyScan.Application.Interfaces;
 using SkyScan.Infrastructure.Services;
+using SkyScan.Application.Services;
 using SkyScan.Application.Mappings;
 using SkyScan.Presentation.Middlewares;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Data.Repositories_Implementations;
 using Microsoft.AspNetCore.Identity;
 using SkyScan.Core.Entities;
+using SkyScan.Infrastructure.Identity;
 
 namespace SkyScan.Presentation
 {
@@ -29,7 +31,7 @@ namespace SkyScan.Presentation
             builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
             // ── Identity ──────────────────────────────────────────────────────────
-            builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
             {
                 // Password policy
                 options.Password.RequireDigit           = true;
@@ -91,17 +93,18 @@ namespace SkyScan.Presentation
             builder.Services.AddScoped<IPriceAlertRepository, PriceAlertRepository>();
             builder.Services.AddScoped<ISearchRepository, SearchRepository>();
             builder.Services.AddScoped<IAirportRepository, AirportRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
-            // ── Flight Provider ────────────────────────────────────────────────────
-            var useMockData = builder.Configuration["FlightProviderSettings:UseMockData"] == "true";
-            if (useMockData)
-                builder.Services.AddScoped<IFlightProviderService, MockFlightProviderService>();
-            else
-                builder.Services.AddHttpClient<IFlightProviderService, AmadeusFlightService>();
+            // ── Flight Provider & Location Lookup ──────────────────────────────────
+            builder.Services.AddHttpClient<IFlightProviderService, AmadeusFlightService>();
+            builder.Services.AddHttpClient<ILocationLookupService, AmadeusLocationLookupService>();
 
             builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();
             builder.Services.AddHttpClient<ICurrencyConversionService, CurrencyConversionService>();
+
+            // ── Price Alert Notifications ────────────────────────────────────────
+            builder.Services.AddHostedService<SkyScan.Infrastructure.Workers.PriceAlertCheckWorker>();
 
             // ─────────────────────────────────────────────────────────────────────
             var app = builder.Build();

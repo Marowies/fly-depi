@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SkyScan.Core.Entities;
+using SkyScan.Infrastructure.Identity;
 
 namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
 {
@@ -14,7 +15,9 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
             builder.Property(s => s.TimeStamp).IsRequired();
             builder.Property(s => s.DepartureDate).IsRequired();
 
-            builder.HasOne(s => s.User)
+            // FK-only — Core.Search doesn't (and shouldn't) hold a navigation to the
+            // Infrastructure-owned ApplicationUser; the collection nav lives on ApplicationUser.
+            builder.HasOne<ApplicationUser>()
                 .WithMany(u => u.Searches)
                 .HasForeignKey(s => s.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
