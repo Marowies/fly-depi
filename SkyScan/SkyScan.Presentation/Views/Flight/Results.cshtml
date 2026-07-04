@@ -1,55 +1,57 @@
 @model SkyScan.Presentation.Models.FlightResultsViewModel
 @inject SkyScan.Application.Interfaces.ICurrencyConversionService CurrencyService
+@inject SkyScan.Presentation.Services.ILanguageService Lang
 @{
-    ViewData["Title"] = "Search Results";
+    ViewData["Title"] = Lang.T("Search Results");
     Layout = "_Layout";
     var currency = Context.Request.Cookies["SelectedCurrency"] ?? "USD";
     var symbol = await CurrencyService.GetCurrencySymbolAsync(currency);
+    var culture = new System.Globalization.CultureInfo(Lang.CurrentLanguage);
 }
 
 <main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 text-text-light">
         <!-- Filter Sidebar -->
         <aside class="w-full lg:w-72 flex-shrink-0 space-y-12">
-            <div class="glass-panel p-8 rounded-2xl border border-white/10">
-                <h2 class="font-sans text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-8">Refine Journey</h2>
+            <div class="glass-panel p-8 rounded-2xl border border-outline">
+                <h2 class="font-sans text-[11px] tracking-[0.2em] uppercase text-accent font-bold mb-8">@Lang.T("Refine Journey")</h2>
                 <div class="space-y-10">
                     <!-- Stops Filter -->
                     <div>
-                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">Stops</label>
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">@Lang.T("Stops")</label>
                         <div class="flex flex-col gap-3">
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="0" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
                                     <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">Non-stop Only</span>
+                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">@Lang.T("Non-stop Only")</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="1" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
                                     <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">Up to 1 Stop</span>
+                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">@Lang.T("Up to 1 Stop")</span>
                             </label>
                             <label class="flex items-center gap-3 cursor-pointer group">
                                 <input type="checkbox" class="hidden filter-checkbox" value="2" checked onchange="applyFilters()" />
-                                <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
                                     <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                 </div>
-                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">2+ Stops</span>
+                                <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">@Lang.T("2+ Stops")</span>
                             </label>
                         </div>
                     </div>
                     <!-- Airlines Filter -->
                     <div>
-                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">Airlines</label>
-                        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-accent">
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">@Lang.T("Airlines")</label>
+                        <div class="flex flex-col gap-3 max-h-48 overflow-y-auto pr-2 rtl:pl-2 rtl:pr-0 scrollbar-thin scrollbar-thumb-accent">
                             @foreach (var airline in Model.UniqueAirlines)
                             {
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <input type="checkbox" class="hidden airline-checkbox" value="@airline" checked onchange="applyFilters()" />
-                                    <div class="checkbox-box w-4 h-4 border border-white/20 flex items-center justify-center transition-colors rounded">
+                                    <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
                                         <div class="checkbox-inner w-2 h-2 bg-accent"></div>
                                     </div>
                                     <span class="text-[11px] text-slate-300 group-hover:text-text-light transition-colors truncate">@airline</span>
@@ -63,8 +65,8 @@
                         var convertedMax = await CurrencyService.ConvertAsync(Model.MaxPrice, currency);
                     }
                     <div>
-                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">Max Price</label>
-                        <input type="range" class="w-full accent-accent bg-white/10 h-1 rounded-lg cursor-pointer" 
+                        <label class="block font-sans text-[10px] uppercase tracking-widest text-slate-300 mb-4 font-bold">@Lang.T("Max Price")</label>
+                        <input type="range" class="w-full accent-accent bg-outline h-1 rounded-lg cursor-pointer" 
                                id="priceSlider" 
                                min="@Math.Floor(convertedMin)" 
                                max="@Math.Ceiling(convertedMax)" 
@@ -76,43 +78,43 @@
                         </div>
                     </div>
                     
-                    <button class="w-full py-2 text-[9px] uppercase tracking-widest text-slate-300 hover:text-accent transition-colors border border-white/10 rounded-lg cursor-pointer" onclick="resetFilters()">Reset Filters</button>
+                    <button class="w-full py-2 text-[9px] uppercase tracking-widest text-slate-300 hover:text-accent transition-colors border border-outline rounded-lg cursor-pointer bg-transparent" onclick="resetFilters()">@Lang.T("Reset Filters")</button>
                 </div>
             </div>
             
-            <div class="p-8 rounded-2xl bg-gradient-to-br from-surface to-background border border-white/10 relative overflow-hidden group">
+            <div class="p-8 rounded-2xl bg-gradient-to-br from-surface to-background border border-outline relative overflow-hidden group">
                 <img class="absolute inset-0 object-cover opacity-10 transition-transform duration-700 group-hover:scale-110" alt="luxury private jet" src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?auto=format&fit=crop&w=800&q=80" />
-                <div class="relative z-10">
-                    <span class="text-accent font-sans text-[9px] font-extrabold uppercase tracking-[.3em]">Celestial Plus</span>
-                    <h3 class="text-xl font-serif font-bold text-text-light mt-2 mb-4 leading-tight">Upgrade to Private Access</h3>
-                    <p class="text-xs text-slate-300 mb-6 leading-relaxed">Skip the terminals. Enjoy direct apron transfers and private lounge access across 40 global hubs.</p>
-                    <button class="text-[10px] font-bold uppercase tracking-widest text-accent border-b border-accent/30 pb-1 cursor-pointer">Learn More</button>
+                <div class="relative z-10 text-left">
+                    <span class="text-accent font-sans text-[9px] font-extrabold uppercase tracking-[.3em]">@Lang.T("Celestial Plus")</span>
+                    <h3 class="text-xl font-serif font-bold text-text-light mt-2 mb-4 leading-tight">@Lang.T("Upgrade to Private Access")</h3>
+                    <p class="text-xs text-slate-300 mb-6 leading-relaxed">@Lang.T("Skip the terminals. Enjoy direct apron transfers and private lounge access across 40 global hubs.")</p>
+                    <button class="text-[10px] font-bold uppercase tracking-widest text-accent border-b border-accent/30 pb-1 cursor-pointer bg-transparent">@Lang.T("Learn More")</button>
                 </div>
             </div>
         </aside>
 
         <!-- Results Content -->
         <div class="flex-1 space-y-8">
-            <header class="flex justify-between items-end pb-4 border-b border-white/5">
-                <div>
-                    <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase">Select your path</span>
-                    <h1 class="text-4xl font-serif font-extrabold text-text-light mt-2 tracking-tight">@Model.OriginCity to @Model.DestinationCity</h1>
+            <header class="flex justify-between items-end pb-4 border-b border-border-light">
+                <div class="text-left">
+                    <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase">@Lang.T("Select your path")</span>
+                    <h1 class="text-4xl font-serif font-extrabold text-text-light mt-2 tracking-tight">@Model.OriginCity @Lang.T("To") @Model.DestinationCity</h1>
                     <p class="text-[11px] text-slate-300 mt-1 uppercase tracking-widest">
-                        @Model.DepartureDate.ToString("dd MMMM, yyyy")
+                        @Model.DepartureDate.ToString("dd MMMM, yyyy", culture)
                         @if (Model.IsRoundTrip && Model.ReturnDate.HasValue)
                         {
-                            <text> • Returning @Model.ReturnDate.Value.ToString("dd MMMM, yyyy")</text>
+                            <text> • @Lang.T("Return") @Model.ReturnDate.Value.ToString("dd MMMM, yyyy", culture)</text>
                         }
                     </p>
                 </div>
                 <div class="text-right">
-                    <span class="text-[10px] tracking-widest text-slate-300 uppercase">@Model.Flights.Count() Results Found</span>
+                    <span class="text-[10px] tracking-widest text-slate-300 uppercase">@Model.Flights.Count() @Lang.T("Results Found")</span>
                 </div>
             </header>
 
             @if (Model.IsRoundTrip)
             {
-                <h2 class="text-sm font-bold uppercase tracking-widest text-accent">Round Trips — @Model.OriginCity to @Model.DestinationCity (Return Included)</h2>
+                <h2 class="text-sm font-bold uppercase tracking-widest text-accent text-left">@Lang.T("Round Trips") — @Model.OriginCity @Lang.T("To") @Model.DestinationCity (@Lang.T("Return Included"))</h2>
             }
             <div id="FlightResultsContainer" class="space-y-6">
                 @foreach (var flight in Model.Flights)
@@ -129,11 +131,11 @@
                     @await Html.PartialAsync("_FlightCard", cardModel)
                 }
 
-                <div id="NoResultsMessage" class="glass-panel p-20 rounded-2xl text-center border border-dashed border-white/10" style="display:none;">
+                <div id="NoResultsMessage" class="glass-panel p-20 rounded-2xl text-center border border-dashed border-outline" style="display:none;">
                     <span class="material-symbols-outlined text-4xl text-text-muted mb-4">search_off</span>
-                    <h5 class="text-text-light font-serif font-bold text-xl mb-2">No Paths Found</h5>
-                    <p class="text-text-muted text-sm mb-8">Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.</p>
-                    <button class="text-accent font-bold uppercase tracking-widest text-xs cursor-pointer" onclick="resetFilters()">Reset All Filters</button>
+                    <h5 class="text-text-light font-serif font-bold text-xl mb-2">@Lang.T("No Paths Found")</h5>
+                    <p class="text-text-muted text-sm mb-8">@Lang.T("Your specific filters don't match any current itineraries. Adjust your parameters to explore other possibilities.")</p>
+                    <button class="text-accent font-bold uppercase tracking-widest text-xs cursor-pointer bg-transparent" onclick="resetFilters()">@Lang.T("Reset All Filters")</button>
                 </div>
             </div>
 
@@ -142,27 +144,27 @@
 </main>
 
 <!-- Flight Details Modal (Moved outside main for proper stacking context above fixed navbar) -->
-<div id="FlightDetailsModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300" dir="ltr">
-    <div class="glass-panel w-full max-w-2xl bg-[#111111]/95 border border-white/10 rounded-3xl shadow-2xl p-8 text-text-light relative flex flex-col gap-6 max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" id="ModalContentBox">
+<div id="FlightDetailsModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
+    <div class="glass-panel w-full max-w-2xl bg-surface/95 border border-outline rounded-3xl shadow-2xl p-8 text-text-light relative flex flex-col gap-6 max-h-[90vh] overflow-y-auto transform scale-95 transition-all duration-300 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" id="ModalContentBox">
         <!-- Close Button -->
-        <button id="btnCloseModal" class="absolute top-6 right-6 text-slate-300 hover:text-white transition-colors cursor-pointer">
+        <button id="btnCloseModal" class="absolute top-6 ltr:right-6 rtl:left-6 text-slate-300 hover:text-white transition-colors cursor-pointer bg-transparent">
             <span class="material-symbols-outlined text-2xl">close</span>
         </button>
 
         <!-- Header -->
-        <header class="space-y-1">
-            <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase" id="ModalSubtitle">SkyScan Itinerary</span>
-            <h2 class="text-3xl font-serif font-extrabold text-white" id="ModalTitle">Flight Details</h2>
+        <header class="space-y-1 text-left">
+            <span class="text-[10px] tracking-[0.3em] font-bold text-accent uppercase" id="ModalSubtitle">@Lang.T("SkyScan Itinerary")</span>
+            <h2 class="text-3xl font-serif font-extrabold text-text-light" id="ModalTitle">@Lang.T("Flight Details")</h2>
         </header>
 
         <!-- Outbound Route timeline -->
-        <div class="bg-white/5 p-6 rounded-2xl border border-white/10 space-y-4" id="OutboundTimelineSection">
-            <span class="text-[10px] uppercase tracking-widest text-accent font-bold block" id="OutboundTimelineHeader">Outbound Journey</span>
+        <div class="bg-glass p-6 rounded-2xl border border-outline space-y-4" id="OutboundTimelineSection">
+            <span class="text-[10px] uppercase tracking-widest text-accent font-bold block" id="OutboundTimelineHeader">@Lang.T("Outbound Journey")</span>
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-accent text-xl">flight_takeoff</span>
-                    <div>
-                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">Departure</p>
+                    <div class="text-left">
+                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">@Lang.T("Departure")</p>
                         <p class="text-lg font-bold text-text-light" id="ModalDepTime">10:15</p>
                         <p class="text-xs text-slate-300" id="ModalOrigin">Sydney (SYD)</p>
                     </div>
@@ -170,14 +172,14 @@
                 <!-- Path Decoration -->
                 <div class="flex-1 px-6 flex flex-col items-center">
                     <span class="block text-center text-[9px] text-slate-300 font-semibold mb-1" id="ModalDuration">9h 20m</span>
-                    <div class="h-[1px] bg-white/10 w-full relative flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-sm rotate-90 bg-opacity-100 px-2">flight</span>
+                    <div class="h-[1px] bg-outline w-full relative flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-sm rotate-90 rtl:rotate-270 bg-opacity-100 px-2 bg-surface">flight</span>
                     </div>
-                    <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalStops">Non-stop</span>
+                    <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalStops">@Lang.T("Non-stop")</span>
                 </div>
                 <div class="flex items-center gap-3 text-right">
-                    <div>
-                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">Arrival</p>
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">@Lang.T("Arrival")</p>
                         <p class="text-lg font-bold text-text-light" id="ModalArrTime">19:35</p>
                         <p class="text-xs text-slate-300" id="ModalDestination">Bangkok (BKK)</p>
                     </div>
@@ -187,13 +189,13 @@
         </div>
 
         <!-- Return Route timeline (Hidden by default for one-way flights) -->
-        <div class="bg-white/5 p-6 rounded-2xl border border-white/10 space-y-4 hidden" id="ReturnTimelineSection">
-            <span class="text-[10px] uppercase tracking-widest text-accent font-bold block">Return Journey</span>
+        <div class="bg-glass p-6 rounded-2xl border border-outline space-y-4 hidden" id="ReturnTimelineSection">
+            <span class="text-[10px] uppercase tracking-widest text-accent font-bold block">@Lang.T("Return Journey")</span>
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined text-accent text-xl">flight_takeoff</span>
-                    <div>
-                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">Departure</p>
+                    <div class="text-left">
+                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">@Lang.T("Departure")</p>
                         <p class="text-lg font-bold text-text-light" id="ModalReturnDepTime">10:15</p>
                         <p class="text-xs text-slate-300" id="ModalReturnOrigin">Bangkok (BKK)</p>
                     </div>
@@ -201,14 +203,14 @@
                 <!-- Path Decoration -->
                 <div class="flex-1 px-6 flex flex-col items-center">
                     <span class="block text-center text-[9px] text-slate-300 font-semibold mb-1" id="ModalReturnDuration">9h 20m</span>
-                    <div class="h-[1px] bg-white/10 w-full relative flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-sm rotate-270 bg-opacity-100 px-2">flight</span>
+                    <div class="h-[1px] bg-outline w-full relative flex items-center justify-center">
+                        <span class="material-symbols-outlined text-accent text-sm rotate-270 rtl:rotate-90 bg-opacity-100 px-2 bg-surface">flight</span>
                     </div>
-                    <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalReturnStops">Non-stop</span>
+                    <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalReturnStops">@Lang.T("Non-stop")</span>
                 </div>
                 <div class="flex items-center gap-3 text-right">
-                    <div>
-                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">Arrival</p>
+                    <div class="text-right">
+                        <p class="text-[10px] uppercase text-slate-300 tracking-wider">@Lang.T("Arrival")</p>
                         <p class="text-lg font-bold text-text-light" id="ModalReturnArrTime">19:35</p>
                         <p class="text-xs text-slate-300" id="ModalReturnDestination">Sydney (SYD)</p>
                     </div>
@@ -218,60 +220,60 @@
         </div>
 
         <!-- In-flight Amenities & Flight Info -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
             <!-- Amenities -->
             <div class="space-y-4">
-                <h3 class="font-serif text-xs uppercase tracking-widest text-slate-300 font-bold">In-Flight Amenities</h3>
+                <h3 class="font-serif text-xs uppercase tracking-widest text-slate-300 font-bold">@Lang.T("In-Flight Amenities")</h3>
                 <div class="grid grid-cols-2 gap-3" id="AmenitiesGrid">
-                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg border border-white/5" id="AmenityWiFi">
+                    <div class="flex items-center gap-2 p-3 bg-glass rounded-lg border border-border-light" id="AmenityWiFi">
                         <span class="material-symbols-outlined text-accent text-sm">wifi</span>
-                        <span class="text-xs text-text-light">Free WiFi</span>
+                        <span class="text-xs text-text-light">@Lang.T("Free WiFi")</span>
                     </div>
-                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg border border-white/5" id="AmenityMeals">
+                    <div class="flex items-center gap-2 p-3 bg-glass rounded-lg border border-border-light" id="AmenityMeals">
                         <span class="material-symbols-outlined text-accent text-sm">restaurant</span>
-                        <span class="text-xs text-text-light">Hot Meals</span>
+                        <span class="text-xs text-text-light">@Lang.T("Hot Meals")</span>
                     </div>
-                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg border border-white/5" id="AmenityPower">
+                    <div class="flex items-center gap-2 p-3 bg-glass rounded-lg border border-border-light" id="AmenityPower">
                         <span class="material-symbols-outlined text-accent text-sm">power</span>
-                        <span class="text-xs text-text-light">USB Outlets</span>
+                        <span class="text-xs text-text-light">@Lang.T("USB Outlets")</span>
                     </div>
-                    <div class="flex items-center gap-2 p-3 bg-white/5 rounded-lg border border-white/5" id="AmenityEntertainment">
+                    <div class="flex items-center gap-2 p-3 bg-glass rounded-lg border border-border-light" id="AmenityEntertainment">
                         <span class="material-symbols-outlined text-accent text-sm">tv</span>
-                        <span class="text-xs text-text-light">Entertainment</span>
+                        <span class="text-xs text-text-light">@Lang.T("Entertainment")</span>
                     </div>
                 </div>
             </div>
 
             <!-- Baggage & Cabin -->
             <div class="space-y-4">
-                <h3 class="font-serif text-xs uppercase tracking-widest text-slate-300 font-bold">Baggage & Cabin</h3>
+                <h3 class="font-serif text-xs uppercase tracking-widest text-slate-300 font-bold">@Lang.T("Baggage & Cabin")</h3>
                 <div class="space-y-2 text-xs text-text-light">
-                    <div class="flex justify-between py-1.5 border-b border-white/5">
-                        <span class="text-slate-300">Cabin Class</span>
-                        <span class="font-bold text-text-light" id="ModalCabin">Economy Class</span>
+                    <div class="flex justify-between py-1.5 border-b border-border-light">
+                        <span class="text-slate-300">@Lang.T("Cabin Class")</span>
+                        <span class="font-bold text-text-light" id="ModalCabin">@Lang.T("Economy Class")</span>
                     </div>
-                    <div class="flex justify-between py-1.5 border-b border-white/5">
-                        <span class="text-slate-300">Carry-on Baggage</span>
-                        <span class="font-bold text-text-light">1x 7kg Included</span>
+                    <div class="flex justify-between py-1.5 border-b border-border-light">
+                        <span class="text-slate-300">@Lang.T("Carry-on Baggage")</span>
+                        <span class="font-bold text-text-light">@Lang.T("1x 7kg Included")</span>
                     </div>
                     <div class="flex justify-between py-1.5">
-                        <span class="text-slate-300">Checked Baggage</span>
-                        <span class="font-bold text-text-light">1x 23kg Included</span>
+                        <span class="text-slate-300">@Lang.T("Checked Baggage")</span>
+                        <span class="font-bold text-text-light">@Lang.T("1x 23kg Included")</span>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Price and Action -->
-        <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-white/5 gap-4">
+        <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-border-light gap-4">
             <div class="text-center sm:text-left">
-                <span class="text-[9px] uppercase tracking-widest text-slate-300 block">Total Price</span>
+                <span class="text-[9px] uppercase tracking-widest text-slate-300 block">@Lang.T("Total Price")</span>
                 <span class="text-3xl font-serif font-extrabold text-accent" id="ModalPrice">$1,250</span>
             </div>
             
             <div class="flex gap-4 w-full sm:w-auto">
-                <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-white/10 hover:bg-white/5 rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
-                    Cancel
+                <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-outline hover:bg-glass rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer bg-transparent text-text-light">
+                    @Lang.T("Cancel")
                 </button>
                 <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="flex-1 sm:flex-initial">
                     <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
@@ -300,8 +302,8 @@
                     <input type="hidden" name="returnHasWifi" id="HiddenReturnHasWifi" />
                     <input type="hidden" name="returnHasFood" id="HiddenReturnHasFood" />
                     <input type="hidden" name="returnHasEntertainment" id="HiddenReturnHasEntertainment" />
-                    <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-accent hover:bg-white text-background rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
-                        Book Flight
+                    <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+                        @Lang.T("Book Flight")
                     </button>
                 </form>
             </div>
@@ -312,6 +314,8 @@
 
 @section Scripts {
     <script>
+        const isAr = document.documentElement.lang === 'ar';
+
         function updatePriceLabel(val) {
             document.getElementById('priceLabel').textContent = '@Html.Raw(symbol)' + val;
             applyFilters();
@@ -404,7 +408,7 @@
                             btn.classList.remove('text-red-500');
                             btn.classList.add('text-text-muted');
                         }
-                        alert("Please sign in to favorite flights.");
+                        alert(isAr ? "يرجى تسجيل الدخول لحفظ الرحلات المفضلة." : "Please sign in to favorite flights.");
                     }
                 } catch (err) {
                     console.error(err);
@@ -460,22 +464,29 @@
                     const redirect = btn.dataset.redirect;
                     const isRoundTrip = btn.dataset.isRoundtrip === 'true';
 
-                    modalTitle.textContent = `${flightNumber} Itinerary`;
-                    modalSubtitle.textContent = `${origin} to ${destination}`;
+                    modalTitle.textContent = isAr ? `مسار الرحلة ${flightNumber}` : `${flightNumber} Itinerary`;
+                    modalSubtitle.textContent = isAr ? `${origin} إلى ${destination}` : `${origin} to ${destination}`;
                     
                     // Outbound Journey fields (incorporating day/month dates)
                     const localeOptions = { day: '2-digit', month: 'short' };
-                    document.getElementById('OutboundTimelineHeader').textContent = isRoundTrip ? "Outbound Journey" : "Flight Journey";
+                    document.getElementById('OutboundTimelineHeader').textContent = isRoundTrip 
+                        ? (isAr ? "رحلة الذهاب" : "Outbound Journey") 
+                        : (isAr ? "مسار الرحلة" : "Flight Journey");
                     
-                    modalDepTime.innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${depTime.toLocaleDateString([], localeOptions)}</span>${depTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
-                    modalArrTime.innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${arrTime.toLocaleDateString([], localeOptions)}</span>${arrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                    const depDateStr = depTime.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', localeOptions);
+                    const arrDateStr = arrTime.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', localeOptions);
                     
-                    modalOrigin.textContent = `${origin} Airport`;
-                    modalDestination.textContent = `${destination} Airport`;
+                    modalDepTime.innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${depDateStr}</span>${depTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                    modalArrTime.innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${arrDateStr}</span>${arrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                    
+                    modalOrigin.textContent = isAr ? `مطار ${origin}` : `${origin} Airport`;
+                    modalDestination.textContent = isAr ? `مطار ${destination}` : `${destination} Airport`;
                     modalDuration.textContent = duration;
-                    modalStops.textContent = stops === 0 ? 'Non-stop' : `${stops} Stop${stops > 1 ? 's' : ''}`;
+                    modalStops.textContent = stops === 0 
+                        ? (isAr ? 'بدون توقف' : 'Non-stop') 
+                        : `${stops} ` + (stops === 1 ? (isAr ? 'توقف' : 'Stop') : (isAr ? 'توقفات' : 'Stops'));
                     
-                    modalPrice.textContent = price > 0 ? ('@Html.Raw(symbol)' + parseFloat(price).toLocaleString()) : 'Included';
+                    modalPrice.textContent = price > 0 ? ('@Html.Raw(symbol)' + parseFloat(price).toLocaleString()) : (isAr ? 'مشمول' : 'Included');
 
                     // Reflect flight amenities dynamically from dataset
                     const hasWifi = btn.dataset.amenitiesWifi === 'true';
@@ -522,13 +533,18 @@
                         const retStops = parseInt(btn.dataset.returnStops);
                         const retDuration = btn.dataset.returnDuration;
 
-                        document.getElementById('ModalReturnDepTime').innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${retDepTime.toLocaleDateString([], localeOptions)}</span>${retDepTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
-                        document.getElementById('ModalReturnArrTime').innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${retArrTime.toLocaleDateString([], localeOptions)}</span>${retArrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                        const retDepDateStr = retDepTime.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', localeOptions);
+                        const retArrDateStr = retArrTime.toLocaleDateString(isAr ? 'ar-EG' : 'en-US', localeOptions);
+
+                        document.getElementById('ModalReturnDepTime').innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${retDepDateStr}</span>${retDepTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
+                        document.getElementById('ModalReturnArrTime').innerHTML = `<span class="text-accent/90 text-[10px] font-bold block mb-0.5">${retArrDateStr}</span>${retArrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}`;
                         
-                        document.getElementById('ModalReturnOrigin').textContent = `${retOrigin} Airport`;
-                        document.getElementById('ModalReturnDestination').textContent = `${retDestination} Airport`;
+                        document.getElementById('ModalReturnOrigin').textContent = isAr ? `مطار ${retOrigin}` : `${retOrigin} Airport`;
+                        document.getElementById('ModalReturnDestination').textContent = isAr ? `مطار ${retDestination}` : `${retDestination} Airport`;
                         document.getElementById('ModalReturnDuration').textContent = retDuration;
-                        document.getElementById('ModalReturnStops').textContent = retStops === 0 ? 'Non-stop' : `${retStops} Stop${retStops > 1 ? 's' : ''}`;
+                        document.getElementById('ModalReturnStops').textContent = retStops === 0 
+                            ? (isAr ? 'بدون توقف' : 'Non-stop') 
+                            : `${retStops} ` + (retStops === 1 ? (isAr ? 'توقف' : 'Stop') : (isAr ? 'توقفات' : 'Stops'));
 
                         // Set Return Hidden Inputs
                         document.getElementById('HiddenReturnFlightNumber').value = retFlightNumber;
@@ -599,7 +615,7 @@
         width: 4px;
     }
     .scrollbar-thin::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--glass);
     }
     .scrollbar-thin::-webkit-scrollbar-thumb {
         background: #bfc5e4;

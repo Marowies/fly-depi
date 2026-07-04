@@ -22,6 +22,8 @@ namespace SkyScan.Presentation
             // ── Core MVC ─────────────────────────────────────────────────────────
             builder.Services.AddControllersWithViews();
             builder.Services.AddMemoryCache();
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddScoped<SkyScan.Presentation.Services.ILanguageService, SkyScan.Presentation.Services.LanguageService>();
 
             // ── Database ──────────────────────────────────────────────────────────
             builder.Services.AddDbContext<SkyScanDbContext>(options =>

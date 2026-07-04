@@ -1,10 +1,12 @@
 @model SkyScan.Presentation.Models.FlightCardViewModel
+@inject SkyScan.Presentation.Services.ILanguageService Lang
 @{
     var flight = Model.Flight;
     var symbol = Model.CurrencySymbol;
     var price = Model.ConvertedPrice;
+    var culture = new System.Globalization.CultureInfo(Lang.CurrentLanguage);
 }
-<div class="flight-card group bg-[#111111]/80 hover:bg-[#111111] transition-all duration-500 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl border border-white/5 hover:border-accent/30"
+<div class="flight-card group bg-surface/80 hover:bg-surface transition-all duration-500 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl border border-border-light hover:border-accent/30"
      data-price="@price"
      data-stops="@flight.Stops"
      data-airline="@flight.AirlineName">
@@ -16,52 +18,52 @@
             <div class="flex flex-col gap-4">
                 <div class="flex justify-between items-start">
                     <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
+                        <div class="w-8 h-8 bg-glass rounded-full flex items-center justify-center border border-outline">
                             <span class="material-symbols-outlined text-slate-300 text-xs">flight_takeoff</span>
                         </div>
-                        <div>
+                        <div class="text-left">
                             <span class="text-[9px] font-bold uppercase tracking-[.2em] text-slate-300">@flight.AirlineName</span>
-                            <p class="text-[10px] text-text-light/95 font-medium">@(flight.ReturnLeg != null ? "Outbound Leg" : Model.Label)</p>
+                            <p class="text-[10px] text-text-light/95 font-medium">@(flight.ReturnLeg != null ? Lang.T("Round Trip") : Lang.T(Model.Label))</p>
                         </div>
                     </div>
                     @if (flight.Stops == 0 && flight.ReturnLeg == null)
                     {
                         <div class="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full">
-                            <span class="text-[9px] font-bold text-accent uppercase tracking-wider">Fastest Route</span>
+                            <span class="text-[9px] font-bold text-accent uppercase tracking-wider">@Lang.T("Fastest Route")</span>
                         </div>
                     }
                 </div>
                 <div class="flex items-center justify-between relative">
                     <div class="text-center md:text-left z-10">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.DepartureTime.ToString("dd MMM")</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.DepartureTime.ToString("dd MMM", culture)</span>
                         <h4 class="text-xl font-serif font-bold text-text-light">@flight.DepartureTime.ToString("HH:mm")</h4>
                         <span class="text-[10px] font-bold uppercase tracking-[.2em] text-text-light/60">@flight.OriginAirport</span>
                     </div>
                     <!-- Flight Path Decoration -->
                     <div class="flex-1 px-8 relative">
-                        <div class="h-[1px] w-full bg-white/10 relative">
+                        <div class="h-[1px] w-full bg-outline relative">
                             <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
                             <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-white/20"></div>
                             <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-accent"></div>
                             <!-- Plane Icon -->
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#111111] group-hover:bg-[#111111] transition-colors px-2">
-                                <span class="material-symbols-outlined text-xs text-accent rotate-90">flight</span>
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface group-hover:bg-surface transition-colors px-2">
+                                <span class="material-symbols-outlined text-xs text-accent rotate-90 rtl:rotate-270">flight</span>
                             </div>
                         </div>
                         <div class="mt-2 text-center">
                             <span class="text-[9px] uppercase tracking-widest text-text-light/60 font-medium">
-                                @((int)flight.Duration.TotalHours)h @(flight.Duration.Minutes)m • 
-                                @(flight.Stops == 0 ? "Non-stop" : $"{flight.Stops} Stop" + (flight.Stops > 1 ? "s" : ""))
+                                @((int)flight.Duration.TotalHours)@Lang.T("h") @(flight.Duration.Minutes)@Lang.T("m") • 
+                                @(flight.Stops == 0 ? Lang.T("Non-stop") : $"{flight.Stops} " + (flight.Stops == 1 ? Lang.T("Stop") : Lang.T("Stops")))
                             </span>
                         </div>
                     </div>
                     <div class="text-center md:text-right z-10">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ArrivalTime.ToString("dd MMM")</span>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ArrivalTime.ToString("dd MMM", culture)</span>
                         <h4 class="text-xl font-serif font-bold text-text-light">@flight.ArrivalTime.ToString("HH:mm")</h4>
                         <span class="text-[10px] font-bold uppercase tracking-[.2em] text-text-light/60">@flight.DestinationAirport</span>
                         @if (flight.ArrivalTime.Date > flight.DepartureTime.Date)
                         {
-                            <p class="text-[9px] text-accent mt-0.5">+1 Day</p>
+                            <p class="text-[9px] text-accent mt-0.5">+1 @Lang.T("Day")</p>
                         }
                     </div>
                 </div>
@@ -70,52 +72,52 @@
             @if (flight.ReturnLeg != null)
             {
                 <!-- Divider -->
-                <div class="h-px bg-white/5 w-full"></div>
+                <div class="h-px bg-outline w-full"></div>
 
                 <!-- Return Segment -->
                 <div class="flex flex-col gap-4">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center border border-white/10">
+                            <div class="w-8 h-8 bg-glass rounded-full flex items-center justify-center border border-outline">
                                 <span class="material-symbols-outlined text-slate-300 text-xs">flight_land</span>
                             </div>
-                            <div>
+                            <div class="text-left">
                                 <span class="text-[9px] font-bold uppercase tracking-[.2em] text-slate-300">@flight.ReturnLeg.AirlineName</span>
-                                <p class="text-[10px] text-text-light/95 font-medium">Return Leg</p>
+                                <p class="text-[10px] text-text-light/95 font-medium">@Lang.T("Return Leg")</p>
                             </div>
                         </div>
                     </div>
                     <div class="flex items-center justify-between relative">
                         <div class="text-center md:text-left z-10">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ReturnLeg.DepartureTime.ToString("dd MMM")</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ReturnLeg.DepartureTime.ToString("dd MMM", culture)</span>
                             <h4 class="text-xl font-serif font-bold text-text-light">@flight.ReturnLeg.DepartureTime.ToString("HH:mm")</h4>
                             <span class="text-[10px] font-bold uppercase tracking-[.2em] text-text-light/60">@flight.ReturnLeg.OriginAirport</span>
                         </div>
                         <!-- Flight Path Decoration -->
                         <div class="flex-1 px-8 relative">
-                            <div class="h-[1px] w-full bg-white/10 relative">
+                            <div class="h-[1px] w-full bg-outline relative">
                                 <div class="absolute inset-0 bg-gradient-to-r from-transparent via-accent/30 to-transparent"></div>
                                 <div class="absolute -top-1 left-0 w-2 h-2 rounded-full bg-white/20"></div>
                                 <div class="absolute -top-1 right-0 w-2 h-2 rounded-full bg-accent"></div>
                                 <!-- Plane Icon -->
-                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#111111] group-hover:bg-[#111111] transition-colors px-2">
-                                    <span class="material-symbols-outlined text-xs text-accent rotate-270">flight</span>
+                                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface group-hover:bg-surface transition-colors px-2">
+                                    <span class="material-symbols-outlined text-xs text-accent rotate-270 rtl:rotate-90">flight</span>
                                 </div>
                             </div>
                             <div class="mt-2 text-center">
                                 <span class="text-[9px] uppercase tracking-widest text-text-light/60 font-medium">
-                                    @((int)flight.ReturnLeg.Duration.TotalHours)h @(flight.ReturnLeg.Duration.Minutes)m • 
-                                    @(flight.ReturnLeg.Stops == 0 ? "Non-stop" : $"{flight.ReturnLeg.Stops} Stop" + (flight.ReturnLeg.Stops > 1 ? "s" : ""))
+                                    @((int)flight.ReturnLeg.Duration.TotalHours)@Lang.T("h") @(flight.ReturnLeg.Duration.Minutes)@Lang.T("m") • 
+                                    @(flight.ReturnLeg.Stops == 0 ? Lang.T("Non-stop") : $"{flight.ReturnLeg.Stops} " + (flight.ReturnLeg.Stops == 1 ? Lang.T("Stop") : Lang.T("Stops")))
                                 </span>
                             </div>
                         </div>
                         <div class="text-center md:text-right z-10">
-                            <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ReturnLeg.ArrivalTime.ToString("dd MMM")</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-accent/90 block">@flight.ReturnLeg.ArrivalTime.ToString("dd MMM", culture)</span>
                             <h4 class="text-xl font-serif font-bold text-text-light">@flight.ReturnLeg.ArrivalTime.ToString("HH:mm")</h4>
                             <span class="text-[10px] font-bold uppercase tracking-[.2em] text-text-light/60">@flight.ReturnLeg.DestinationAirport</span>
                             @if (flight.ReturnLeg.ArrivalTime.Date > flight.ReturnLeg.DepartureTime.Date)
                             {
-                                <p class="text-[9px] text-accent mt-0.5">+1 Day</p>
+                                <p class="text-[9px] text-accent mt-0.5">+1 @Lang.T("Day")</p>
                             }
                         </div>
                     </div>
@@ -124,7 +126,7 @@
 
         </div>
         <!-- Right Actions -->
-        <div class="w-full md:w-64 bg-[#111111] p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l border-white/5">
+        <div class="w-full md:w-64 bg-surface p-8 md:p-10 flex flex-col justify-center items-center md:items-end border-t md:border-t-0 md:border-l rtl:md:border-l-0 rtl:md:border-r border-border-light">
             <div class="flex items-baseline gap-1 mb-6">
                 @if (price > 0)
                 {
@@ -133,12 +135,12 @@
                 }
                 else
                 {
-                    <span class="text-2xl font-serif font-extrabold text-accent tracking-tighter">Included</span>
+                    <span class="text-2xl font-serif font-extrabold text-accent tracking-tighter">@Lang.T("Included")</span>
                 }
             </div>
 
             <div class="flex items-center gap-3 w-full mb-3">
-                <button class="favorite-btn flex-1 py-3 border border-white/10 hover:border-red-500/50 text-text-light/80 hover:text-red-500 rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer text-text-muted"
+                <button class="favorite-btn flex-1 py-3 border border-outline hover:border-red-500/50 text-text-light/80 hover:text-red-500 rounded-xl transition-all flex items-center justify-center gap-2 text-[10px] font-bold uppercase tracking-widest cursor-pointer"
                         data-flight-number="@flight.FlightNumber"
                         data-dep-time="@flight.DepartureTime.ToString("o")"
                         data-arr-time="@flight.ArrivalTime.ToString("o")"
@@ -147,11 +149,11 @@
                         data-origin-iata="@Model.RouteOriginIata"
                         data-destination-iata="@Model.RouteDestinationIata"
                         data-redirect="@flight.RedirectURL">
-                    <span class="material-symbols-outlined text-sm">favorite</span> Favorite
+                    <span class="material-symbols-outlined text-sm">favorite</span> @Lang.T("Favorite")
                 </button>
             </div>
 
-            <button class="w-full py-4 bg-accent hover:bg-white text-background rounded-xl text-xs font-extrabold uppercase text-center tracking-widest hover:scale-[1.02] transition-all duration-300 cursor-pointer open-details-btn shadow-md"
+            <button class="w-full py-4 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-extrabold uppercase text-center tracking-widest hover:scale-[1.02] transition-all duration-300 cursor-pointer open-details-btn shadow-md"
                     data-flight-number="@flight.FlightNumber"
                     data-dep-time="@flight.DepartureTime.ToString("o")"
                     data-arr-time="@flight.ArrivalTime.ToString("o")"
@@ -162,7 +164,7 @@
                     data-airline="@flight.AirlineName"
                     data-price="@price"
                     data-stops="@flight.Stops"
-                    data-duration="@(((int)flight.Duration.TotalHours) + "h " + flight.Duration.Minutes + "m")"
+                    data-duration="@(((int)flight.Duration.TotalHours) + Lang.T("h") + " " + flight.Duration.Minutes + Lang.T("m"))"
                     data-redirect="@flight.RedirectURL"
                     data-amenities-wifi="@(flight.HasWifi ? "true" : "false")"
                     data-amenities-meals="@(flight.HasFood ? "true" : "false")"
@@ -181,14 +183,14 @@
                         data-return-destination-iata="@Model.RouteOriginIata"
                         data-return-airline="@flight.ReturnLeg.AirlineName"
                         data-return-stops="@flight.ReturnLeg.Stops"
-                        data-return-duration="@(((int)flight.ReturnLeg.Duration.TotalHours) + "h " + flight.ReturnLeg.Duration.Minutes + "m")"
+                        data-return-duration="@(((int)flight.ReturnLeg.Duration.TotalHours) + Lang.T("h") + " " + flight.ReturnLeg.Duration.Minutes + Lang.T("m"))"
                         data-return-amenities-wifi="@(flight.ReturnLeg.HasWifi ? "true" : "false")"
                         data-return-amenities-meals="@(flight.ReturnLeg.HasFood ? "true" : "false")"
                         data-return-amenities-power="@((flight.ReturnLeg.HasWifi || flight.ReturnLeg.HasEntertainment) ? "true" : "false")"
                         data-return-amenities-entertainment="@(flight.ReturnLeg.HasEntertainment ? "true" : "false")"
                         </text>
                     }>
-                Flight Details
+                @Lang.T("Flight Details")
             </button>
         </div>
     </div>

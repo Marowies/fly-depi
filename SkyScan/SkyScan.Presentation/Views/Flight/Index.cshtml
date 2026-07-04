@@ -1,10 +1,10 @@
 @model SkyScan.Presentation.Models.FlightSearchViewModel
+@inject SkyScan.Presentation.Services.ILanguageService Lang
 @{
-    ViewData["Title"] = "SkyScan - Premium Flight Experience";
+    ViewData["Title"] = Lang.T("SkyScan - Premium Flight Experience");
     Layout = "_Layout";
 }
 
-<!-- Hero Canvas -->
 <!-- Hero Canvas -->
 <main class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-20">
     <!-- Background Imagery with Dark Overlay -->
@@ -22,26 +22,26 @@
         <div class="flex-1 space-y-10 text-left">
             <div class="space-y-4">
                 <div class="inline-block overflow-hidden whitespace-nowrap">
-                    <span class="text-accent font-manrope text-[10px] uppercase tracking-[0.4em] font-bold block typewriter">Every Destination, One Search.</span>
+                    <span class="text-accent font-manrope text-[10px] uppercase tracking-[0.4em] font-bold block typewriter">@Lang.T("Every Destination, One Search.")</span>
                 </div>
                 <h1 class="font-serif text-5xl md:text-[80px] font-extrabold tracking-tight text-text-light leading-[1.1] flex flex-col overflow-hidden">
-                    <span class="inline-block animate-slide-left">Fly Beyond</span>
-                    <span class="inline-block italic font-light opacity-90 text-accent animate-slide-right mt-1">Time & Sky</span>
+                    <span class="inline-block animate-slide-left">@Lang.T("Fly Beyond")</span>
+                    <span class="inline-block italic font-light opacity-90 text-accent animate-slide-right mt-1">@Lang.T("Time & Sky")</span>
                 </h1>
                 <p id="heroSubtitle" class="text-text-muted text-base md:text-lg font-light max-w-md leading-relaxed flex flex-wrap gap-x-[0.3em] gap-y-1">
-                    Every destination deserves a seamless beginning. Compare flights, explore new horizons, and travel with comfort, confidence, and style.
+                    @Lang.T("Every destination deserves a seamless beginning. Compare flights, explore new horizons, and travel with comfort, confidence, and style.")
                 </p>
             </div>
             
             <!-- Global Reach Badges -->
-            <div class="pt-10 flex items-center gap-4 border-t border-white/5 max-w-xs">
-                <div class="w-12 h-12 bg-white/5 rounded-full border border-white/10 flex items-center justify-center">
+            <div class="pt-10 flex items-center gap-4 border-t border-border-light max-w-xs">
+                <div class="w-12 h-12 bg-glass rounded-full border border-outline flex items-center justify-center">
                     <span class="material-symbols-outlined text-accent text-xl">public</span>
                 </div>
                 <div>
-                    <span class="block text-[8px] uppercase tracking-widest text-text-muted font-bold">Global Reach</span>
-                    <span class="text-2xl font-serif font-bold text-text-light">5,000+</span>
-                    <span class="block text-[8px] text-text-muted">Airports Worldwide</span>
+                    <span class="block text-[8px] uppercase tracking-widest text-text-muted font-bold">@Lang.T("Global Reach")</span>
+                    <span class="text-2xl font-serif font-bold text-text-light">@Lang.T("5,000+")</span>
+                    <span class="block text-[8px] text-text-muted">@Lang.T("Airports Worldwide")</span>
                 </div>
             </div>
         </div>
@@ -57,15 +57,15 @@
                     <!-- Soft gold highlight in background of card -->
                     <div class="absolute -right-20 -top-20 w-40 h-40 bg-accent/5 rounded-full blur-3xl pointer-events-none"></div>
                     
-                    <h3 class="font-serif text-base font-bold text-text-light mb-6 uppercase tracking-wider text-center border-b border-white/5 pb-3">Search Flights </h3>
+                    <h3 class="font-serif text-base font-bold text-text-light mb-6 uppercase tracking-wider text-center border-b border-border-light pb-3">@Lang.T("Search Flights")</h3>
                     
                     <!-- Vertical Stack of Inputs -->
                     <div class="space-y-4">
                         <!-- Origin -->
-                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
-                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">From</label>
+                        <div class="bg-glass border border-outline hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">@Lang.T("From")</label>
                             <div class="flex items-center justify-between gap-3">
-                                <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="Origin City..." type="text" />
+                                <input asp-for="OriginCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="@Lang.T("Origin City...")" type="text" />
                                 <button type="button" id="btnDetectGPS" class="text-accent hover:text-white transition-colors cursor-pointer" title="Detect Location">
                                     <span class="material-symbols-outlined text-base">my_location</span>
                                 </button>
@@ -73,51 +73,51 @@
                         </div>
 
                         <!-- Destination -->
-                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
-                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">To</label>
+                        <div class="bg-glass border border-outline hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">@Lang.T("To")</label>
                             <div class="flex items-center justify-between gap-3">
-                                <input asp-for="DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="Destination City..." type="text" />
+                                <input asp-for="DestinationCity" list="cityList" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-base placeholder:text-text-muted/30 w-full uppercase outline-none" placeholder="@Lang.T("Destination City...")" type="text" />
                                 <span class="material-symbols-outlined text-accent text-base">location_on</span>
                             </div>
                         </div>
 
                         <!-- Dates Section -->
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
-                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Departure</label>
-                                <input asp-for="DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none [color-scheme:dark]" />
+                            <div class="bg-glass border border-outline hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">@Lang.T("Departure")</label>
+                                <input asp-for="DepartureDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none" />
                             </div>
-                            <div id="ReturnDateField" class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative" style="display: none;">
-                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Return</label>
-                                <input asp-for="ReturnDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none [color-scheme:dark]" />
+                            <div id="ReturnDateField" class="bg-glass border border-outline hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative" style="display: none;">
+                                <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">@Lang.T("Return")</label>
+                                <input asp-for="ReturnDate" type="date" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-manrope font-bold text-xs w-full outline-none" />
                             </div>
                         </div>
 
                         <!-- Cabin Class -->
-                        <div class="bg-white/[0.02] border border-white/10 hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
-                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">Cabin Class</label>
+                        <div class="bg-glass border border-outline hover:border-accent/30 focus-within:border-accent/80 transition-colors p-4 rounded-2xl relative">
+                            <label class="block text-[8px] uppercase tracking-widest text-text-muted mb-1 font-bold">@Lang.T("Cabin Class")</label>
                             <div class="flex items-center justify-between">
                                 <select asp-for="CabinClass" class="bg-transparent border-none p-0 focus:ring-0 text-text-light font-serif font-bold text-sm w-full cursor-pointer appearance-none uppercase outline-none">
-                                    <option value="first" class="bg-surface text-white">First Class</option>
-                                    <option value="business" class="bg-surface text-white">Business</option>
-                                    <option value="premium" class="bg-surface text-white">Premium</option>
-                                    <option value="economy" class="bg-surface text-white">Economy</option>
+                                    <option value="first" class="bg-surface text-text-light">@Lang.T("First Class")</option>
+                                    <option value="business" class="bg-surface text-text-light">@Lang.T("Business")</option>
+                                    <option value="premium" class="bg-surface text-text-light">@Lang.T("Premium")</option>
+                                    <option value="economy" class="bg-surface text-text-light">@Lang.T("Economy")</option>
                                 </select>
                                 <span class="material-symbols-outlined text-accent text-base">star</span>
                             </div>
                         </div>
 
                         <!-- Search Button -->
-                        <button type="submit" class="w-full bg-accent hover:bg-white text-background font-manrope font-bold uppercase tracking-widest text-[11px] py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 scale-98 active:scale-100">
-                            Search Flights <span class="material-symbols-outlined text-sm">arrow_right_alt</span>
+                        <button type="submit" class="w-full bg-accent hover:bg-text-light hover:text-background text-background font-manrope font-bold uppercase tracking-widest text-[11px] py-4 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-2 scale-98 active:scale-100">
+                            @Lang.T("Search Flights") <span class="material-symbols-outlined text-sm rtl:rotate-180">arrow_right_alt</span>
                         </button>
                     </div>
                 </div>
 
                 <!-- Trip Type Selectors -->
                 <div class="flex justify-center gap-4 mt-6">
-                    <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-white text-black px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer transition-all">One Way</button>
-                    <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-white/5 text-text-muted/60 px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer hover:bg-white/10 transition-all">Round Trip</button>
+                    <button type="button" onclick="setTripType('OneWay')" id="btnOneWay" class="trip-type-btn bg-text-light text-background px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer transition-all">@Lang.T("One Way")</button>
+                    <button type="button" onclick="setTripType('RoundTrip')" id="btnRoundTrip" class="trip-type-btn bg-glass text-text-muted px-5 py-2 rounded-full font-sans text-[9px] uppercase tracking-widest font-bold cursor-pointer hover:bg-text-light/10 transition-all">@Lang.T("Round Trip")</button>
                 </div>
 
                 <!-- City Autocomplete Datalist -->
@@ -136,43 +136,43 @@
 
 </main>
 <!-- Trending Routes Section -->
-<section class="bg-[#050505] py-24 px-8 border-b border-white/5">
+<section class="bg-background py-24 px-8 border-b border-border-light">
     <div class="max-w-7xl mx-auto">
         <header class="mb-12">
-            <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">Real-time Insights</span>
-            <h2 class="font-serif text-3xl font-extrabold tracking-tight text-text-light mt-1">Trending Flight Routes</h2>
-            <p class="text-xs text-text-muted mt-2">The most popular journeys booked and searched by our members.</p>
+            <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">@Lang.T("Real-time Insights")</span>
+            <h2 class="font-serif text-3xl font-extrabold tracking-tight text-text-light mt-1">@Lang.T("Trending Flight Routes")</h2>
+            <p class="text-xs text-text-muted mt-2">@Lang.T("The most popular journeys booked and searched by our members.")</p>
         </header>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             @foreach (var route in Model.TrendingRoutes)
             {
                 <a href="/Flight/Results?origin=@route.OriginCityId&destination=@route.DestinationCityId&date=@DateTime.Today.AddDays(1).ToString("yyyy-MM-dd")" 
-                   class="group glass-panel block p-6 rounded-2xl border border-white/5 hover:border-accent/40 hover:shadow-[0_0_20px_rgba(216,180,106,0.1)] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
+                   class="group glass-panel block p-6 rounded-2xl border border-border-light hover:border-accent/40 hover:shadow-[0_0_20px_rgba(216,180,106,0.1)] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
                     <div class="absolute -right-8 -top-8 w-24 h-24 bg-gradient-to-br from-accent/10 to-transparent rounded-full filter blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     
                     <div class="h-4"></div>
 
                     <div class="space-y-4">
                         <div>
-                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">From</span>
+                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">@Lang.T("From")</span>
                             <span class="text-sm font-serif font-bold text-text-light">@route.OriginCityName</span>
                         </div>
-                        <div class="h-px bg-white/10 w-full relative">
+                        <div class="h-px bg-outline w-full relative">
                             <span class="material-symbols-outlined text-[10px] text-accent absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-90">flight</span>
                         </div>
                         <div>
-                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">To</span>
+                            <span class="block text-[8px] text-text-muted uppercase tracking-widest">@Lang.T("To")</span>
                             <span class="text-sm font-serif font-bold text-text-light">@route.DestinationCityName</span>
                         </div>
                     </div>
 
-                    <div class="mt-8 pt-4 border-t border-white/5 flex justify-between items-baseline">
+                    <div class="mt-8 pt-4 border-t border-border-light flex justify-between items-baseline">
                         <div>
-                            <span class="text-[8px] text-text-muted uppercase tracking-widest block">From</span>
+                            <span class="text-[8px] text-text-muted uppercase tracking-widest block">@Lang.T("From")</span>
                             <span class="text-lg font-serif font-extrabold text-accent">$@route.MinPrice.ToString("N0")</span>
                         </div>
-                        <span class="text-[10px] text-accent font-bold uppercase tracking-wider group-hover:underline">Explore</span>
+                        <span class="text-[10px] text-accent font-bold uppercase tracking-wider group-hover:underline">@Lang.T("Explore")</span>
                     </div>
                 </a>
             }
@@ -181,43 +181,43 @@
 </section>
 
 <!-- Featured Curations (Bento Grid) -->
-<section class="bg-[#050505] py-32 px-8">
+<section class="bg-background py-32 px-8">
     <div class="max-w-7xl mx-auto">
         <header class="flex justify-between items-end mb-16">
             <div class="space-y-2">
-                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">SkyScan Curated</span>
-                <h2 class="font-serif text-4xl font-bold tracking-tight text-white">The Horizon Collection</h2>
+                <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">@Lang.T("SkyScan Curated")</span>
+                <h2 class="font-serif text-4xl font-bold tracking-tight text-text-light">@Lang.T("The Horizon Collection")</h2>
             </div>
-            <a class="font-sans text-[10px] uppercase tracking-widest text-text-muted/60 hover:text-accent transition-all border-b border-white/10 pb-1" href="#">View All Destinations</a>
+            <a class="font-sans text-[10px] uppercase tracking-widest text-text-muted/60 hover:text-accent transition-all border-b border-border-light pb-1" href="#">@Lang.T("View All Destinations")</a>
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 h-auto md:h-[600px]">
             <!-- Tokyo -->
-            <div class="md:col-span-7 group relative overflow-hidden rounded-3xl bg-[#111111] shadow-2xl transition-all duration-700 border border-white/5">
+            <div class="md:col-span-7 group relative overflow-hidden rounded-3xl bg-surface shadow-2xl transition-all duration-700 border border-border-light">
                 <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Tokyo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrb19dtuO7CAKXUwjUlpTeTR4x6Y1ABKrvnkEFas2hIbnikxewmi6GULMGztdKanilwIrzN27rrYAWiM0WXJutHCewHfyZmfq-IiEL8w3VlJabHtZhxSXSTMdl5HrwY3rOzTLoDWW797z1S4r3BEz_tCLN9nM78cHJOBZF2ftgNey_m5-xgBJ3wIPQM8vpNYoD_FpxQmZYMdrMIt2zDzPq-XsT0_rjotLMslSYVVJwTGzTWzD_zGbo9t7hhNMPfGKqbaS2fxGTrQ" />
                 <div class="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-85 group-hover:opacity-95 transition-opacity"></div>
-                <div class="absolute bottom-0 left-0 p-10 z-10">
-                    <span class="bg-accent text-background px-3 py-1 rounded font-sans text-[9px] uppercase font-bold tracking-widest mb-4 inline-block shadow-lg">New Opening</span>
-                    <h3 class="font-serif text-3xl font-bold mb-2 text-white">Tokyo Nocturne</h3>
-                    <p class="text-text-muted text-xs font-light max-w-sm">Experience the neon-soaked luxury of the Ginza District's newest private lounge.</p>
+                <div class="absolute bottom-0 left-0 p-10 z-10 text-left">
+                    <span class="bg-accent text-background px-3 py-1 rounded font-sans text-[9px] uppercase font-bold tracking-widest mb-4 inline-block shadow-lg">@Lang.T("New Opening")</span>
+                    <h3 class="font-serif text-3xl font-bold mb-2 text-white">@Lang.T("Tokyo Nocturne")</h3>
+                    <p class="text-text-muted text-xs font-light max-w-sm">@Lang.T("Experience the neon-soaked luxury of the Ginza District's newest private lounge.")</p>
                 </div>
             </div>
 
             <!-- Swiss Alps & Dubai -->
             <div class="md:col-span-5 flex flex-col gap-8">
-                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5">
+                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-surface border border-border-light">
                     <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Swiss Alps" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCB4BpL1Rp_v0LLqR9hOWUcIH1TMXWEQaf1smsv4N98Cx0hjqtXgUpY3Q94MClfuvaBzlNvu3S5R6R7ihhEMf8WCgBJXE49nndV13IBflOLiym-a0wM1zR2NtsOwCz3df-UQjsx0SMVuP46dyJhmXfSTCroA_M72ucYsQheExvQ1T1PdrD2naJXhoWELOUaKrhttHCKf1-AzGdCSZtZukNdFRDdGBxuvIyF8UYbc5lIXFedaNkxLoifEEPbniAs9dSqilrsreoGLQ" />
                     <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85"></div>
-                    <div class="absolute bottom-0 left-0 p-8 z-10">
-                        <h3 class="font-serif text-xl font-bold text-white mb-1">Alpine Sanctuary</h3>
+                    <div class="absolute bottom-0 left-0 p-8 z-10 text-left">
+                        <h3 class="font-serif text-xl font-bold text-white mb-1">@Lang.T("Alpine Sanctuary")</h3>
                         <p class="text-accent text-[9px] uppercase tracking-widest font-bold">St. Moritz, Switzerland</p>
                     </div>
                 </div>
-                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-[#111111] border border-white/5">
+                <div class="flex-1 group relative overflow-hidden rounded-3xl bg-surface border border-border-light">
                     <img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Dubai" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4TVeapnSBk381Ot3ATr1whVHFWv2cctTleGNd9fmKeTH181xMFPkbKMUWDzNfjXd4bO4EunMTiR7IDbhgIoX73puKrvddB73Fzn3wvNYqmHWVi__p6lwCEto_0CFlc9Us95YW8EuagLkc5Z6NmLkCjR849Z2_t-rwJLd0E9EiUOGoJZidTywTmOmP4vceUmh6UR85S4eiKvPr_k3iEQ6r8p0ThIDerEv4C6MWFWIPBtZBSatc1rfr7bqqBd74tZWISHSMxPrExA" />
                     <div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent opacity-85"></div>
-                    <div class="absolute bottom-0 left-0 p-8 z-10">
-                        <h3 class="font-serif text-xl font-bold text-white mb-1">Desert Mirage</h3>
+                    <div class="absolute bottom-0 left-0 p-8 z-10 text-left">
+                        <h3 class="font-serif text-xl font-bold text-white mb-1">@Lang.T("Desert Mirage")</h3>
                         <p class="text-accent text-[9px] uppercase tracking-widest font-bold">Dubai, UAE</p>
                     </div>
                 </div>
@@ -227,21 +227,21 @@
 </section>
 
 <!-- Luxury Stats -->
-<section class="bg-[#050505] py-24 px-8 border-t border-white/5">
+<section class="bg-background py-24 px-8 border-t border-border-light">
     <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-16">
         <div class="text-center md:text-left space-y-2">
             <div class="text-accent font-serif text-6xl font-extrabold tracking-tighter">98.4%</div>
-            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">SkyScan On-Time Arrival</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">@Lang.T("SkyScan On-Time Arrival")</div>
         </div>
-        <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+        <div class="w-px h-16 bg-outline hidden md:block"></div>
         <div class="text-center md:text-left space-y-2">
             <div class="text-text-light font-serif text-6xl font-extrabold tracking-tighter">150+</div>
-            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">Global SkyScan Lounges</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">@Lang.T("Global SkyScan Lounges")</div>
         </div>
-        <div class="w-px h-16 bg-white/10 hidden md:block"></div>
+        <div class="w-px h-16 bg-outline hidden md:block"></div>
         <div class="text-center md:text-left space-y-2">
             <div class="text-text-light font-serif text-6xl font-extrabold tracking-tighter">24/7</div>
-            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">SkyScan Concierge</div>
+            <div class="font-sans text-[10px] uppercase tracking-[0.2em] text-text-muted/60 font-bold">@Lang.T("SkyScan Concierge")</div>
         </div>
     </div>
 </section>
@@ -252,13 +252,13 @@
             document.getElementById('TripTypeHidden').value = type;
             const buttons = document.querySelectorAll('.trip-type-btn');
             buttons.forEach(btn => {
-                btn.classList.remove('bg-white', 'text-black');
-                btn.classList.add('bg-white/5', 'text-text-muted/60');
+                btn.classList.remove('bg-text-light', 'text-background');
+                btn.classList.add('bg-glass', 'text-text-muted');
             });
             const selectedBtn = document.getElementById('btn' + type);
             if (selectedBtn) {
-                selectedBtn.classList.remove('bg-white/5', 'text-text-muted/60');
-                selectedBtn.classList.add('bg-white', 'text-black');
+                selectedBtn.classList.remove('bg-glass', 'text-text-muted');
+                selectedBtn.classList.add('bg-text-light', 'text-background');
             }
 
             const returnField = document.getElementById('ReturnDateField');
@@ -398,4 +398,3 @@
         }
     }
 </style>
-

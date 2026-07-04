@@ -37,6 +37,8 @@ namespace SkyScan.Presentation.Controllers
         private static readonly TimeSpan SearchCacheDuration = TimeSpan.FromMinutes(15);
         private const string UnknownAircraftCode = "UNK";
 
+        private readonly SkyScan.Presentation.Services.ILanguageService _languageService;
+
         public FlightController(
             IAirportRepository airportRepository,
             ISearchRepository searchRepository,
@@ -47,7 +49,8 @@ namespace SkyScan.Presentation.Controllers
             IFlightProviderService flightProviderService,
             ILocationLookupService locationLookupService,
             IMemoryCache cache,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            SkyScan.Presentation.Services.ILanguageService languageService)
         {
             _flightRepository = flightRepository;
             _airportRepository = airportRepository;
@@ -59,14 +62,22 @@ namespace SkyScan.Presentation.Controllers
             _locationLookupService = locationLookupService;
             _cache = cache;
             _userManager = userManager;
+            _languageService = languageService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var rawCities = await GetCachedAirportDropdownAsync();
+            var currentLang = _languageService.CurrentLanguage;
+
             var viewModel = new FlightSearchViewModel
             {
-                CitiesWithAirports = await GetCachedAirportDropdownAsync()
+                CitiesWithAirports = rawCities.Select(c => new SelectListItem
+                {
+                    Value = c.Value,
+                    Text  = _languageService.TranslateCityCountry(c.Text, currentLang)
+                }).OrderBy(c => c.Text).ToList()
             };
 
             var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
@@ -79,8 +90,8 @@ namespace SkyScan.Presentation.Controllers
                 {
                     OriginCityId = s.OriginCityId,
                     DestinationCityId = s.DestinationCityId,
-                    OriginCityName = s.OriginCity.Name,
-                    DestinationCityName = s.DestinationCity.Name,
+                    OriginCityName = _languageService.TranslateCityCountry(s.OriginCity.Name, currentLang),
+                    DestinationCityName = _languageService.TranslateCityCountry(s.DestinationCity.Name, currentLang),
                     SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount,
                     MinPrice = 150 + new Random().Next(50, 400)
                 })
@@ -102,8 +113,8 @@ namespace SkyScan.Presentation.Controllers
                             {
                                 OriginCityId = origin.CityId,
                                 DestinationCityId = dest.CityId,
-                                OriginCityName = origin.Name,
-                                DestinationCityName = dest.Name,
+                                OriginCityName = _languageService.TranslateCityCountry(origin.Name, currentLang),
+                                DestinationCityName = _languageService.TranslateCityCountry(dest.Name, currentLang),
                                 SearchCount = origin.SearchCount + dest.SearchCount,
                                 MinPrice = 190 + new Random().Next(40, 450)
                             });
@@ -142,10 +153,12 @@ namespace SkyScan.Presentation.Controllers
                 if (string.IsNullOrEmpty(input)) return null;
                 if (Guid.TryParse(input, out var guid)) return guid;
                 
-                // Try to find by name in cache
+                // Try to find by name in cache (checks English text, English City part, Arabic translation text, and Arabic City part)
                 var match = allCities.FirstOrDefault(c => 
                     c.Text.Equals(input, StringComparison.OrdinalIgnoreCase) || 
-                    c.Text.Contains(input, StringComparison.OrdinalIgnoreCase));
+                    c.Text.Contains(input, StringComparison.OrdinalIgnoreCase) ||
+                    _languageService.TranslateCityCountry(c.Text, "ar").Equals(input, StringComparison.OrdinalIgnoreCase) ||
+                    _languageService.TranslateCityCountry(c.Text, "ar").Contains(input, StringComparison.OrdinalIgnoreCase));
                 
                 return match != null ? Guid.Parse(match.Value) : null;
             }
@@ -253,14 +266,15 @@ namespace SkyScan.Presentation.Controllers
             var destIatas = destAirports.Select(a => a.IataCode).Where(i => !string.IsNullOrEmpty(i)).ToList();
 
             // Resolve City Names from the first available airport or default
+            var currentLang = _languageService.CurrentLanguage;
             var originCity = originAirports.FirstOrDefault()?.City;
             var originName = originCity != null 
-                ? $"{originCity.Name}, {originCity.Country?.Name ?? originCity.CountryCode}" 
+                ? $"{_languageService.TranslateCityCountry(originCity.Name, currentLang)}, {_languageService.TranslateCityCountry(originCity.Country?.Name ?? originCity.CountryCode, currentLang)}" 
                 : "Origin";
 
             var destCity = destAirports.FirstOrDefault()?.City;
             var destName = destCity != null 
-                ? $"{destCity.Name}, {destCity.Country?.Name ?? destCity.CountryCode}" 
+                ? $"{_languageService.TranslateCityCountry(destCity.Name, currentLang)}, {_languageService.TranslateCityCountry(destCity.Country?.Name ?? destCity.CountryCode, currentLang)}" 
                 : "Destination";
             
             // Search Flights via the provider (Mock or Real) with Caching
@@ -313,7 +327,9 @@ namespace SkyScan.Presentation.Controllers
             {
                 return NotFound("No nearby city found.");
             }
-            return Json(new { cityId = city.CityId, name = city.Name });
+            var currentLang = _languageService.CurrentLanguage;
+            var cityName = currentLang == "ar" ? _languageService.TranslateCityCountry(city.Name, "ar") : city.Name;
+            return Json(new { cityId = city.CityId, name = cityName });
         }
 
         [HttpPost]
