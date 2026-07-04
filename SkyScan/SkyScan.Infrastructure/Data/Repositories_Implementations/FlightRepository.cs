@@ -29,6 +29,9 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .ToListAsync();
         }
 
+        // Retrieves the flights with the lowest ticket prices, limited to a specified count.
+        // Probably not refrenced in the current codebase, but could be useful for a "best deals" feature.
+        // Could be deleted if not used, but might be useful for future features.
         public async Task<IEnumerable<Flight>> GetLowestPriceFlightsAsync(int count = 5)
         {
             return await _dbSet
@@ -42,6 +45,9 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .ToListAsync();
         }
 
+        // Finds flights that are randomly selected from the database, simulating a "flights around the world" feature.
+        // probably not referenced in the current codebase, but could be useful for a "travel inspiration" feature.
+        // Could be deleted if not used, but might be useful for future features.
         public async Task<IEnumerable<Flight>> GetFlightsAroundTheWorldAsync(int count = 5)
         {
             return await _dbSet

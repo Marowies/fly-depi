@@ -52,6 +52,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .ToListAsync();
         }
 
+        // Probably not needed
         public async Task<City?> GetNearestCityByCoordinatesAsync(double latitude, double longitude)
         {
             // Latitude and Longitude have been removed from the database schema.
