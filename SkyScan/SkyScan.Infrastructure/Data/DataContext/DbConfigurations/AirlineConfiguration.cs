@@ -17,6 +17,8 @@ namespace SkyScan.Infrastructure.Data.DataContext.DbConfigurations
 
             builder.Property(a => a.IataCode).HasMaxLength(3);
 
+            builder.Property(a => a.Url).HasMaxLength(255).IsRequired(false);
+
             builder.HasIndex(a => a.IataCode).IsUnique(false);
         }
     }

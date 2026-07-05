@@ -219,11 +219,20 @@ namespace SkyScan.Presentation.Controllers
                 SaveGuestBookingsToCookie(guestBookings);
             }
 
-            // Redirect user to the flight redirect URL (Google Flights link)
-            var finalRedirectUrl = flight.RedirectURL;
+            // Redirect user to the flight redirect URL (Airline official site or fallback)
+            var finalRedirectUrl = flight.Airline?.Url;
             if (string.IsNullOrEmpty(finalRedirectUrl))
             {
-                finalRedirectUrl = $"https://www.google.com/travel/flights?q=Flights%20to%20{destination}%20from%20{origin}%20on%20{depTime:yyyy-MM-dd}";
+                finalRedirectUrl = flight.RedirectURL;
+            }
+            if (string.IsNullOrEmpty(finalRedirectUrl))
+            {
+                var queryStr = $"flights from {originIata} to {destinationIata} on {depTime:yyyy-MM-dd}";
+                if (!string.IsNullOrEmpty(returnDepartureTime) && DateTime.TryParse(returnDepartureTime, out var retDate))
+                {
+                    queryStr += $" through {retDate:yyyy-MM-dd}";
+                }
+                finalRedirectUrl = $"https://www.google.com/travel/flights?q={Uri.EscapeDataString(queryStr)}";
             }
 
             return Redirect(finalRedirectUrl);

@@ -76,7 +76,7 @@ namespace SkyScan.Presentation.Controllers
                 CitiesWithAirports = rawCities.Select(c => new SelectListItem
                 {
                     Value = c.Value,
-                    Text  = _languageService.TranslateCityCountry(c.Text, currentLang)
+                    Text  = c.Text
                 }).OrderBy(c => c.Text).ToList()
             };
 
@@ -90,8 +90,8 @@ namespace SkyScan.Presentation.Controllers
                 {
                     OriginCityId = s.OriginCityId,
                     DestinationCityId = s.DestinationCityId,
-                    OriginCityName = _languageService.TranslateCityCountry(s.OriginCity.Name, currentLang),
-                    DestinationCityName = _languageService.TranslateCityCountry(s.DestinationCity.Name, currentLang),
+                    OriginCityName = s.OriginCity.Name,
+                    DestinationCityName = s.DestinationCity.Name,
                     SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount,
                     MinPrice = 150 + new Random().Next(50, 400)
                 })
@@ -113,8 +113,8 @@ namespace SkyScan.Presentation.Controllers
                             {
                                 OriginCityId = origin.CityId,
                                 DestinationCityId = dest.CityId,
-                                OriginCityName = _languageService.TranslateCityCountry(origin.Name, currentLang),
-                                DestinationCityName = _languageService.TranslateCityCountry(dest.Name, currentLang),
+                                OriginCityName = origin.Name,
+                                DestinationCityName = dest.Name,
                                 SearchCount = origin.SearchCount + dest.SearchCount,
                                 MinPrice = 190 + new Random().Next(40, 450)
                             });
@@ -153,12 +153,10 @@ namespace SkyScan.Presentation.Controllers
                 if (string.IsNullOrEmpty(input)) return null;
                 if (Guid.TryParse(input, out var guid)) return guid;
                 
-                // Try to find by name in cache (checks English text, English City part, Arabic translation text, and Arabic City part)
+                // Try to find by name in cache (checks English text, English City part)
                 var match = allCities.FirstOrDefault(c => 
                     c.Text.Equals(input, StringComparison.OrdinalIgnoreCase) || 
-                    c.Text.Contains(input, StringComparison.OrdinalIgnoreCase) ||
-                    _languageService.TranslateCityCountry(c.Text, "ar").Equals(input, StringComparison.OrdinalIgnoreCase) ||
-                    _languageService.TranslateCityCountry(c.Text, "ar").Contains(input, StringComparison.OrdinalIgnoreCase));
+                    c.Text.Contains(input, StringComparison.OrdinalIgnoreCase));
                 
                 return match != null ? Guid.Parse(match.Value) : null;
             }
@@ -269,12 +267,12 @@ namespace SkyScan.Presentation.Controllers
             var currentLang = _languageService.CurrentLanguage;
             var originCity = originAirports.FirstOrDefault()?.City;
             var originName = originCity != null 
-                ? $"{_languageService.TranslateCityCountry(originCity.Name, currentLang)}, {_languageService.TranslateCityCountry(originCity.Country?.Name ?? originCity.CountryCode, currentLang)}" 
+                ? $"{originCity.Name}, {originCity.Country?.Name ?? originCity.CountryCode}" 
                 : "Origin";
 
             var destCity = destAirports.FirstOrDefault()?.City;
             var destName = destCity != null 
-                ? $"{_languageService.TranslateCityCountry(destCity.Name, currentLang)}, {_languageService.TranslateCityCountry(destCity.Country?.Name ?? destCity.CountryCode, currentLang)}" 
+                ? $"{destCity.Name}, {destCity.Country?.Name ?? destCity.CountryCode}" 
                 : "Destination";
             
             // Search Flights via the provider (Mock or Real) with Caching
@@ -328,7 +326,16 @@ namespace SkyScan.Presentation.Controllers
                 return NotFound("No nearby city found.");
             }
             var currentLang = _languageService.CurrentLanguage;
-            var cityName = currentLang == "ar" ? _languageService.TranslateCityCountry(city.Name, "ar") : city.Name;
+            var cityName = city.Name;
+
+            if (currentLang == "ar")
+            {
+                var dbCity = await _airportRepository.GetCityByIdAsync(city.CityId);
+                if (dbCity != null && !string.IsNullOrEmpty(dbCity.NameAr))
+                {
+                    cityName = dbCity.NameAr;
+                }
+            }
             return Json(new { cityId = city.CityId, name = cityName });
         }
 
@@ -384,17 +391,25 @@ namespace SkyScan.Presentation.Controllers
         /// </summary>
         private async Task<List<SelectListItem>> GetCachedAirportDropdownAsync()
         {
-            if (!_cache.TryGetValue(AirportCacheKey, out List<SelectListItem>? cachedItems) || cachedItems == null)
+            var currentLang = _languageService.CurrentLanguage;
+            var cacheKey = $"{AirportCacheKey}_{currentLang}";
+            if (!_cache.TryGetValue(cacheKey, out List<SelectListItem>? cachedItems) || cachedItems == null)
             {
                 var cities = await _airportRepository.GetCityDropdownItemsAsync();
+                var isAr = currentLang == "ar";
 
-                cachedItems = cities.Select(c => new SelectListItem
+                cachedItems = cities.Select(c => 
                 {
-                    Value = c.CityId.ToString(),
-                    Text  = $"{c.CityName}, {c.CountryName}"
+                    var cityName = isAr && !string.IsNullOrEmpty(c.CityNameAr) ? c.CityNameAr : c.CityName;
+                    var countryName = isAr && !string.IsNullOrEmpty(c.CountryNameAr) ? c.CountryNameAr : c.CountryName;
+                    return new SelectListItem
+                    {
+                        Value = c.CityId.ToString(),
+                        Text  = $"{cityName}, {countryName}"
+                    };
                 }).OrderBy(c => c.Text).ToList();
 
-                _cache.Set(AirportCacheKey, cachedItems, AirportCacheDuration);
+                _cache.Set(cacheKey, cachedItems, AirportCacheDuration);
             }
 
             return cachedItems;

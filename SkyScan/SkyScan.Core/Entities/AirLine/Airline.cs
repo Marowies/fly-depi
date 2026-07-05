@@ -17,6 +17,9 @@ namespace SkyScan.Core.Entities.AirLine
         [StringLength(3, MinimumLength = 2, ErrorMessage = "IATA Code must be 2-3 characters.")]
         public string? IataCode { get; set; }
 
+        [StringLength(255)]
+        public string? Url { get; set; }
+
         public List<Flight> Flights { get; set; } = new List<Flight>();
     }
 }

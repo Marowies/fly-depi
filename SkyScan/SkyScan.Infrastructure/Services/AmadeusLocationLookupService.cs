@@ -71,32 +71,52 @@ namespace SkyScan.Infrastructure.Services
                 var url = $"v1/reference-data/locations/airports?latitude={latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}&longitude={longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}&radius=500";
                 
                 var response = await _httpClient.GetAsync(url);
-                if (!response.IsSuccessStatusCode) return null;
-
-                var json = await response.Content.ReadAsStringAsync();
-                using var doc = JsonDocument.Parse(json);
-                if (!doc.RootElement.TryGetProperty("data", out var dataArray) || dataArray.ValueKind != JsonValueKind.Array) return null;
-
-                foreach (var location in dataArray.EnumerateArray())
+                if (response.IsSuccessStatusCode)
                 {
-                    var iataCode = location.TryGetProperty("iataCode", out var iataEl) ? iataEl.GetString() : null;
-                    if (string.IsNullOrEmpty(iataCode)) continue;
-
-                    // Resolve the IATA code against local seeded data
-                    var airport = await _airportRepository.GetByIataAsync(iataCode);
-                    if (airport != null && airport.City != null)
+                    var json = await response.Content.ReadAsStringAsync();
+                    using var doc = JsonDocument.Parse(json);
+                    if (doc.RootElement.TryGetProperty("data", out var dataArray) && dataArray.ValueKind == JsonValueKind.Array)
                     {
-                        return new NearestCityDto
+                        foreach (var location in dataArray.EnumerateArray())
                         {
-                            CityId = airport.City.CityId,
-                            Name = airport.City.Name
-                        };
+                            var iataCode = location.TryGetProperty("iataCode", out var iataEl) ? iataEl.GetString() : null;
+                            if (string.IsNullOrEmpty(iataCode)) continue;
+
+                            // Resolve the IATA code against local seeded data
+                            var airport = await _airportRepository.GetByIataAsync(iataCode);
+                            if (airport != null && airport.City != null)
+                            {
+                                return new NearestCityDto
+                                {
+                                    CityId = airport.City.CityId,
+                                    Name = airport.City.Name
+                                };
+                            }
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error finding nearest airport/city via Amadeus: {ex.Message}");
+            }
+
+            // Fallback: Use local database reverse-geocoding lookup
+            try
+            {
+                var city = await _airportRepository.GetNearestCityByCoordinatesAsync(latitude, longitude);
+                if (city != null)
+                {
+                    return new NearestCityDto
+                    {
+                        CityId = city.CityId,
+                        Name = city.Name
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in local coordinate reverse-geocoding fallback: {ex.Message}");
             }
 
             return null;

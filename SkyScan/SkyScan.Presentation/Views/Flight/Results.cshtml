@@ -106,6 +106,10 @@
                             <text> • @Lang.T("Return") @Model.ReturnDate.Value.ToString("dd MMMM, yyyy", culture)</text>
                         }
                     </p>
+                    <p class="text-[10px] text-accent/80 mt-1.5 flex items-center gap-1.5 font-medium italic">
+                        <span class="material-symbols-outlined text-[12px] align-middle">info</span>
+                        @Lang.T("Disclaimer: Prices shown are estimates and may not be final. Please verify details before booking.")
+                    </p>
                 </div>
                 <div class="text-right">
                     <span class="text-[10px] tracking-widest text-slate-300 uppercase">@Model.Flights.Count() @Lang.T("Results Found")</span>
@@ -173,7 +177,7 @@
                 <div class="flex-1 px-6 flex flex-col items-center">
                     <span class="block text-center text-[9px] text-slate-300 font-semibold mb-1" id="ModalDuration">9h 20m</span>
                     <div class="h-[1px] bg-outline w-full relative flex items-center justify-center">
-                        <span class="material-symbols-outlined text-accent text-sm rotate-90 rtl:rotate-270 bg-opacity-100 px-2 bg-surface">flight</span>
+                        <span class="material-symbols-outlined text-accent text-sm rotate-90 rtl:rotate-270 bg-opacity-0 px-2 bg-surface">flight</span>
                     </div>
                     <span class="block text-center text-[9px] text-accent font-bold mt-1" id="ModalStops">@Lang.T("Non-stop")</span>
                 </div>

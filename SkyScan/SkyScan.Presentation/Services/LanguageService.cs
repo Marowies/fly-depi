@@ -9,7 +9,7 @@ namespace SkyScan.Presentation.Services
         string CurrentLanguage { get; }
         bool IsRtl { get; }
         string T(string key);
-        string TranslateCityCountry(string englishText, string targetLang);
+        
     }
 
     public class LanguageService : ILanguageService
@@ -180,65 +180,21 @@ namespace SkyScan.Presentation.Services
             { "Search Again", "ابحث مجدداً" },
             { "Saved", "محفوظة" },
             { "No routes saved to favorites yet.", "لم يتم حفظ أي مسارات في المفضلة بعد." },
-            { "Favorite flight paths to monitor price changes and save schedules here.", "أضف مسارات رحلاتك المفضلة لمتابعة تغيرات الأسعار وحفظ المواعيد هنا." }
+            { "Favorite flight paths to monitor price changes and save schedules here.", "أضف مسارات رحلاتك المفضلة لمتابعة تغيرات الأسعار وحفظ المواعيد هنا." },
+            { "Disclaimer: Prices shown are estimates and may not be final. Please verify details before booking.", "تنويه: الأسعار المعروضة هي أسعار تقديرية وقد لا تكون نهائية. يرجى التحقق من التفاصيل قبل تأكيد الحجز." },
+            { "SkyScan Collection", "مجموعة سكاي سكان" },
+            { "Your Booked Journeys", "رحلاتك المحجوزة" },
+            { "A curation of your scheduled skies and historical flights.", "مجموعة من رحلاتك المجدولة والسابقة." },
+            { "No Bookings Yet", "لا توجد حجوزات بعد" },
+            { "You haven't reserved any flights yet. Let us search and prepare your next itinerary.", "لم تقم بحجز أي رحلات بعد. دعنا نبحث ونجهز لك رحلتك القادمة." },
+            { "Start Exploring", "ابدأ الاستكشاف" },
+            { "Booked", "تم الحجز" },
+            { "View Ticket", "عرض التذكرة" },
+            { "Remove from favorites", "إزالة من المفضلة" },
+            { "Target Price", "السعر المستهدف" }
         };
 
-        // City & Country Name Translations
-        private static readonly Dictionary<string, string> LocationTranslations = new(StringComparer.OrdinalIgnoreCase)
-        {
-            // Cities
-            { "Cairo", "القاهرة" },
-            { "London", "لندن" },
-            { "Paris", "باريس" },
-            { "New York", "نيويورك" },
-            { "Tokyo", "طوكيو" },
-            { "Dubai", "دبي" },
-            { "Jeddah", "جدة" },
-            { "Riyadh", "الرياض" },
-            { "Alexandria", "الإسكندرية" },
-            { "El Arish", "العريش" },
-            { "Abu Simbel", "أبو سمبل" },
-            { "Al-Baha", "الباحة" },
-            { "Al Ain", "العين" },
-            { "Rome", "روما" },
-            { "Istanbul", "إسطنبول" },
-            { "Berlin", "برلين" },
-            { "Sydney", "سيدني" },
-            { "Toronto", "تورونتو" },
-            { "Madrid", "مدريد" },
-            { "Barcelona", "برشلونة" },
-            { "Amsterdam", "أمستردام" },
-            { "Brussels", "بروكسل" },
-            { "Geneva", "جنيف" },
-            { "Zurich", "زيورخ" },
-            { "Moscow", "موسكو" },
-            { "Singapore", "سنغافورة" },
-            { "Bangkok", "بانكوك" },
-            { "Los Angeles", "لوس أنجلوس" },
-            { "Chicago", "شيكاغو" },
-            { "San Francisco", "سان فرانسيسكو" },
-            { "Miami", "ميامي" },
-            { "Washington", "واشنطن" },
-
-            // Countries
-            { "Egypt", "مصر" },
-            { "United Kingdom", "المملكة المتحدة" },
-            { "United States", "الولايات المتحدة" },
-            { "France", "فرنسا" },
-            { "Germany", "ألمانيا" },
-            { "Italy", "إيطاليا" },
-            { "Spain", "إسبانيا" },
-            { "Japan", "اليابان" },
-            { "Saudi Arabia", "المملكة العربية السعودية" },
-            { "United Arab Emirates", "الإمارات العربية المتحدة" },
-            { "Canada", "كندا" },
-            { "Australia", "أستراليا" },
-            { "Russia", "روسيا" },
-            { "Switzerland", "سويسرا" },
-            { "Netherlands", "هولندا" },
-            { "Belgium", "بلجيكا" },
-            { "Thailand", "تايلاند" }
-        };
+       
 
         public string T(string key)
         {
@@ -254,27 +210,6 @@ namespace SkyScan.Presentation.Services
             return key; // Default to English
         }
 
-        public string TranslateCityCountry(string englishText, string targetLang)
-        {
-            if (string.IsNullOrEmpty(englishText)) return string.Empty;
-            if (targetLang != "ar") return englishText;
-
-            // Handle format like "City, Country"
-            var parts = englishText.Split(new[] { ',' }, 2);
-            if (parts.Length == 2)
-            {
-                var city = parts[0].Trim();
-                var country = parts[1].Trim();
-
-                var transCity = LocationTranslations.TryGetValue(city, out var tc) ? tc : city;
-                var transCountry = LocationTranslations.TryGetValue(country, out var tco) ? tco : country;
-
-                return $"{transCity}، {transCountry}";
-            }
-
-            // Single word translation
-            var trimmed = englishText.Trim();
-            return LocationTranslations.TryGetValue(trimmed, out var t) ? t : trimmed;
-        }
+        
     }
 }

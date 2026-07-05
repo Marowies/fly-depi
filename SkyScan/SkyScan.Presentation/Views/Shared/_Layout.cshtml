@@ -1,6 +1,6 @@
 @inject SkyScan.Presentation.Services.ILanguageService Lang
 <!DOCTYPE html>
-<html class="dark" lang="@Lang.CurrentLanguage" dir="@(Lang.IsRtl ? "rtl" : "ltr")">
+<html class="dark" lang="@Lang.CurrentLanguage" dir="ltr">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -73,19 +73,19 @@
         }
 
         html.light {
-            --background-rgb: 245 243 239; /* Warm luxury ivory/cream */
-            --surface-rgb: 255 255 255; /* Pure white card surface */
-            --accent-rgb: 196 144 69; /* Warm rich gold */
-            --text-light-rgb: 30 32 30; /* Soft charcoal text (gentle on eyes) */
-            --text-muted-rgb: 100 105 100; /* Muted slate grey */
+            --background-rgb: 252 249 248; /* #fcf9f8 (Aurelian Minimalist Bone White Background) */
+            --surface-rgb: 255 255 255; /* #ffffff (surface-container-lowest) */
+            --accent-rgb: 118 90 25; /* #765a19 (Primary Luxury Gold/Bronze) */
+            --text-light-rgb: 28 27 27; /* #1c1b1b (on-background Charcoal) */
+            --text-muted-rgb: 77 70 57; /* #4d4639 (on-surface-variant Warm Slate) */
             
-            --border-light: rgba(196, 144, 69, 0.08); /* Gold-tinted soft border */
-            --glass: rgba(196, 144, 69, 0.03);
-            --outline-variant: rgba(196, 144, 69, 0.08);
-            --outline: rgba(196, 144, 69, 0.12);
+            --border-light: rgba(208, 197, 180, 0.35); /* #d0c5b4 (outline-variant) at 35% opacity */
+            --glass: rgba(252, 249, 248, 0.75); /* Tonal layer glass */
+            --outline-variant: rgba(208, 197, 180, 0.35);
+            --outline: rgba(127, 118, 103, 0.25); /* #7f7667 (outline) at 25% opacity */
             
-            --glass-bg: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(196, 144, 69, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(208, 197, 180, 0.3);
             --date-scheme: light;
         }
 
@@ -104,6 +104,31 @@
         }
         .rotate-animation {
             animation: rotate-360 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Arabic text direction and alignment overrides (keeps layout, boxes, and icons LTR) */
+        html[lang="ar"] p, 
+        html[lang="ar"] h1, 
+        html[lang="ar"] h2, 
+        html[lang="ar"] h3, 
+        html[lang="ar"] h4, 
+        html[lang="ar"] h5, 
+        html[lang="ar"] h6, 
+        html[lang="ar"] span, 
+        html[lang="ar"] label, 
+        html[lang="ar"] input, 
+        html[lang="ar"] select, 
+        html[lang="ar"] option,
+        html[lang="ar"] textarea,
+        html[lang="ar"] header,
+        html[lang="ar"] .text-left {
+            text-align: right !important;
+            direction: rtl;
+        }
+        
+        html[lang="ar"] input::placeholder {
+            text-align: right;
+            direction: rtl;
         }
     </style>
 </head>

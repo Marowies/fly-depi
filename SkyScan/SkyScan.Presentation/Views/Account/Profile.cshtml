@@ -1,21 +1,22 @@
 @model SkyScan.Infrastructure.Identity.ApplicationUser
+@inject SkyScan.Presentation.Services.ILanguageService Lang
 @{
-    ViewData["Title"] = "Your SkyScan Profile";
+    ViewData["Title"] = Lang.T("Your SkyScan Profile");
     Layout = "_Layout";
 }
 
 <main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
     <div class="max-w-7xl mx-auto space-y-12">
         <!-- Profile Header -->
-        <header class="text-center md:text-left space-y-2 pb-6 border-b border-white/5 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <header class="text-center md:text-left space-y-2 pb-6 border-b border-border-light flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
-                <span class="font-label text-[10px] uppercase tracking-[0.4em] text-tertiary font-bold">SkyScan Identity</span>
-                <h1 class="font-headline text-4xl font-extrabold text-white">@Model.Name</h1>
-                <p class="text-on-surface-variant text-sm font-light opacity-80">Premium member profile and curated flight settings.</p>
+                <span class="font-label text-[10px] uppercase tracking-[0.4em] text-accent font-bold">@Lang.T("SkyScan Identity")</span>
+                <h1 class="font-headline text-4xl font-extrabold text-text-light">@Model.Name</h1>
+                <p class="text-text-muted text-sm font-light opacity-80">@Lang.T("Premium member profile and curated flight settings.")</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="bg-[#BFC5E4]/10 text-[#BFC5E4] px-4 py-2 rounded-full font-label text-[10px] uppercase font-bold tracking-widest border border-[#BFC5E4]/20">
-                    SkyScan Member
+                <span class="bg-accent/10 text-accent px-4 py-2 rounded-full font-label text-[10px] uppercase font-bold tracking-widest border border-accent/20">
+                    @Lang.T("SkyScan Member")
                 </span>
             </div>
         </header>
@@ -23,40 +24,40 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <!-- Account Details Sidebar (4 cols) -->
             <section class="lg:col-span-4 space-y-8">
-                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Personal Details</h2>
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-text-light border-b border-border-light pb-3">@Lang.T("Personal Details")</h2>
                     
                     <div class="space-y-4">
                         <div>
-                            <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Full Name</span>
-                            <span class="text-slate-200 font-bold text-sm">@Model.Name</span>
+                            <span class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("Full Name")</span>
+                            <span class="text-text-light font-bold text-sm">@Model.Name</span>
                         </div>
                         <div>
-                            <span class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Email Address</span>
-                            <span class="text-slate-200 font-bold text-sm">@Model.Email</span>
+                            <span class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("Email Address")</span>
+                            <span class="text-text-light font-bold text-sm">@Model.Email</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Two-Factor Authentication Management -->
-                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <button type="button" onclick="toggleTwoFactor()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 focus:outline-none text-left cursor-pointer">
-                        <span>Security & Authenticator</span>
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <button type="button" onclick="toggleTwoFactor()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-text-light border-b border-border-light pb-3 focus:outline-none text-left cursor-pointer bg-transparent">
+                        <span>@Lang.T("Security & Authenticator")</span>
                         <span id="twoFactorArrow" class="material-symbols-outlined transition-transform duration-300 transform">expand_more</span>
                     </button>
                     
                     <div id="twoFactorContent" class="hidden space-y-6 transition-all duration-300">
-                        <p class="text-xs text-slate-400 leading-relaxed">Enhance your SkyScan profile security by enabling Two-Factor Authentication (2FA).</p>
+                        <p class="text-xs text-text-muted leading-relaxed">@Lang.T("Enhance your SkyScan profile security by enabling Two-Factor Authentication (2FA).")</p>
                         
                         <div class="flex items-center justify-between py-2">
-                            <span class="text-xs font-bold text-slate-300">2FA Status</span>
+                            <span class="text-xs font-bold text-text-light">@Lang.T("2FA Status")</span>
                             @if (Model.TwoFactorEnabled)
                             {
-                                <span class="text-[10px] font-bold text-green-400 bg-green-950/20 px-3 py-1 rounded-full border border-green-500/20 uppercase tracking-wider">Enabled</span>
+                                <span class="text-[10px] font-bold text-green-400 bg-green-950/20 px-3 py-1 rounded-full border border-green-500/20 uppercase tracking-wider">@Lang.T("Enabled")</span>
                             }
                             else
                             {
-                                <span class="text-[10px] font-bold text-amber-400 bg-amber-950/20 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-wider">Disabled</span>
+                                <span class="text-[10px] font-bold text-amber-400 bg-amber-950/20 px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-wider">@Lang.T("Disabled")</span>
                             }
                         </div>
 
@@ -64,28 +65,28 @@
                         {
                             <form asp-controller="Account" asp-action="DisableTwoFactor" method="post">
                                 <button type="submit" class="w-full py-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                                    Disable Two-Factor Auth
+                                    @Lang.T("Disable Two-Factor Auth")
                                 </button>
                             </form>
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="EnableTwoFactor" class="block text-center w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
-                                Set Up Two-Factor Auth
+                            <a asp-controller="Account" asp-action="EnableTwoFactor" class="block text-center w-full py-3 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-bold uppercase tracking-widest transition-all">
+                                @Lang.T("Set Up Two-Factor Auth")
                             </a>
                         }
                     </div>
                 </div>
 
                 <!-- Reset Password -->
-                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <button type="button" onclick="toggleResetPassword()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 focus:outline-none text-left cursor-pointer">
-                        <span>Reset Password</span>
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <button type="button" onclick="toggleResetPassword()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-text-light border-b border-border-light pb-3 focus:outline-none text-left cursor-pointer bg-transparent">
+                        <span>@Lang.T("Reset Password")</span>
                         <span id="resetPasswordArrow" class="material-symbols-outlined transition-transform duration-300 transform">expand_more</span>
                     </button>
                     
                     <div id="resetPasswordContent" class="hidden space-y-6 transition-all duration-300">
-                        <p class="text-xs text-slate-400 leading-relaxed">Change your login password regularly for safety.</p>
+                        <p class="text-xs text-text-muted leading-relaxed">@Lang.T("Change your login password regularly for safety.")</p>
 
                         @if (TempData["PasswordSuccess"] != null)
                         {
@@ -102,19 +103,19 @@
 
                         <form asp-controller="Account" asp-action="ChangePassword" method="post" class="space-y-4">
                             <div>
-                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Current Password</label>
-                                <input name="OldPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                                <label class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("Current Password")</label>
+                                <input name="OldPassword" type="password" required class="w-full bg-surface border border-border-light p-3 rounded-xl text-text-light font-body text-xs focus:border-accent outline-none transition-all" />
                             </div>
                             <div>
-                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">New Password</label>
-                                <input name="NewPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                                <label class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("New Password")</label>
+                                <input name="NewPassword" type="password" required class="w-full bg-surface border border-border-light p-3 rounded-xl text-text-light font-body text-xs focus:border-accent outline-none transition-all" />
                             </div>
                             <div>
-                                <label class="block text-[10px] text-slate-500 uppercase tracking-widest mb-1">Confirm New Password</label>
-                                <input name="ConfirmPassword" type="password" required class="w-full bg-[#141a32] border border-white/10 p-3 rounded-xl text-slate-200 font-body text-xs focus:border-[#DAC76A] outline-none transition-all" />
+                                <label class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("Confirm New Password")</label>
+                                <input name="ConfirmPassword" type="password" required class="w-full bg-surface border border-border-light p-3 rounded-xl text-text-light font-body text-xs focus:border-accent outline-none transition-all" />
                             </div>
-                            <button type="submit" class="w-full py-3 bg-primary hover:bg-white text-on-primary hover:text-black rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
-                                Update Password
+                            <button type="submit" class="w-full py-3 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                                @Lang.T("Update Password")
                             </button>
                         </form>
                     </div>
@@ -124,18 +125,18 @@
             <!-- Favorites and Search Log Dashboard (8 cols) -->
             <section class="lg:col-span-8 space-y-8">
                 <!-- Favorites / Price Monitored Routes -->
-                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3 flex items-center justify-between">
-                        <span>Monitored Routes & Favorites</span>
-                        <span class="text-[10px] bg-tertiary/10 text-tertiary px-3 py-1 rounded-full font-bold uppercase">@Model.PriceAlerts.Count Saved</span>
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-text-light border-b border-border-light pb-3 flex items-center justify-between">
+                        <span>@Lang.T("Monitored Routes & Favorites")</span>
+                        <span class="text-[10px] bg-accent/10 text-accent px-3 py-1 rounded-full font-bold uppercase">@Model.PriceAlerts.Count @Lang.T("Saved")</span>
                     </h2>
 
                     @if (!Model.PriceAlerts.Any())
                     {
                         <div class="py-12 text-center space-y-3">
-                            <span class="material-symbols-outlined text-4xl text-slate-600">favorite_border</span>
-                            <p class="text-slate-400 text-sm">No routes saved to favorites yet.</p>
-                            <p class="text-xs text-slate-600">Favorite flight paths to monitor price changes and save schedules here.</p>
+                            <span class="material-symbols-outlined text-4xl text-text-muted">favorite_border</span>
+                            <p class="text-text-muted text-sm">@Lang.T("No routes saved to favorites yet.")</p>
+                            <p class="text-xs text-text-muted opacity-80">@Lang.T("Favorite flight paths to monitor price changes and save schedules here.")</p>
                         </div>
                     }
                     else
@@ -146,31 +147,31 @@
                                 var flight = alert.Trip?.Flights?.FirstOrDefault();
                                 if (flight != null)
                                 {
-                                    <div class="p-5 rounded-lg bg-surface-container-low border border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 hover:border-white/10 transition-all">
+                                    <div class="p-5 rounded-lg bg-surface border border-border-light flex flex-col md:flex-row justify-between items-center gap-4 hover:border-accent/20 transition-all">
                                         <div class="flex-1 space-y-2">
                                             <div class="flex items-center gap-3">
-                                                <span class="text-xs font-bold uppercase tracking-wider text-slate-300">@flight.FlightNumber</span>
-                                                <span class="text-[10px] text-slate-500">| @flight.Airline?.Name</span>
+                                                <span class="text-xs font-bold uppercase tracking-wider text-accent">@flight.FlightNumber</span>
+                                                <span class="text-[10px] text-text-muted">| @flight.Airline?.Name</span>
                                             </div>
-                                            <div class="flex items-center gap-4 text-sm font-semibold text-slate-200">
+                                            <div class="flex items-center gap-4 text-sm font-semibold text-text-light">
                                                 <span>@flight.DepartureAirport?.City?.Name (@flight.DepartureAirport?.IataCode)</span>
-                                                <span class="material-symbols-outlined text-xs text-slate-500">arrow_forward</span>
+                                                <span class="material-symbols-outlined text-xs text-text-muted">arrow_forward</span>
                                                 <span>@flight.ArrivalAirport?.City?.Name (@flight.ArrivalAirport?.IataCode)</span>
                                             </div>
-                                            <div class="text-[10px] text-slate-400">
-                                                Departs: @flight.DepartureTime.ToString("yyyy-MM-dd HH:mm")
+                                            <div class="text-[10px] text-text-muted">
+                                                @Lang.T("Departure Date"): @flight.DepartureTime.ToString("yyyy-MM-dd HH:mm")
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-6">
                                             <div class="text-right">
-                                                <span class="block text-[9px] text-slate-500 uppercase tracking-widest">Target Price</span>
-                                                <span class="text-tertiary font-bold text-lg">$@alert.TargetPrice.ToString("N0")</span>
+                                                <span class="block text-[9px] text-text-muted uppercase tracking-widest">@Lang.T("Target Price")</span>
+                                                <span class="text-accent font-bold text-lg">$@alert.TargetPrice.ToString("N0")</span>
                                             </div>
 
-                                            <button class="remove-fav-btn text-slate-500 hover:text-red-500 transition-colors p-2 cursor-pointer"
+                                            <button class="remove-fav-btn text-text-muted hover:text-red-500 transition-colors p-2 cursor-pointer bg-transparent border-none"
                                                     data-flight-number="@flight.FlightNumber"
                                                     data-dep-time="@flight.DepartureTime.ToString("o")"
-                                                    title="Remove from favorites">
+                                                    title="@Lang.T("Remove from favorites")">
                                                 <span class="material-symbols-outlined">delete</span>
                                             </button>
                                         </div>
@@ -182,44 +183,44 @@
                 </div>
 
                 <!-- Recent Searches Log -->
-                <div class="glass-panel p-8 rounded-xl border border-white/5 space-y-6">
-                    <h2 class="font-headline text-lg font-bold text-slate-200 border-b border-white/5 pb-3">Your Search History</h2>
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <h2 class="font-headline text-lg font-bold text-text-light border-b border-border-light pb-3">@Lang.T("Your Search History")</h2>
 
                     @if (!Model.Searches.Any())
                     {
-                        <p class="text-slate-400 text-xs py-4 text-center">No recent flight searches recorded.</p>
+                        <p class="text-text-muted text-xs py-4 text-center">@Lang.T("No recent flight searches recorded.")</p>
                     }
                     else
                     {
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs border-collapse">
                                 <thead>
-                                    <tr class="border-b border-white/5 text-slate-500 uppercase tracking-wider font-bold">
-                                        <th class="py-3 px-2">Date Searched</th>
-                                        <th class="py-3 px-2">Route</th>
-                                        <th class="py-3 px-2">Departure Date</th>
-                                        <th class="py-3 px-2">Trip Type</th>
+                                    <tr class="border-b border-border-light text-text-muted uppercase tracking-wider font-bold">
+                                        <th class="py-3 px-2">@Lang.T("Date Searched")</th>
+                                        <th class="py-3 px-2">@Lang.T("Route")</th>
+                                        <th class="py-3 px-2">@Lang.T("Departure Date")</th>
+                                        <th class="py-3 px-2">@Lang.T("Trip Type")</th>
                                         <th class="py-3 px-2"></th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-white/5 text-slate-300">
+                                <tbody class="divide-y divide-border-light text-text-light">
                                     @foreach (var search in Model.Searches.OrderByDescending(s => s.TimeStamp).Take(10))
                                     {
-                                        <tr class="hover:bg-white/5 transition-colors">
-                                            <td class="py-4 px-2 text-slate-400">@search.TimeStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                                        <tr class="hover:bg-glass transition-colors">
+                                            <td class="py-4 px-2 text-text-muted">@search.TimeStamp.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
                                             <td class="py-4 px-2 font-bold">
                                                 @(search.OriginCity?.Name ?? "Unknown") → @(search.DestinationCity?.Name ?? "Unknown")
                                             </td>
-                                            <td class="py-4 px-2 text-slate-400">@search.DepartureDate.ToString("yyyy-MM-dd")</td>
+                                            <td class="py-4 px-2 text-text-muted">@search.DepartureDate.ToString("yyyy-MM-dd")</td>
                                             <td class="py-4 px-2">
-                                                <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-white/5 uppercase">
-                                                    @search.Type.ToString()
+                                                <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-glass uppercase">
+                                                    @Lang.T(search.Type.ToString())
                                                 </span>
                                             </td>
                                             <td class="py-4 px-2 text-right">
                                                 <a href="/Flight/Results?origin=@search.OriginCityId&destination=@search.DestinationCityId&date=@search.DepartureDate.ToString("yyyy-MM-dd")&tripType=@search.Type" 
-                                                   class="text-primary hover:text-white font-bold uppercase text-[10px] tracking-wider transition-colors">
-                                                    Search Again
+                                                   class="text-accent hover:text-text-light font-bold uppercase text-[10px] tracking-wider transition-colors">
+                                                    @Lang.T("Search Again")
                                                 </a>
                                             </td>
                                         </tr>

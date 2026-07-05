@@ -14,6 +14,9 @@ namespace SkyScan.Core.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
+        [StringLength(100)]
+        public string? NameAr { get; set; }
+
         [StringLength(10)]
         public string Continent { get; set; }
 
