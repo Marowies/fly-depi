@@ -269,49 +269,72 @@
         </div>
 
         <!-- Price and Action -->
-        <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 border-t border-border-light gap-4">
-            <div class="text-center sm:text-left">
-                <span class="text-[9px] uppercase tracking-widest text-slate-300 block">@Lang.T("Total Price")</span>
-                <span class="text-3xl font-serif font-extrabold text-accent" id="ModalPrice">$1,250</span>
-            </div>
-            
-            <div class="flex gap-4 w-full sm:w-auto">
-                <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-outline hover:bg-glass rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer bg-transparent text-text-light">
-                    @Lang.T("Cancel")
-                </button>
-                <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="flex-1 sm:flex-initial">
-                    <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
-                    <input type="hidden" name="departureTime" id="HiddenDepartureTime" />
-                    <input type="hidden" name="origin" id="HiddenOrigin" />
-                    <input type="hidden" name="destination" id="HiddenDestination" />
-                    <input type="hidden" name="originIata" id="HiddenOriginIata" />
-                    <input type="hidden" name="destinationIata" id="HiddenDestinationIata" />
-                    <input type="hidden" name="airlineName" id="HiddenAirlineName" />
-                    <input type="hidden" name="arrivalTime" id="HiddenArrivalTime" />
-                    <input type="hidden" name="price" id="HiddenPrice" />
-                    <input type="hidden" name="redirectUrl" id="HiddenRedirectUrl" />
-                    <!-- Amenities -->
-                    <input type="hidden" name="hasWifi" id="HiddenHasWifi" />
-                    <input type="hidden" name="hasFood" id="HiddenHasFood" />
-                    <input type="hidden" name="hasEntertainment" id="HiddenHasEntertainment" />
-                    <!-- Return Flight Inputs -->
-                    <input type="hidden" name="returnFlightNumber" id="HiddenReturnFlightNumber" />
-                    <input type="hidden" name="returnDepartureTime" id="HiddenReturnDepartureTime" />
-                    <input type="hidden" name="returnOrigin" id="HiddenReturnOrigin" />
-                    <input type="hidden" name="returnDestination" id="HiddenReturnDestination" />
-                    <input type="hidden" name="returnOriginIata" id="HiddenReturnOriginIata" />
-                    <input type="hidden" name="returnDestinationIata" id="HiddenReturnDestinationIata" />
-                    <input type="hidden" name="returnAirlineName" id="HiddenReturnAirlineName" />
-                    <input type="hidden" name="returnArrivalTime" id="HiddenReturnArrivalTime" />
-                    <input type="hidden" name="returnHasWifi" id="HiddenReturnHasWifi" />
-                    <input type="hidden" name="returnHasFood" id="HiddenReturnHasFood" />
-                    <input type="hidden" name="returnHasEntertainment" id="HiddenReturnHasEntertainment" />
-                    <button type="submit" id="btnConfirmBook" class="w-full px-8 py-3 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
+        <form asp-controller="Booking" asp-action="Book" method="post" target="_blank" class="w-full">
+            <input type="hidden" name="flightNumber" id="HiddenFlightNumber" />
+            <input type="hidden" name="departureTime" id="HiddenDepartureTime" />
+            <input type="hidden" name="origin" id="HiddenOrigin" />
+            <input type="hidden" name="destination" id="HiddenDestination" />
+            <input type="hidden" name="originIata" id="HiddenOriginIata" />
+            <input type="hidden" name="destinationIata" id="HiddenDestinationIata" />
+            <input type="hidden" name="airlineName" id="HiddenAirlineName" />
+            <input type="hidden" name="arrivalTime" id="HiddenArrivalTime" />
+            <input type="hidden" name="price" id="HiddenPrice" />
+            <input type="hidden" name="redirectUrl" id="HiddenRedirectUrl" />
+            <!-- Amenities -->
+            <input type="hidden" name="hasWifi" id="HiddenHasWifi" />
+            <input type="hidden" name="hasFood" id="HiddenHasFood" />
+            <input type="hidden" name="hasEntertainment" id="HiddenHasEntertainment" />
+            <!-- Return Flight Inputs -->
+            <input type="hidden" name="returnFlightNumber" id="HiddenReturnFlightNumber" />
+            <input type="hidden" name="returnDepartureTime" id="HiddenReturnDepartureTime" />
+            <input type="hidden" name="returnOrigin" id="HiddenReturnOrigin" />
+            <input type="hidden" name="returnDestination" id="HiddenReturnDestination" />
+            <input type="hidden" name="returnOriginIata" id="HiddenReturnOriginIata" />
+            <input type="hidden" name="returnDestinationIata" id="HiddenReturnDestinationIata" />
+            <input type="hidden" name="returnAirlineName" id="HiddenReturnAirlineName" />
+            <input type="hidden" name="returnArrivalTime" id="HiddenReturnArrivalTime" />
+            <input type="hidden" name="returnHasWifi" id="HiddenReturnHasWifi" />
+            <input type="hidden" name="returnHasFood" id="HiddenReturnHasFood" />
+            <input type="hidden" name="returnHasEntertainment" id="HiddenReturnHasEntertainment" />
+
+            <!-- Booking Options -->
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <div class="flex flex-col gap-3 pt-6 border-t border-border-light text-left">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="createPriceAlert" value="true" checked class="hidden" />
+                        <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
+                            <div class="checkbox-inner w-2 h-2 bg-accent"></div>
+                        </div>
+                        <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">@Lang.T("Track and send emails of this booking to price alert.")</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="addToCalendar" value="true" checked class="hidden" />
+                        <div class="checkbox-box w-4 h-4 border border-outline flex items-center justify-center transition-colors rounded">
+                            <div class="checkbox-inner w-2 h-2 bg-accent"></div>
+                        </div>
+                        <span class="text-xs text-slate-300 group-hover:text-accent transition-colors">@Lang.T("Add this booking to my calendar.")</span>
+                    </label>
+                </div>
+            }
+
+            <!-- Price and Action -->
+            <footer class="flex flex-col sm:flex-row justify-between items-center pt-6 mt-6 border-t border-border-light gap-4">
+                <div class="text-center sm:text-left">
+                    <span class="text-[9px] uppercase tracking-widest text-slate-300 block">@Lang.T("Total Price")</span>
+                    <span class="text-3xl font-serif font-extrabold text-accent" id="ModalPrice">$1,250</span>
+                </div>
+                
+                <div class="flex gap-4 w-full sm:w-auto">
+                    <button type="button" id="btnCancelModal" class="flex-1 sm:flex-initial px-6 py-3 border border-outline hover:bg-glass rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer bg-transparent text-text-light">
+                        @Lang.T("Cancel")
+                    </button>
+                    <button type="submit" id="btnConfirmBook" class="flex-1 sm:flex-initial px-8 py-3 bg-accent hover:bg-text-light hover:text-background text-background rounded-xl text-xs font-extrabold uppercase tracking-widest transition-all cursor-pointer">
                         @Lang.T("Book Flight")
                     </button>
-                </form>
-            </div>
-        </footer>
+                </div>
+            </footer>
+        </form>
     </div>
 </div>
 </main>

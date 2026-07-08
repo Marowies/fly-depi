@@ -100,6 +100,7 @@ namespace SkyScan.Presentation
             // ── Flight Provider & Location Lookup ──────────────────────────────────
             builder.Services.AddHttpClient<IFlightProviderService, AmadeusFlightService>();
             builder.Services.AddHttpClient<ILocationLookupService, AmadeusLocationLookupService>();
+            builder.Services.AddHttpClient<IGeocodingService, NominatimGeocodingService>();
 
             builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
 using SkyScan.Core.Repositories_Interfaces;
@@ -7,6 +8,8 @@ using SkyScan.Infrastructure.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -18,18 +21,21 @@ namespace SkyScan.Presentation.Controllers
         private readonly IBookingRepository _bookingRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPriceAlertRepository _priceAlertRepository;
+        private readonly IConfiguration _configuration;
         private const string GuestBookingsCookieName = "SkyScan_GuestBookings";
 
         public BookingController(
             IFlightRepository flightRepository, 
             IBookingRepository bookingRepository, 
             UserManager<ApplicationUser> userManager,
-            IPriceAlertRepository priceAlertRepository)
+            IPriceAlertRepository priceAlertRepository,
+            IConfiguration configuration)
         {
             _flightRepository = flightRepository;
             _bookingRepository = bookingRepository;
             _userManager = userManager;
             _priceAlertRepository = priceAlertRepository;
+            _configuration = configuration;
         }
 
         // Helper class to serialize guest bookings in cookie
@@ -73,7 +79,9 @@ namespace SkyScan.Presentation.Controllers
             string? returnArrivalTime = null,
             bool returnHasWifi = false,
             bool returnHasFood = false,
-            bool returnHasEntertainment = false)
+            bool returnHasEntertainment = false,
+            bool createPriceAlert = false,
+            bool addToCalendar = false)
         {
             if (!DateTime.TryParse(departureTime, out var depTime))
             {
@@ -128,29 +136,33 @@ namespace SkyScan.Presentation.Controllers
                 }
             }
 
+            var mainBookingId = Guid.NewGuid();
             var user = await _userManager.GetUserAsync(User);
             if (user != null)
             {
                 await _bookingRepository.AddAsync(new Booking
                 {
-                    BookingId = Guid.NewGuid(),
+                    BookingId = mainBookingId,
                     UserId = user.Id,
                     FlightId = flight.FlightId,
                     BookingDate = DateTime.UtcNow
                 });
 
-                // Auto-Favorite Outbound Flight via interface
-                var outboundTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, price);
-                var existingOutboundAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, outboundTrip.TripId);
-                if (existingOutboundAlert == null)
+                if (createPriceAlert)
                 {
-                    await _priceAlertRepository.AddAsync(new PriceAlert
+                    // Auto-Favorite Outbound Flight via interface
+                    var outboundTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, price);
+                    var existingOutboundAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, outboundTrip.TripId);
+                    if (existingOutboundAlert == null)
                     {
-                        Id = Guid.NewGuid(),
-                        UserId = user.Id,
-                        TripId = outboundTrip.TripId,
-                        TargetPrice = price
-                    });
+                        await _priceAlertRepository.AddAsync(new PriceAlert
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = user.Id,
+                            TripId = outboundTrip.TripId,
+                            TargetPrice = price
+                        });
+                    }
                 }
 
                 if (returnFlight != null)
@@ -163,18 +175,21 @@ namespace SkyScan.Presentation.Controllers
                         BookingDate = DateTime.UtcNow
                     });
 
-                    // Auto-Favorite Return Flight via interface
-                    var returnTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(returnFlight.FlightId, 0.00M);
-                    var existingReturnAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, returnTrip.TripId);
-                    if (existingReturnAlert == null)
+                    if (createPriceAlert)
                     {
-                        await _priceAlertRepository.AddAsync(new PriceAlert
+                        // Auto-Favorite Return Flight via interface
+                        var returnTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(returnFlight.FlightId, 0.00M);
+                        var existingReturnAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, returnTrip.TripId);
+                        if (existingReturnAlert == null)
                         {
-                            Id = Guid.NewGuid(),
-                            UserId = user.Id,
-                            TripId = returnTrip.TripId,
-                            TargetPrice = 0.00M
-                        });
+                            await _priceAlertRepository.AddAsync(new PriceAlert
+                            {
+                                Id = Guid.NewGuid(),
+                                UserId = user.Id,
+                                TripId = returnTrip.TripId,
+                                TargetPrice = 0.00M
+                            });
+                        }
                     }
                 }
             }
@@ -185,7 +200,7 @@ namespace SkyScan.Presentation.Controllers
 
                 guestBookings.Add(new GuestBookingCookieModel
                 {
-                    BookingId = Guid.NewGuid(),
+                    BookingId = mainBookingId,
                     BookingDate = DateTime.UtcNow,
                     FlightNumber = flight.FlightNumber,
                     DepartureTime = flight.DepartureTime,
@@ -217,6 +232,11 @@ namespace SkyScan.Presentation.Controllers
                 }
 
                 SaveGuestBookingsToCookie(guestBookings);
+            }
+
+            if (addToCalendar)
+            {
+                return RedirectToAction(nameof(AddToGoogleCalendar), new { bookingId = mainBookingId, isBookingFlow = true });
             }
 
             // Redirect user to the flight redirect URL (Airline official site or fallback)
@@ -328,6 +348,255 @@ namespace SkyScan.Presentation.Controllers
                 HttpOnly = true,
                 Secure = true
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddToGoogleCalendar(Guid bookingId, bool isBookingFlow = false)
+        {
+            var booking = await FindBookingAsync(bookingId);
+            if (booking == null)
+            {
+                TempData["Error"] = "Booking not found.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var googleClientId = _configuration["Authentication:Google:ClientId"];
+            if (string.IsNullOrEmpty(googleClientId))
+            {
+                TempData["Error"] = "Google Calendar integration is not configured.";
+                if (isBookingFlow)
+                {
+                    return Redirect(GetFlightRedirectUrl(booking));
+                }
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var redirectUri = Url.Action("GoogleCalendarCallback", "Booking", null, Request.Scheme);
+            
+            var state = isBookingFlow ? $"{bookingId}|book" : bookingId.ToString();
+
+            var authUrl = $"https://accounts.google.com/o/oauth2/v2/auth" +
+                          $"?client_id={googleClientId}" +
+                          $"&redirect_uri={Uri.EscapeDataString(redirectUri!)}" +
+                          $"&response_type=code" +
+                          $"&scope={Uri.EscapeDataString("https://www.googleapis.com/auth/calendar.events")}" +
+                          $"&state={state}" +
+                          $"&access_type=online" +
+                          $"&prompt=consent";
+
+            return Redirect(authUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GoogleCalendarCallback(string? code, string? state, string? error)
+        {
+            if (string.IsNullOrEmpty(state))
+            {
+                TempData["Error"] = "Invalid response from Google authorization server (missing state).";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var stateParts = state.Split('|');
+            if (!Guid.TryParse(stateParts[0], out var bookingId))
+            {
+                TempData["Error"] = "Invalid booking state.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var isBookingFlow = stateParts.Length > 1 && stateParts[1] == "book";
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                TempData["Error"] = $"Google Calendar authorization failed: {error}";
+                if (isBookingFlow)
+                {
+                    var fallbackBooking = await FindBookingAsync(bookingId);
+                    if (fallbackBooking != null) return Redirect(GetFlightRedirectUrl(fallbackBooking));
+                }
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            if (string.IsNullOrEmpty(code))
+            {
+                TempData["Error"] = "Invalid response from Google authorization server (missing code).";
+                if (isBookingFlow)
+                {
+                    var fallbackBooking = await FindBookingAsync(bookingId);
+                    if (fallbackBooking != null) return Redirect(GetFlightRedirectUrl(fallbackBooking));
+                }
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var booking = await FindBookingAsync(bookingId);
+            if (booking == null)
+            {
+                TempData["Error"] = "Booking associated with this calendar event was not found.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            var googleClientId = _configuration["Authentication:Google:ClientId"];
+            var googleClientSecret = _configuration["Authentication:Google:ClientSecret"];
+            var redirectUri = Url.Action("GoogleCalendarCallback", "Booking", null, Request.Scheme);
+
+            using var client = new HttpClient();
+            string accessToken;
+
+            try
+            {
+                var tokenRequestParams = new Dictionary<string, string>
+                {
+                    { "client_id", googleClientId ?? "" },
+                    { "client_secret", googleClientSecret ?? "" },
+                    { "code", code },
+                    { "grant_type", "authorization_code" },
+                    { "redirect_uri", redirectUri ?? "" }
+                };
+
+                var tokenResponse = await client.PostAsync("https://oauth2.googleapis.com/token", new FormUrlEncodedContent(tokenRequestParams));
+                if (!tokenResponse.IsSuccessStatusCode)
+                {
+                    var errorBody = await tokenResponse.Content.ReadAsStringAsync();
+                    TempData["Error"] = $"Failed to retrieve access token from Google: {errorBody}";
+                    if (isBookingFlow) return Redirect(GetFlightRedirectUrl(booking));
+                    return RedirectToAction(nameof(MyBookings));
+                }
+
+                var tokenJson = await tokenResponse.Content.ReadAsStringAsync();
+                using var tokenDoc = JsonDocument.Parse(tokenJson);
+                accessToken = tokenDoc.RootElement.GetProperty("access_token").GetString() ?? "";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Failed to exchange authorization code: {ex.Message}";
+                if (isBookingFlow) return Redirect(GetFlightRedirectUrl(booking));
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            if (string.IsNullOrEmpty(accessToken))
+            {
+                TempData["Error"] = "Retrieved an empty access token from Google.";
+                if (isBookingFlow) return Redirect(GetFlightRedirectUrl(booking));
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            try
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+                var flight = booking.Flight;
+                var origin = flight.DepartureAirport?.City?.Name ?? flight.DepartureAirport?.IataCode ?? "Origin";
+                var destination = flight.ArrivalAirport?.City?.Name ?? flight.ArrivalAirport?.IataCode ?? "Destination";
+                
+                var title = $"Flight {flight.FlightNumber} — {origin} to {destination}";
+                var location = $"{flight.DepartureAirport?.Name} ({flight.DepartureAirport?.IataCode})";
+                var description = $"Flight details for your upcoming trip:\n\n" +
+                                  $"• Flight: {flight.FlightNumber}\n" +
+                                  $"• Airline: {flight.Airline?.Name ?? "N/A"}\n" +
+                                  $"• Route: {origin} ({flight.DepartureAirport?.IataCode}) → {destination} ({flight.ArrivalAirport?.IataCode})\n" +
+                                  $"• Departure: {flight.DepartureTime:dddd, MMMM dd, yyyy} at {flight.DepartureTime:HH:mm} (Local Time)\n" +
+                                  $"• Arrival: {flight.ArrivalTime:dddd, MMMM dd, yyyy} at {flight.ArrivalTime:HH:mm} (Local Time)\n" +
+                                  $"• Booking Reference: {booking.BookingId}\n" +
+                                  $"• Manage Booking / Check-in: {flight.RedirectURL}";
+
+                var eventPayload = new
+                {
+                    summary = title,
+                    location = location,
+                    description = description,
+                    start = new { dateTime = flight.DepartureTime.ToString("yyyy-MM-ddTHH:mm:ss"), timeZone = "UTC" },
+                    end = new { dateTime = flight.ArrivalTime.ToString("yyyy-MM-ddTHH:mm:ss"), timeZone = "UTC" },
+                    reminders = new
+                    {
+                        useDefault = false,
+                        overrides = new[]
+                        {
+                            new { method = "email", minutes = 1440 }, // 1 day before
+                            new { method = "popup", minutes = 180 }   // 3 hours before
+                        }
+                    }
+                };
+
+                var payloadJson = JsonSerializer.Serialize(eventPayload);
+                var content = new StringContent(payloadJson, System.Text.Encoding.UTF8, "application/json");
+
+                var calendarResponse = await client.PostAsync("https://www.googleapis.com/calendar/v3/calendars/primary/events", content);
+                if (calendarResponse.IsSuccessStatusCode)
+                {
+                    TempData["Message"] = "Flight successfully added to your Google Calendar with reminders!";
+                }
+                else
+                {
+                    var calendarError = await calendarResponse.Content.ReadAsStringAsync();
+                    TempData["Error"] = $"Failed to create Google Calendar event: {calendarError}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error calling Google Calendar API: {ex.Message}";
+            }
+
+            if (isBookingFlow)
+            {
+                return Redirect(GetFlightRedirectUrl(booking));
+            }
+
+            return RedirectToAction(nameof(MyBookings));
+        }
+
+        private string GetFlightRedirectUrl(Booking booking)
+        {
+            var flight = booking.Flight;
+            var finalRedirectUrl = flight.Airline?.Url;
+            if (string.IsNullOrEmpty(finalRedirectUrl))
+            {
+                finalRedirectUrl = flight.RedirectURL;
+            }
+            if (string.IsNullOrEmpty(finalRedirectUrl))
+            {
+                var queryStr = $"flights from {flight.DepartureAirport?.IataCode} to {flight.ArrivalAirport?.IataCode} on {flight.DepartureTime:yyyy-MM-dd}";
+                finalRedirectUrl = $"https://www.google.com/travel/flights?q={Uri.EscapeDataString(queryStr)}";
+            }
+            return finalRedirectUrl;
+        }
+
+        private async Task<Booking?> FindBookingAsync(Guid bookingId)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var bookings = await _bookingRepository.GetBookingsByUserIdAsync(user.Id);
+                return bookings.FirstOrDefault(b => b.BookingId == bookingId);
+            }
+            else
+            {
+                var guestBookings = GetGuestBookingsFromCookie();
+                var gb = guestBookings.FirstOrDefault(b => b.BookingId == bookingId);
+                if (gb == null) return null;
+
+                return new Booking
+                {
+                    BookingId = gb.BookingId,
+                    BookingDate = gb.BookingDate,
+                    Flight = new Flight
+                    {
+                        FlightNumber = gb.FlightNumber,
+                        DepartureTime = gb.DepartureTime,
+                        ArrivalTime = gb.ArrivalTime,
+                        RedirectURL = gb.RedirectUrl,
+                        Airline = new Airline { Name = gb.AirlineName },
+                        DepartureAirport = new Airport
+                        {
+                            IataCode = gb.OriginIata,
+                            City = new City { Name = gb.OriginCityName }
+                        },
+                        ArrivalAirport = new Airport
+                        {
+                            IataCode = gb.DestinationIata,
+                            City = new City { Name = gb.DestinationCityName }
+                        }
+                    }
+                };
+            }
         }
     }
 }

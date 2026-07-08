@@ -18,15 +18,17 @@ namespace SkyScan.Infrastructure.Services
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly IAirportRepository _airportRepository;
+        private readonly IGeocodingService _geocodingService;
         private string? _accessToken;
         private DateTime _tokenExpiration = DateTime.MinValue;
 
-        public AmadeusLocationLookupService(HttpClient httpClient, IConfiguration configuration, IAirportRepository airportRepository)
+        public AmadeusLocationLookupService(HttpClient httpClient, IConfiguration configuration, IAirportRepository airportRepository, IGeocodingService geocodingService)
         {
             _httpClient = httpClient;
             _clientId = configuration["Amadeus:ClientId"] ?? "";
             _clientSecret = configuration["Amadeus:ClientSecret"] ?? "";
             _airportRepository = airportRepository;
+            _geocodingService = geocodingService;
 
             var baseUrl = configuration["Amadeus:BaseUrl"] ?? "https://test.api.amadeus.com/";
             _httpClient.BaseAddress = new Uri(baseUrl);
@@ -101,22 +103,26 @@ namespace SkyScan.Infrastructure.Services
                 Console.WriteLine($"Error finding nearest airport/city via Amadeus: {ex.Message}");
             }
 
-            // Fallback: Use local database reverse-geocoding lookup
+            // Fallback: Use geocoding service + local database lookup
             try
             {
-                var city = await _airportRepository.GetNearestCityByCoordinatesAsync(latitude, longitude);
-                if (city != null)
+                var cityName = await _geocodingService.ReverseGeocodeCityNameAsync(latitude, longitude);
+                if (!string.IsNullOrEmpty(cityName))
                 {
-                    return new NearestCityDto
+                    var city = await _airportRepository.GetCityByNameAsync(cityName);
+                    if (city != null)
                     {
-                        CityId = city.CityId,
-                        Name = city.Name
-                    };
+                        return new NearestCityDto
+                        {
+                            CityId = city.CityId,
+                            Name = city.Name
+                        };
+                    }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in local coordinate reverse-geocoding fallback: {ex.Message}");
+                Console.WriteLine($"Error in coordinate reverse-geocoding fallback: {ex.Message}");
             }
 
             return null;
