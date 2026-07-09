@@ -37,7 +37,6 @@ namespace SkyScan.Presentation.Models
         public string OriginCityName { get; set; } = string.Empty;
         public string DestinationCityName { get; set; } = string.Empty;
         public int SearchCount { get; set; }
-        public double MinPrice { get; set; }
     }
 
     public class MultiCityLegViewModel

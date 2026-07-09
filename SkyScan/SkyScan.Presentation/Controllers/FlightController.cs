@@ -93,8 +93,7 @@ namespace SkyScan.Presentation.Controllers
                     DestinationCityId = s.DestinationCityId,
                     OriginCityName = s.OriginCity.Name,
                     DestinationCityName = s.DestinationCity.Name,
-                    SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount,
-                    MinPrice = 150 + new Random().Next(50, 400)
+                    SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount
                 })
                 .ToList();
 
@@ -116,8 +115,7 @@ namespace SkyScan.Presentation.Controllers
                                 DestinationCityId = dest.CityId,
                                 OriginCityName = origin.Name,
                                 DestinationCityName = dest.Name,
-                                SearchCount = origin.SearchCount + dest.SearchCount,
-                                MinPrice = 190 + new Random().Next(40, 450)
+                                SearchCount = origin.SearchCount + dest.SearchCount
                             });
                         }
                     }
