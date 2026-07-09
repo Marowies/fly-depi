@@ -1,42 +1,36 @@
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SkyScan.Core.Entities;
+using SkyScan.Application.Account.ChangePassword;
+using SkyScan.Application.Account.ConfirmEmail;
+using SkyScan.Application.Account.DisableTwoFactor;
+using SkyScan.Application.Account.EnableTwoFactor;
+using SkyScan.Application.Account.ExternalLoginCallback;
+using SkyScan.Application.Account.ForgotPassword;
+using SkyScan.Application.Account.GetUserProfile;
+using SkyScan.Application.Account.Login;
+using SkyScan.Application.Account.Register;
+using SkyScan.Application.Account.ResendEmailConfirmation;
+using SkyScan.Application.Account.ResetPassword;
+using SkyScan.Application.Account.TwoFactorLogin;
 using SkyScan.Core.Repositories_Interfaces;
-using SkyScan.Core.Services.Interfaces;
 using SkyScan.Infrastructure.Identity;
 using SkyScan.Presentation.Models;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using SkyScan.Infrastructure.Data.Data_Sources;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace SkyScan.Presentation.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserRepository   _userRepository;
-        private readonly IEmailService     _emailService;
-        private readonly UrlEncoder        _urlEncoder;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMediator _mediator;
+        private readonly IUserRepository _userRepository;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly SkyScanDbContext  _context;
 
-        public AccountController(
-            IUserRepository    userRepository,
-            IEmailService      emailService,
-            UrlEncoder         urlEncoder,
-            UserManager<ApplicationUser>  userManager,
-            SignInManager<ApplicationUser> signInManager,
-            SkyScanDbContext   context)
+        public AccountController(IMediator mediator, IUserRepository userRepository, SignInManager<ApplicationUser> signInManager)
         {
+            _mediator = mediator;
             _userRepository = userRepository;
-            _emailService   = emailService;
-            _urlEncoder     = urlEncoder;
-            _userManager    = userManager;
-            _signInManager  = signInManager;
-            _context        = context;
+            _signInManager = signInManager;
         }
 
         // ══════════════════════════════════════════════════════════════════════════
@@ -52,31 +46,13 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = new User
-            {
-                Email = model.Email,
-                Name  = model.Name
-            };
-
-            var result = await _userRepository.RegisterUserAsync(user, model.Password);
-            if (!result.Succeeded)
+            var result = await _mediator.Send(new RegisterCommand { Name = model.Name, Email = model.Email, Password = model.Password });
+            if (!result.Success)
             {
                 foreach (var error in result.Errors)
                     ModelState.AddModelError(string.Empty, error);
                 return View(model);
             }
-
-            // Send email confirmation
-            var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
-            var confirmUrl = Url.Action(
-                nameof(ConfirmEmail), "Account",
-                new { userId = user.Id.ToString(), token = token },
-                protocol: Request.Scheme)!;
-
-            await _emailService.SendEmailAsync(
-                user.Email,
-                "SkyScan – Confirm Your Email",
-                BuildConfirmEmailBody(user.Name, confirmUrl));
 
             return RedirectToAction(nameof(RegisterConfirmation));
         }
@@ -91,14 +67,7 @@ namespace SkyScan.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
-                return RedirectToAction(nameof(ConfirmEmailError));
-
-            var appUser = await _userManager.FindByIdAsync(userId);
-            if (appUser == null)
-                return RedirectToAction(nameof(ConfirmEmailError));
-
-            var result = await _userRepository.ConfirmEmailAsync(appUser.ToDomain(), token);
+            var result = await _mediator.Send(new ConfirmEmailCommand { UserId = userId, Token = token });
             return result.Succeeded
                 ? View("ConfirmEmailSuccess")
                 : View("ConfirmEmailError");
@@ -116,20 +85,7 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userRepository.GetUserByEmailAsync(model.Email);
-            if (user != null)
-            {
-                var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
-                var confirmUrl = Url.Action(
-                    nameof(ConfirmEmail), "Account",
-                    new { userId = user.Id.ToString(), token = token },
-                    protocol: Request.Scheme)!;
-
-                await _emailService.SendEmailAsync(
-                    user.Email,
-                    "SkyScan – Confirm Your Email",
-                    BuildConfirmEmailBody(user.Name, confirmUrl));
-            }
+            await _mediator.Send(new ResendEmailConfirmationCommand { Email = model.Email });
 
             // Always redirect — never reveal whether the email exists
             TempData["Message"] = "If that email is registered, a confirmation link has been sent.";
@@ -154,7 +110,7 @@ namespace SkyScan.Presentation.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (!ModelState.IsValid) return View(model);
 
-            var result = await _userRepository.LoginUserAsync(model.Email, model.Password, model.RememberMe);
+            var result = await _mediator.Send(new LoginCommand { Email = model.Email, Password = model.Password, RememberMe = model.RememberMe });
 
             if (result.Succeeded)
                 return LocalRedirectOrHome(returnUrl);
@@ -197,21 +153,7 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userRepository.GetUserByEmailAsync(model.Email);
-
-            if (user != null)
-            {
-                var token = await _userRepository.GeneratePasswordResetTokenAsync(user);
-                var resetUrl = Url.Action(
-                    nameof(ResetPassword), "Account",
-                    new { email = user.Email, token = token },
-                    protocol: Request.Scheme)!;
-
-                await _emailService.SendEmailAsync(
-                    user.Email,
-                    "SkyScan – Reset Your Password",
-                    BuildResetPasswordBody(user.Name, resetUrl));
-            }
+            await _mediator.Send(new ForgotPasswordCommand { Email = model.Email });
 
             // Always redirect — never reveal whether email is registered
             return RedirectToAction(nameof(ForgotPasswordConfirmation));
@@ -239,11 +181,10 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userRepository.GetUserByEmailAsync(model.Email);
-            if (user == null)
+            var result = await _mediator.Send(new ResetPasswordCommand { Email = model.Email, Token = model.Token, Password = model.Password });
+            if (!result.UserFound)
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
 
-            var result = await _userRepository.ResetPasswordAsync(user, model.Token, model.Password);
             if (!result.Succeeded)
             {
                 foreach (var error in result.Errors)
@@ -266,9 +207,9 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RefreshCookie(string? returnUrl = null)
         {
-            var appUser = await _userManager.GetUserAsync(User);
-            if (appUser != null)
-                await _userRepository.RefreshSignInAsync(appUser.ToDomain());
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser != null)
+                await _userRepository.RefreshSignInAsync(currentUser);
 
             TempData["Message"] = "Session refreshed successfully.";
             return LocalRedirectOrHome(returnUrl);
@@ -281,12 +222,12 @@ namespace SkyScan.Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> TwoFactorLogin(string? returnUrl = null, bool rememberMe = false)
         {
-            var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
-            if (user == null)
+            var status = await _mediator.Send(new TwoFactorLoginStatusQuery());
+            if (!status.HasPendingUser)
             {
                 return RedirectToAction(nameof(Login));
             }
-            ViewData["ReturnUrl"]  = returnUrl;
+            ViewData["ReturnUrl"] = returnUrl;
             ViewData["RememberMe"] = rememberMe;
             return View(new TwoFactorVerifyViewModel { RememberMe = rememberMe });
         }
@@ -297,9 +238,12 @@ namespace SkyScan.Presentation.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var code = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-            var result = await _userRepository.TwoFactorSignInAsync(
-                "Authenticator", code, model.RememberMe, model.RememberMachine);
+            var result = await _mediator.Send(new TwoFactorLoginCommand
+            {
+                Code = model.Code,
+                RememberMe = model.RememberMe,
+                RememberMachine = model.RememberMachine
+            });
 
             if (result.Succeeded)
                 return LocalRedirectOrHome(returnUrl);
@@ -316,24 +260,15 @@ namespace SkyScan.Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> EnableTwoFactor()
         {
-            var appUser = await _userManager.GetUserAsync(User);
-            if (appUser == null) return Challenge();
-            var user = appUser.ToDomain();
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
 
-            var key = await _userRepository.GetAuthenticatorKeyAsync(user);
-            if (string.IsNullOrEmpty(key))
-            {
-                await _userRepository.ResetAuthenticatorKeyAsync(user);
-                key = await _userRepository.GetAuthenticatorKeyAsync(user);
-            }
-
-            var formattedKey = FormatKey(key!);
-            var authenticatorUri = GenerateQrCodeUri(user.Email, key!);
+            var result = await _mediator.Send(new EnableTwoFactorSetupQuery { UserId = currentUser.Id, InitializeIfMissing = true });
 
             return View(new EnableTwoFactorViewModel
             {
-                SharedKey        = formattedKey,
-                AuthenticatorUri = authenticatorUri
+                SharedKey = result.SharedKey,
+                AuthenticatorUri = result.AuthenticatorUri
             });
         }
 
@@ -342,31 +277,26 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EnableTwoFactor(EnableTwoFactorViewModel model)
         {
-            var appUser = await _userManager.GetUserAsync(User);
-            if (appUser == null) return Challenge();
-            var user = appUser.ToDomain();
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
 
             if (!ModelState.IsValid)
             {
-                var key = await _userRepository.GetAuthenticatorKeyAsync(user);
-                model.SharedKey        = FormatKey(key ?? "");
-                model.AuthenticatorUri = GenerateQrCodeUri(user.Email, key ?? "");
+                var setup = await _mediator.Send(new EnableTwoFactorSetupQuery { UserId = currentUser.Id, InitializeIfMissing = false });
+                model.SharedKey = setup.SharedKey;
+                model.AuthenticatorUri = setup.AuthenticatorUri;
                 return View(model);
             }
 
-            var code = model.Code.Replace(" ", string.Empty).Replace("-", string.Empty);
-            var isValid = await _userRepository.VerifyTwoFactorTokenAsync(user, code);
-
-            if (!isValid)
+            var result = await _mediator.Send(new EnableTwoFactorCommand { UserId = currentUser.Id, Code = model.Code });
+            if (!result.Success)
             {
-                ModelState.AddModelError(string.Empty, "Verification code is invalid.");
-                var key = await _userRepository.GetAuthenticatorKeyAsync(user);
-                model.SharedKey        = FormatKey(key ?? "");
-                model.AuthenticatorUri = GenerateQrCodeUri(user.Email, key ?? "");
+                ModelState.AddModelError(string.Empty, result.ErrorMessage ?? "Verification code is invalid.");
+                model.SharedKey = result.SharedKey;
+                model.AuthenticatorUri = result.AuthenticatorUri;
                 return View(model);
             }
 
-            await _userRepository.SetTwoFactorEnabledAsync(user, true);
             TempData["Message"] = "Two-factor authentication has been enabled.";
             return RedirectToAction(nameof(TwoFactorEnabled));
         }
@@ -380,10 +310,10 @@ namespace SkyScan.Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DisableTwoFactor()
         {
-            var appUser = await _userManager.GetUserAsync(User);
-            if (appUser == null) return Challenge();
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
 
-            await _userRepository.SetTwoFactorEnabledAsync(appUser.ToDomain(), false);
+            await _mediator.Send(new DisableTwoFactorCommand { UserId = currentUser.Id });
             TempData["Message"] = "Two-factor authentication has been disabled.";
             return RedirectToAction("Index", "Home");
         }
@@ -392,69 +322,30 @@ namespace SkyScan.Presentation.Controllers
         // GOOGLE EXTERNAL LOGIN
         // ══════════════════════════════════════════════════════════════════════════
 
+        // Not routed through IUserRepository/MediatR: this action's only job is to build an
+        // ASP.NET Core AuthenticationProperties payload and return a Challenge() result —
+        // both are framework-native constructs a MediatR handler cannot return (handlers
+        // return data, not IActionResult). See Phase 2d report Flag F1.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult GoogleLogin(string? returnUrl = null)
         {
             var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Account", new { returnUrl });
-            var properties  = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
             return Challenge(properties, "Google");
         }
 
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null)
         {
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
+            var result = await _mediator.Send(new ExternalLoginCallbackCommand { ReturnUrl = returnUrl });
+            if (!result.Success)
             {
-                TempData["Error"] = "External login failed. Please try again.";
+                TempData["Error"] = result.ErrorMessage;
                 return RedirectToAction(nameof(Login));
             }
 
-            // Sign in if external login already linked
-            var signInResult = await _signInManager.ExternalLoginSignInAsync(
-                info.LoginProvider, info.ProviderKey, isPersistent: false);
-
-            if (signInResult.Succeeded)
-                return LocalRedirectOrHome(returnUrl);
-
-            // Create a new account linked to Google
-            var email = info.Principal.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-            var name  = info.Principal.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value ?? email ?? "User";
-
-            if (email != null)
-            {
-                var user = await _userRepository.GetUserByEmailAsync(email);
-                if (user == null)
-                {
-                    user = new User
-                    {
-                        Email          = email,
-                        Name           = name,
-                        EmailConfirmed = true   // Google emails are already verified
-                    };
-                    var createResult = await _userRepository.RegisterUserAsync(user, Guid.NewGuid().ToString() + "Aa1!");
-                    if (!createResult.Succeeded)
-                    {
-                        TempData["Error"] = "Unable to create account via Google.";
-                        return RedirectToAction(nameof(Login));
-                    }
-                }
-
-                var appUser = await _userManager.FindByIdAsync(user.Id.ToString());
-                if (appUser == null)
-                {
-                    TempData["Error"] = "Unable to complete Google sign-in.";
-                    return RedirectToAction(nameof(Login));
-                }
-
-                await _userManager.AddLoginAsync(appUser, new UserLoginInfo(info.LoginProvider, info.ProviderKey, info.ProviderDisplayName));
-                await _signInManager.SignInAsync(appUser, isPersistent: false);
-                return LocalRedirectOrHome(returnUrl);
-            }
-
-            TempData["Error"] = "Could not retrieve email from Google. Please try again.";
-            return RedirectToAction(nameof(Login));
+            return LocalRedirectOrHome(result.ReturnUrl);
         }
 
         // ══════════════════════════════════════════════════════════════════════════
@@ -472,17 +363,22 @@ namespace SkyScan.Presentation.Controllers
                 return RedirectToAction(nameof(Profile));
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
 
-            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-            if (!result.Succeeded)
+            var result = await _mediator.Send(new ChangePasswordCommand
             {
-                TempData["PasswordError"] = string.Join(" ", result.Errors.Select(e => e.Description));
+                UserId = currentUser.Id,
+                OldPassword = model.OldPassword,
+                NewPassword = model.NewPassword
+            });
+
+            if (!result.Success)
+            {
+                TempData["PasswordError"] = result.ErrorMessage;
                 return RedirectToAction(nameof(Profile));
             }
 
-            await _signInManager.RefreshSignInAsync(user);
             TempData["PasswordSuccess"] = "Your password has been changed successfully.";
             return RedirectToAction(nameof(Profile));
         }
@@ -495,31 +391,11 @@ namespace SkyScan.Presentation.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null) return Challenge();
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
 
-            var fullUser = await _context.Users
-                .Include(u => u.Searches)
-                    .ThenInclude(s => s.OriginCity)
-                .Include(u => u.Searches)
-                    .ThenInclude(s => s.DestinationCity)
-                .Include(u => u.PriceAlerts)
-                    .ThenInclude(pa => pa.Trip)
-                        .ThenInclude(t => t.Flights)
-                            .ThenInclude(f => f.Airline)
-                .Include(u => u.PriceAlerts)
-                    .ThenInclude(pa => pa.Trip)
-                        .ThenInclude(t => t.Flights)
-                            .ThenInclude(f => f.DepartureAirport)
-                                .ThenInclude(a => a.City)
-                .Include(u => u.PriceAlerts)
-                    .ThenInclude(pa => pa.Trip)
-                        .ThenInclude(t => t.Flights)
-                            .ThenInclude(f => f.ArrivalAirport)
-                                .ThenInclude(a => a.City)
-                .FirstOrDefaultAsync(u => u.Id == user.Id);
-
-            return View(fullUser);
+            var result = await _mediator.Send(new GetUserProfileQuery { UserId = currentUser.Id });
+            return View(result);
         }
 
         // ══════════════════════════════════════════════════════════════════════════
@@ -539,51 +415,6 @@ namespace SkyScan.Presentation.Controllers
                 return Redirect(returnUrl);
             return RedirectToAction("Index", "Home");
         }
-
-        private static string FormatKey(string unformattedKey)
-        {
-            var result = new System.Text.StringBuilder();
-            int currentPosition = 0;
-            while (currentPosition + 4 < unformattedKey.Length)
-            {
-                result.Append(unformattedKey.AsSpan(currentPosition, 4)).Append(' ');
-                currentPosition += 4;
-            }
-            if (currentPosition < unformattedKey.Length)
-                result.Append(unformattedKey.AsSpan(currentPosition));
-            return result.ToString().ToUpperInvariant();
-        }
-
-        private string GenerateQrCodeUri(string email, string unformattedKey)
-        {
-            const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
-            return string.Format(
-                AuthenticatorUriFormat,
-                _urlEncoder.Encode("SkyScan"),
-                _urlEncoder.Encode(email),
-                unformattedKey);
-        }
-
-        // ── Email template helpers ────────────────────────────────────────────────
-
-        private static string BuildConfirmEmailBody(string name, string confirmUrl) => $@"
-        <div style=""font-family:Manrope,Inter,sans-serif;background:#0b1229;color:#dce1ff;padding:40px;border-radius:16px;max-width:520px;margin:auto"">
-          <h2 style=""color:#bfc5e4;margin-bottom:8px"">Welcome to SkyScan, {System.Net.WebUtility.HtmlEncode(name)}!</h2>
-          <p style=""color:#bfc5e4cc;line-height:1.6"">Please confirm your email address by clicking the button below.</p>
-          <a href=""{confirmUrl}"" style=""display:inline-block;margin:24px 0;padding:14px 32px;background:#bfc5e4;color:#0b1229;font-weight:700;border-radius:12px;text-decoration:none;letter-spacing:.05em"">
-            Confirm Email
-          </a>
-          <p style=""font-size:12px;color:#bfc5e4aa"">If you did not create a SkyScan account, please ignore this email.</p>
-        </div>";
-
-        private static string BuildResetPasswordBody(string name, string resetUrl) => $@"
-        <div style=""font-family:Manrope,Inter,sans-serif;background:#0b1229;color:#dce1ff;padding:40px;border-radius:16px;max-width:520px;margin:auto"">
-          <h2 style=""color:#bfc5e4;margin-bottom:8px"">Reset Your Password</h2>
-          <p style=""color:#bfc5e4cc;line-height:1.6"">Hi {System.Net.WebUtility.HtmlEncode(name)}, we received a request to reset your SkyScan password.</p>
-          <a href=""{resetUrl}"" style=""display:inline-block;margin:24px 0;padding:14px 32px;background:#dac76a;color:#0b1229;font-weight:700;border-radius:12px;text-decoration:none;letter-spacing:.05em"">
-            Reset Password
-          </a>
-          <p style=""font-size:12px;color:#bfc5e4aa"">This link expires in 1 hour. If you didn't request a reset, please ignore this email.</p>
-        </div>";
     }
 }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        

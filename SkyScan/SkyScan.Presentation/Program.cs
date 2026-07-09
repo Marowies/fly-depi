@@ -34,6 +34,7 @@ namespace SkyScan.Presentation
             builder.Services.AddScoped<SkyScan.Presentation.Services.ILanguageService, SkyScan.Presentation.Services.LanguageService>();
             builder.Services.AddScoped<ICookieWriter, SkyScan.Presentation.Services.CookieWriter>();
             builder.Services.AddScoped<ICurrentLanguageProvider, SkyScan.Presentation.Services.CurrentLanguageProvider>();
+            builder.Services.AddScoped<IUrlBuilder, SkyScan.Presentation.Services.UrlBuilder>();
             builder.Services.AddScoped<SkyScan.Application.Flights.Common.AirportDropdownCache>();
 
             // ── CQRS (MediatR) + Validation Pipeline ─────────────────────────────

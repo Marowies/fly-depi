@@ -3,6 +3,7 @@ using SkyScan.Core.Entities;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Identity;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SkyScan.Infrastructure.Data.Repositories_Implementations
@@ -48,6 +49,12 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<User?> GetUserByEmailAsync(string email)
             => (await _userManager.FindByEmailAsync(email))?.ToDomain();
 
+        public async Task<User?> GetUserByIdAsync(Guid id)
+            => (await _userManager.FindByIdAsync(id.ToString()))?.ToDomain();
+
+        public async Task<User?> GetCurrentUserAsync(ClaimsPrincipal principal)
+            => (await _userManager.GetUserAsync(principal))?.ToDomain();
+
         // ── Email Confirmation ────────────────────────────────────────────────────
 
         public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
@@ -63,6 +70,16 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
         public async Task<AuthResult> ResetPasswordAsync(User user, string token, string newPassword)
             => (await _userManager.ResetPasswordAsync(await RequireAppUserAsync(user), token, newPassword)).ToAuthResult();
+
+        public async Task<AuthResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
+        {
+            var appUser = await RequireAppUserAsync(user);
+            var result = await _userManager.ChangePasswordAsync(appUser, oldPassword, newPassword);
+            if (!result.Succeeded) return result.ToAuthResult();
+
+            await _signInManager.RefreshSignInAsync(appUser);
+            return AuthResult.Success();
+        }
 
         // ── Two-Factor Authentication ─────────────────────────────────────────────
 
@@ -87,20 +104,7 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<AuthResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberMachine)
             => (await _signInManager.TwoFactorSignInAsync(provider, code, rememberMe, rememberMachine)).ToAuthResult();
 
-        // ── Cookie Refresh ────────────────────────────────────────────────────────
+        public async Task<User?> GetTwoFactorAuthenticationUserAsync()
+            => (await _signInManager.GetTwoFactorAuthenticationUserAsync())?.ToDomain();
 
-        public async Task RefreshSignInAsync(User user)
-            => await _signInManager.RefreshSignInAsync(await RequireAppUserAsync(user));
-
-        // ── Helpers ───────────────────────────────────────────────────────────────
-
-        /// <summary>
-        /// Core only ever holds the plain domain User, so every Identity-native operation
-        /// re-resolves the real ApplicationUser by Id first. One extra lookup per call — the
-        /// cost of keeping Identity out of Core.
-        /// </summary>
-        private async Task<ApplicationUser> RequireAppUserAsync(User user)
-            => await _userManager.FindByIdAsync(user.Id.ToString())
-                ?? throw new InvalidOperationException($"User '{user.Id}' was not found.");
-    }
-}
+        // ── External (Google) Login ───────────────────────────────────

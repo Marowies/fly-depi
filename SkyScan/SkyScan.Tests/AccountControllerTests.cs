@@ -1,55 +1,52 @@
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
-using SkyScan.Core.Entities;
+using SkyScan.Application.Account.ConfirmEmail;
+using SkyScan.Application.Account.ForgotPassword;
+using SkyScan.Application.Account.Login;
+using SkyScan.Application.Account.Register;
 using SkyScan.Core.Repositories_Interfaces;
-using SkyScan.Core.Services.Interfaces;
 using SkyScan.Infrastructure.Identity;
 using SkyScan.Presentation.Controllers;
 using SkyScan.Presentation.Models;
-using System.Text.Encodings.Web;
-using SkyScan.Infrastructure.Data.Data_Sources;
 using Xunit;
 
 namespace SkyScan.Tests
 {
+    // Rewritten for Phase 2d: AccountController is now a thin controller over IMediator +
+    // IUserRepository (Identity-current-user lookups) + SignInManager (GoogleLogin only).
+    // These tests exercise the controller's own branching (ModelState guards, result-to-
+    // IActionResult mapping) against a mocked IMediator — the actual business logic these
+    // tests used to exercise directly now lives in, and should be tested via, the individual
+    // Command/Query Handlers (RegisterCommandHandler, LoginCommandHandler, etc.) in
+    // SkyScan.Application. See Phase 2d report §5.2 Flag F3.
     public class AccountControllerTests
     {
+        private readonly Mock<IMediator> _mockMediator;
         private readonly Mock<IUserRepository> _mockUserRepo;
-        private readonly Mock<IEmailService> _mockEmailService;
-        private readonly Mock<UrlEncoder> _mockUrlEncoder;
-        private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
         private readonly Mock<SignInManager<ApplicationUser>> _mockSignInManager;
         private readonly AccountController _controller;
 
         public AccountControllerTests()
         {
+            _mockMediator = new Mock<IMediator>();
             _mockUserRepo = new Mock<IUserRepository>();
-            _mockEmailService = new Mock<IEmailService>();
-            _mockUrlEncoder = new Mock<UrlEncoder>();
 
-            // Mocking UserManager
+            // Mocking SignInManager (still a direct controller dependency for GoogleLogin only)
             var store = new Mock<IUserStore<ApplicationUser>>();
-            _mockUserManager = new Mock<UserManager<ApplicationUser>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
-
-            // Mocking SignInManager
+            var mockUserManager = new Mock<UserManager<ApplicationUser>>(store.Object, null!, null!, null!, null!, null!, null!, null!, null!);
             var contextAccessor = new Mock<IHttpContextAccessor>();
             var claimsFactory = new Mock<IUserClaimsPrincipalFactory<ApplicationUser>>();
             _mockSignInManager = new Mock<SignInManager<ApplicationUser>>(
-                _mockUserManager.Object,
+                mockUserManager.Object,
                 contextAccessor.Object,
                 claimsFactory.Object,
                 null!, null!, null!, null!);
 
-            _controller = new AccountController(
-                _mockUserRepo.Object,
-                _mockEmailService.Object,
-                _mockUrlEncoder.Object,
-                _mockUserManager.Object,
-                _mockSignInManager.Object,
-                new Mock<SkyScanDbContext>().Object);
+            _controller = new AccountController(_mockMediator.Object, _mockUserRepo.Object, _mockSignInManager.Object);
 
             _controller.ControllerContext = new ControllerContext
             {
@@ -82,10 +79,8 @@ namespace SkyScan.Tests
         {
             // Arrange
             var model = new RegisterViewModel { Email = "test@example.com", Password = "Password123!", Name = "Test User" };
-            _mockUserRepo.Setup(r => r.RegisterUserAsync(It.IsAny<User>(), It.IsAny<string>()))
-                .ReturnsAsync(AuthResult.Success());
-            _mockUserRepo.Setup(r => r.GenerateEmailConfirmationTokenAsync(It.IsAny<User>()))
-                .ReturnsAsync("token");
+            _mockMediator.Setup(m => m.Send(It.IsAny<RegisterCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new RegisterResult { Success = true });
 
             // Act
             var result = await _controller.Register(model);
@@ -93,7 +88,9 @@ namespace SkyScan.Tests
             // Assert
             var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("RegisterConfirmation", redirectResult.ActionName);
-            _mockEmailService.Verify(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _mockMediator.Verify(m => m.Send(
+                It.Is<RegisterCommand>(c => c.Email == model.Email && c.Name == model.Name),
+                It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Fact]
@@ -116,8 +113,8 @@ namespace SkyScan.Tests
         {
             // Arrange
             var model = new LoginViewModel { Email = "test@example.com", Password = "Password123!" };
-            _mockUserRepo.Setup(r => r.LoginUserAsync(model.Email, model.Password, model.RememberMe))
-                .ReturnsAsync(AuthResult.Success());
+            _mockMediator.Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new LoginResult { Succeeded = true });
 
             // Act
             var result = await _controller.Login(model);
@@ -132,12 +129,12 @@ namespace SkyScan.Tests
         public async Task ConfirmEmail_ReturnsSuccessView_WhenSuccessful()
         {
             // Arrange
-            string userId = "user123";
+            string userId = Guid.NewGuid().ToString();
             string token = "token123";
-            var appUser = new ApplicationUser { Id = Guid.NewGuid(), Name = "Test", Email = "test@example.com" };
-            _mockUserManager.Setup(m => m.FindByIdAsync(userId)).ReturnsAsync(appUser);
-            _mockUserRepo.Setup(r => r.ConfirmEmailAsync(It.Is<User>(u => u.Id == appUser.Id), token))
-                .ReturnsAsync(AuthResult.Success());
+            _mockMediator.Setup(m => m.Send(
+                    It.Is<ConfirmEmailCommand>(c => c.UserId == userId && c.Token == token),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ConfirmEmailResult { Succeeded = true });
 
             // Act
             var result = await _controller.ConfirmEmail(userId, token);
@@ -152,9 +149,8 @@ namespace SkyScan.Tests
         {
             // Arrange
             var model = new ForgotPasswordViewModel { Email = "test@example.com" };
-            var user = new User { Email = model.Email, Name = "Test" };
-            _mockUserRepo.Setup(r => r.GetUserByEmailAsync(model.Email)).ReturnsAsync(user);
-            _mockUserRepo.Setup(r => r.GeneratePasswordResetTokenAsync(user)).ReturnsAsync("token");
+            _mockMediator.Setup(m => m.Send(It.IsAny<ForgotPasswordCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
 
             // Act
             var result = await _controller.ForgotPassword(model);
@@ -162,7 +158,5 @@ namespace SkyScan.Tests
             // Assert
             var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("ForgotPasswordConfirmation", redirectResult.ActionName);
-            _mockEmailService.Verify(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        }
-    }
-}
+            _mockMediator.Verify(m => m.Send(
+                It.Is<Forgot
