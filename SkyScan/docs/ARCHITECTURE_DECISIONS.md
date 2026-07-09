@@ -60,3 +60,29 @@ something HTTP-specific (cookies, headers, etc.) should get a small abstraction 
 one rather than a direct ASP.NET Core dependency. Don't grow `ICookieWriter` into a
 general-purpose `IHttpContext` wrapper — add a new, narrowly-scoped interface per actual
 need instead.
+
+---
+
+## 2026-07-09 — Display formatting stays in views; only stateful decisions get a Handler
+
+**Decision:** Calls like `ICurrencyConversionService.GetCurrencySymbolAsync(...)` made
+directly from Razor views (`Views/Flight/Results.cshtml`, `Views/Account/Profile.cshtml`)
+are left as-is — they are not pulled into a Query as part of the CQRS retrofit. This is
+distinct from `SetCurrencyCommand` (Phase 2a), which *is* a Handler.
+
+**Why:** The dividing line isn't "does this call a service" — it's whether the call
+changes or persists anything. `GetCurrencySymbolAsync` and `ConvertAsync` are pure,
+read-only formatting: given the currency the user already selected (via the
+`SelectedCurrency` cookie, itself set through `SetCurrencyCommand`), compute a symbol or
+converted amount to render. Nothing is written, no decision is made that outlives the
+response, and there's no orchestration beyond one lookup. That's a presentation concern —
+the view deciding how to *display* a number — not a business operation. `SetCurrencyCommand`
+is different: it's the one place that actually changes the user's stored preference, which
+is exactly the kind of state-changing, side-effecting action the retrofit criteria target.
+
+**How to apply:** When deciding whether a piece of view-level logic belongs in a
+Query/Handler, ask whether it reads already-decided state to format output (leave in the
+view) or whether it decides/persists something new (convert). Don't treat "it calls an
+Application-layer service" as sufficient reason to convert — plenty of Application
+services exist precisely so views and controllers can call read-only formatting logic
+without duplicating it, and that's fine left where it is.
