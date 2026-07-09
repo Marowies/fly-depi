@@ -1,22 +1,22 @@
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using SkyScan.Application.Languages.SetLanguage;
 
 namespace SkyScan.Presentation.Controllers
 {
     public class LanguageController : Controller
     {
-        [HttpGet]
-        public IActionResult Set(string culture, string returnUrl)
+        private readonly IMediator _mediator;
+
+        public LanguageController(IMediator mediator)
         {
-            if (culture == "ar" || culture == "en")
-            {
-                Response.Cookies.Append("Language", culture, new CookieOptions
-                {
-                    Expires = DateTimeOffset.UtcNow.AddYears(1),
-                    Path = "/"
-                });
-            }
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Set(string culture, string returnUrl)
+        {
+            await _mediator.Send(new SetLanguageCommand(culture));
 
             if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
