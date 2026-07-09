@@ -14,5 +14,7 @@ namespace SkyScan.Core.Repositories_Interfaces
         Task<IEnumerable<PriceAlert>> GetAllWithDetailsAsync();
 
         Task<Trip> EnsureTripExistsForFlightAsync(Guid flightId, decimal price);
+
+        Task DeleteUserAlertsAsync(Guid userId);
     }
 }

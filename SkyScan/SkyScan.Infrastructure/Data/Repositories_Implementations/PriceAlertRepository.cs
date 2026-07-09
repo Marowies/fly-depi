@@ -81,5 +81,14 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
             return trip;
         }
+        public async Task DeleteUserAlertsAsync(Guid userId)
+        {
+            var alerts = await _dbSet.Where(a => a.UserId == userId).ToListAsync();
+            if (alerts.Any())
+            {
+                _dbSet.RemoveRange(alerts);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

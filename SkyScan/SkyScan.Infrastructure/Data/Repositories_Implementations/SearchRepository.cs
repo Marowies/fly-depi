@@ -107,5 +107,14 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
             await _context.SaveChangesAsync();
         }
+        public async Task AnonymizeUserSearchesAsync(Guid userId)
+        {
+            var searches = await _dbSet.Where(s => s.UserId == userId).ToListAsync();
+            foreach (var search in searches)
+            {
+                search.UserId = null;
+            }
+            await _context.SaveChangesAsync();
+        }
     }
 }

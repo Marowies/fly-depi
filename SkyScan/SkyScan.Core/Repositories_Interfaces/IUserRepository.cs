@@ -19,6 +19,8 @@ namespace SkyScan.Core.Repositories_Interfaces
         /// so this stays framework-agnostic the same way AuthResult does.</summary>
         Task<User?> GetCurrentUserAsync(ClaimsPrincipal principal);
 
+        Task<AuthResult> SoftDeleteAccountAsync(User user);
+
         // Email Confirmation
         Task<string> GenerateEmailConfirmationTokenAsync(User user);
         Task<AuthResult> ConfirmEmailAsync(User user, string token);

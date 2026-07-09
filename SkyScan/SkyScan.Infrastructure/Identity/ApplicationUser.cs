@@ -19,5 +19,8 @@ namespace SkyScan.Infrastructure.Identity
 
         public List<Search> Searches { get; set; } = new List<Search>();
         public List<PriceAlert> PriceAlerts { get; set; } = new List<PriceAlert>();
+
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedAtUtc { get; set; }
     }
 }

@@ -6,6 +6,8 @@ namespace SkyScan.Core.Entities
 {
     public class Search
     {
+        [Key]
+        public Guid SearchId { get; set; } = Guid.NewGuid();
         
         public DateTime TimeStamp { get; set; }
         public TripType Type { get; set; }
@@ -16,6 +18,6 @@ namespace SkyScan.Core.Entities
         public City OriginCity { get; set; }
         public City DestinationCity { get; set; }
 
-        public Guid UserId { get; set; }
+        public Guid? UserId { get; set; }
     }
 }

@@ -14,5 +14,7 @@ namespace SkyScan.Core.Repositories_Interfaces
 
         /// <summary>Upserts the user's search for this route (refreshing TimeStamp/date/type if it already exists) and evicts the oldest beyond <paramref name="maxPerUser"/> routes.</summary>
         Task LogSearchAsync(Guid userId, Guid originCityId, Guid destinationCityId, DateTime departureDate, TripType type, int maxPerUser = 5);
+
+        Task AnonymizeUserSearchesAsync(Guid userId);
     }
 }

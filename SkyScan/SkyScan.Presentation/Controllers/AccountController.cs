@@ -399,6 +399,41 @@ namespace SkyScan.Presentation.Controllers
         }
 
         // ══════════════════════════════════════════════════════════════════════════
+        // DELETE ACCOUNT
+        // ══════════════════════════════════════════════════════════════════════════
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        [Microsoft.AspNetCore.RateLimiting.EnableRateLimiting("BookingPolicy")]
+        public async Task<IActionResult> DeleteAccount(DeleteAccountViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["DeleteError"] = "Current password is required.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            var currentUser = await _userRepository.GetCurrentUserAsync(User);
+            if (currentUser == null) return Challenge();
+
+            var result = await _mediator.Send(new SkyScan.Application.Account.DeleteAccount.DeleteAccountCommand 
+            { 
+                User = currentUser, 
+                Password = model.Password 
+            });
+
+            if (!result.Succeeded)
+            {
+                TempData["DeleteError"] = result.Errors.FirstOrDefault() ?? "Unable to delete account.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            TempData["Message"] = "Your account has been deleted.";
+            return RedirectToAction("Index", "Home");
+        }
+
+        // ══════════════════════════════════════════════════════════════════════════
         // ACCESS DENIED
         // ══════════════════════════════════════════════════════════════════════════
 

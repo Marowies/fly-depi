@@ -41,7 +41,14 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         }
 
         public async Task<AuthResult> LoginUserAsync(string email, string password, bool rememberMe)
-            => (await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true)).ToAuthResult();
+        {
+            var appUser = await _userManager.FindByEmailAsync(email);
+            if (appUser != null && appUser.IsDeleted)
+            {
+                return AuthResult.Failed("This account has been deleted.");
+            }
+            return (await _signInManager.PasswordSignInAsync(email, password, rememberMe, lockoutOnFailure: true)).ToAuthResult();
+        }
 
         public async Task LogoutUserAsync()
             => await _signInManager.SignOutAsync();
@@ -149,6 +156,27 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
 
         public async Task RefreshSignInAsync(User user)
             => await _signInManager.RefreshSignInAsync(await RequireAppUserAsync(user));
+
+        // ── Account Deletion ──────────────────────────────────────────────────────
+
+        public async Task<AuthResult> SoftDeleteAccountAsync(User user)
+        {
+            var appUser = await RequireAppUserAsync(user);
+            appUser.IsDeleted = true;
+            appUser.DeletedAtUtc = DateTime.UtcNow;
+
+            var logins = await _userManager.GetLoginsAsync(appUser);
+            foreach (var login in logins)
+            {
+                await _userManager.RemoveLoginAsync(appUser, login.LoginProvider, login.ProviderKey);
+            }
+
+            var updateResult = await _userManager.UpdateAsync(appUser);
+            if (!updateResult.Succeeded) return updateResult.ToAuthResult();
+
+            await _signInManager.SignOutAsync();
+            return AuthResult.Success();
+        }
 
         // ── Helpers ───────────────────────────────────────────────────────────────
 

@@ -123,6 +123,7 @@ namespace SkyScan.Presentation
 
             // ── Price Alert Notifications ────────────────────────────────────────
             builder.Services.AddHostedService<SkyScan.Infrastructure.Workers.PriceAlertCheckWorker>();
+            builder.Services.AddHostedService<SkyScan.Infrastructure.Workers.AccountPurgeWorker>();
 
             // ── Rate Limiting ────────────────────────────────────────────────────
             builder.Services.AddRateLimiter(options =>

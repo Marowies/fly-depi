@@ -123,6 +123,34 @@
                         </form>
                     </div>
                 </div>
+                <!-- Delete Account -->
+                <div class="glass-panel p-8 rounded-xl border border-border-light space-y-6">
+                    <button type="button" onclick="toggleDeleteAccount()" class="w-full flex items-center justify-between font-headline text-lg font-bold text-red-500 border-b border-border-light pb-3 focus:outline-none text-left cursor-pointer bg-transparent">
+                        <span>@Lang.T("Delete Account")</span>
+                        <span id="deleteAccountArrow" class="material-symbols-outlined transition-transform duration-300 transform">expand_more</span>
+                    </button>
+                    
+                    <div id="deleteAccountContent" class="hidden space-y-6 transition-all duration-300">
+                        <p class="text-xs text-text-muted leading-relaxed">@Lang.T("Are you sure you want to delete your account? This action cannot be undone and your bookings will be purged after 30 days.")</p>
+
+                        @if (TempData["DeleteError"] != null)
+                        {
+                            <div class="text-red-400 text-xs font-semibold bg-red-950/25 p-3 rounded-lg border border-red-500/25">
+                                @TempData["DeleteError"]
+                            </div>
+                        }
+
+                        <form asp-controller="Account" asp-action="DeleteAccount" method="post" class="space-y-4">
+                            <div>
+                                <label class="block text-[10px] text-text-muted uppercase tracking-widest mb-1">@Lang.T("Current Password")</label>
+                                <input name="Password" type="password" required class="w-full bg-surface border border-border-light p-3 rounded-xl text-text-light font-body text-xs focus:border-accent outline-none transition-all" />
+                            </div>
+                            <button type="submit" class="w-full py-3 bg-red-500 hover:bg-red-400 text-background rounded-xl text-xs font-bold uppercase tracking-widest transition-all cursor-pointer">
+                                @Lang.T("Delete My Account")
+                            </button>
+                        </form>
+                    </div>
+                </div>
             </section>
 
             <!-- Favorites and Search Log Dashboard (8 cols) -->
@@ -290,11 +318,29 @@
             }
         }
 
+        function toggleDeleteAccount() {
+            const content = document.getElementById('deleteAccountContent');
+            const arrow = document.getElementById('deleteAccountArrow');
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotate-180');
+            }
+        }
+
         // Auto-expand if there is an active feedback message
         @if (TempData["PasswordSuccess"] != null || TempData["PasswordError"] != null)
         {
             <text>
             toggleResetPassword();
+            </text>
+        }
+        @if (TempData["DeleteError"] != null)
+        {
+            <text>
+            toggleDeleteAccount();
             </text>
         }
     </script>
