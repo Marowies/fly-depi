@@ -159,4 +159,8 @@ namespace SkyScan.Tests
             var redirectResult = Assert.IsType<RedirectToActionResult>(result);
             Assert.Equal("ForgotPasswordConfirmation", redirectResult.ActionName);
             _mockMediator.Verify(m => m.Send(
-                It.Is<Forgot
+                It.Is<ForgotPasswordCommand>(c => c.Email == model.Email),
+                It.IsAny<CancellationToken>()), Times.Once);
+        }
+    }
+}

@@ -121,3 +121,8 @@ namespace SkyScan.Application.Flights.SearchFlights
                 DestinationCityId = finalDestId.Value,
                 DepartureDate = request.DepartureDate,
                 TripType = request.TripType,
+                ReturnDate = dto.ReturnDate
+            };
+        }
+    }
+}

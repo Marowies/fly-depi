@@ -107,4 +107,58 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
         public async Task<User?> GetTwoFactorAuthenticationUserAsync()
             => (await _signInManager.GetTwoFactorAuthenticationUserAsync())?.ToDomain();
 
-        // ── External (Google) Login ───────────────────────────────────
+        // ── External (Google) Login ───────────────────────────────────────────────
+
+        public async Task<ExternalLoginData> GetExternalLoginInfoAsync()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null) return ExternalLoginData.NotFound();
+
+            var email = info.Principal.FindFirst(ClaimTypes.Email)?.Value;
+            var name = info.Principal.FindFirst(ClaimTypes.Name)?.Value ?? email ?? "User";
+
+            return new ExternalLoginData
+            {
+                Found = true,
+                LoginProvider = info.LoginProvider,
+                ProviderKey = info.ProviderKey,
+                ProviderDisplayName = info.ProviderDisplayName,
+                Email = email,
+                Name = name
+            };
+        }
+
+        public async Task<AuthResult> ExternalLoginSignInAsync(string loginProvider, string providerKey)
+            => (await _signInManager.ExternalLoginSignInAsync(loginProvider, providerKey, isPersistent: false)).ToAuthResult();
+
+        public async Task<AuthResult> LinkExternalLoginAsync(User user, string loginProvider, string providerKey, string? providerDisplayName)
+        {
+            // Deliberately a non-throwing lookup (unlike RequireAppUserAsync) so a resolve
+            // failure here surfaces as a graceful sign-in error instead of an unhandled
+            // exception hitting GlobalExceptionMiddleware — matches the original controller's
+            // explicit "Unable to complete Google sign-in." branch.
+            var appUser = await _userManager.FindByIdAsync(user.Id.ToString());
+            if (appUser == null) return AuthResult.Failed("Unable to complete Google sign-in.");
+
+            await _userManager.AddLoginAsync(appUser, new UserLoginInfo(loginProvider, providerKey, providerDisplayName));
+            await _signInManager.SignInAsync(appUser, isPersistent: false);
+            return AuthResult.Success();
+        }
+
+        // ── Cookie Refresh ────────────────────────────────────────────────────────
+
+        public async Task RefreshSignInAsync(User user)
+            => await _signInManager.RefreshSignInAsync(await RequireAppUserAsync(user));
+
+        // ── Helpers ───────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Core only ever holds the plain domain User, so every Identity-native operation
+        /// re-resolves the real ApplicationUser by Id first. One extra lookup per call — the
+        /// cost of keeping Identity out of Core.
+        /// </summary>
+        private async Task<ApplicationUser> RequireAppUserAsync(User user)
+            => await _userManager.FindByIdAsync(user.Id.ToString())
+                ?? throw new InvalidOperationException($"User '{user.Id}' was not found.");
+    }
+}
