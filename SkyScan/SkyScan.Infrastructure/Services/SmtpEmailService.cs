@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Core.Services.Interfaces;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;

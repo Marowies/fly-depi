@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace SkyScan.Core.Repositories_Interfaces
+namespace SkyScan.Core.Services.Interfaces
 {
     public interface IEmailService
     {

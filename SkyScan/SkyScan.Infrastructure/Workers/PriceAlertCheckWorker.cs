@@ -7,6 +7,7 @@ using SkyScan.Application.Interfaces;
 using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
 using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Core.Services.Interfaces;
 using SkyScan.Infrastructure.Identity;
 using System;
 using System.Linq;

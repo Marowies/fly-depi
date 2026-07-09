@@ -3,9 +3,9 @@ using SkyScan.Infrastructure.Data.Data_Sources;
 using SkyScan.Application.Interfaces;
 using SkyScan.Infrastructure.Services;
 using SkyScan.Application.Services;
-using SkyScan.Application.Mappings;
 using SkyScan.Presentation.Middlewares;
 using SkyScan.Core.Repositories_Interfaces;
+using SkyScan.Core.Services.Interfaces;
 using SkyScan.Infrastructure.Data.Repositories_Implementations;
 using Microsoft.AspNetCore.Identity;
 using SkyScan.Core.Entities;
@@ -31,9 +31,6 @@ namespace SkyScan.Presentation
             // ── Database ──────────────────────────────────────────────────────────
             builder.Services.AddDbContext<SkyScanDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SmarterASPNetConnection")));
-
-            // ── AutoMapper ────────────────────────────────────────────────────────
-            builder.Services.AddAutoMapper(cfg => cfg.AddProfile<MappingProfile>());
 
             // ── Identity ──────────────────────────────────────────────────────────
             builder.Services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>

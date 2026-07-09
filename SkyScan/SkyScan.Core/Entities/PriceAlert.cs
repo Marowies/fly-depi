@@ -1,6 +1,5 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SkyScan.Core.Entities
 {
@@ -16,8 +15,9 @@ namespace SkyScan.Core.Entities
         public Guid TripId { get; set; }
         public Trip Trip { get; set; }
 
+        // Column type (decimal(18,2)) is configured in PriceAlertConfiguration, not here —
+        // storage metadata belongs in the Fluent API configuration, not on the domain entity.
         [Required]
-        [Column(TypeName = "decimal(18,2)")]
         [Range(0, 1000000)]
         public decimal TargetPrice { get; set; }
     }
