@@ -1,22 +1,22 @@
-using Microsoft.AspNetCore.Http;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using SkyScan.Application.Currency.SetCurrency;
 
 namespace SkyScan.Presentation.Controllers
 {
     public class CurrencyController : Controller
     {
-        [HttpGet]
-        public IActionResult Set(string code)
+        private readonly IMediator _mediator;
+
+        public CurrencyController(IMediator mediator)
         {
-            if (!string.IsNullOrEmpty(code))
-            {
-                Response.Cookies.Append(
-                    "SelectedCurrency",
-                    code.ToUpper(),
-                    new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
-                );
-            }
+            _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Set(string code)
+        {
+            await _mediator.Send(new SetCurrencyCommand(code));
 
             var referer = Request.Headers["Referer"].ToString();
             if (!string.IsNullOrEmpty(referer))
