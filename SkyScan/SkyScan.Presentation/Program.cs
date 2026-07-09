@@ -10,6 +10,9 @@ using SkyScan.Infrastructure.Data.Repositories_Implementations;
 using Microsoft.AspNetCore.Identity;
 using SkyScan.Core.Entities;
 using SkyScan.Infrastructure.Identity;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 namespace SkyScan.Presentation
 {
@@ -109,6 +112,37 @@ namespace SkyScan.Presentation
             // ── Price Alert Notifications ────────────────────────────────────────
             builder.Services.AddHostedService<SkyScan.Infrastructure.Workers.PriceAlertCheckWorker>();
 
+            // ── Rate Limiting ────────────────────────────────────────────────────
+            builder.Services.AddRateLimiter(options =>
+            {
+                options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+
+                // 30 search requests per minute per client IP address
+                options.AddPolicy("SearchPolicy", context =>
+                {
+                    var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+                    return RateLimitPartition.GetFixedWindowLimiter(ipAddress, _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 30,
+                        Window = TimeSpan.FromMinutes(1),
+                        QueueLimit = 0
+                    });
+                });
+
+                // 10 transactional/booking actions capacity with 2 tokens replenished every 30s per client IP address
+                options.AddPolicy("BookingPolicy", context =>
+                {
+                    var ipAddress = context.Connection.RemoteIpAddress?.ToString() ?? "anonymous";
+                    return RateLimitPartition.GetTokenBucketLimiter(ipAddress, _ => new TokenBucketRateLimiterOptions
+                    {
+                        TokenLimit = 10,
+                        ReplenishmentPeriod = TimeSpan.FromSeconds(30),
+                        TokensPerPeriod = 2,
+                        QueueLimit = 0
+                    });
+                });
+            });
+
             // ─────────────────────────────────────────────────────────────────────
             var app = builder.Build();
 
@@ -131,6 +165,7 @@ namespace SkyScan.Presentation
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseRateLimiter();
 
             app.UseAuthentication();
             app.UseAuthorization();

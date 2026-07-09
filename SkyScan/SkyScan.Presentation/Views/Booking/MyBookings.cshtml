@@ -4,6 +4,7 @@
     ViewData["Title"] = Lang.T("My Premium Bookings");
     Layout = "_Layout";
     var culture = new System.Globalization.CultureInfo(Lang.CurrentLanguage);
+    var addedBookings = ViewBag.AddedBookings as List<Guid> ?? new List<Guid>();
 }
 
 <main class="pt-32 pb-24 px-6 md:px-12 atmospheric-layer min-h-screen">
@@ -14,20 +15,7 @@
             <p class="text-text-muted text-sm font-light opacity-80">@Lang.T("A curation of your scheduled skies and historical flights.")</p>
         </header>
 
-        @if (TempData["Message"] != null)
-        {
-            <div class="bg-green-950/20 text-green-400 p-4 rounded-xl border border-green-500/20 backdrop-blur-md text-xs font-bold flex items-center gap-2 animate-fade-in">
-                <span class="material-symbols-outlined text-base">check_circle</span>
-                @TempData["Message"]
-            </div>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <div class="bg-red-950/20 text-red-400 p-4 rounded-xl border border-red-500/20 backdrop-blur-md text-xs font-bold flex items-center gap-2 animate-fade-in">
-                <span class="material-symbols-outlined text-base">error</span>
-                @TempData["Error"]
-            </div>
-        }
+
 
         <div class="space-y-6">
             @if (!Model.Any())
@@ -78,10 +66,20 @@
                                 <span class="text-text-light font-bold text-sm">@booking.Flight.Airline?.Name</span>
                             </div>
                             <div class="flex flex-col sm:flex-row gap-3">
-                                <a href="/Booking/AddToGoogleCalendar?bookingId=@booking.BookingId" class="inline-flex items-center justify-center gap-2 bg-glass border border-outline hover:border-accent/40 text-text-light font-label text-[10px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg transition-all">
-                                    <span class="material-symbols-outlined text-xs text-accent">calendar_month</span>
-                                    @Lang.T("Google Calendar")
-                                </a>
+                                @if (addedBookings.Contains(booking.BookingId))
+                                {
+                                    <a href="/Booking/AddToGoogleCalendar?bookingId=@booking.BookingId" class="inline-flex items-center justify-center gap-2 bg-accent/20 border border-accent text-accent font-label text-[10px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-xs text-accent">task_alt</span>
+                                        @Lang.T("Added to Google Calendar")
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="/Booking/AddToGoogleCalendar?bookingId=@booking.BookingId" class="inline-flex items-center justify-center gap-2 bg-glass border border-outline hover:border-accent/40 text-text-light font-label text-[10px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg transition-all">
+                                        <span class="material-symbols-outlined text-xs text-accent">calendar_month</span>
+                                        @Lang.T("Google Calendar")
+                                    </a>
+                                }
                                 <a href="@booking.Flight.RedirectURL" target="_blank" class="inline-flex items-center justify-center bg-accent hover:bg-text-light hover:text-background text-background font-label text-[10px] font-bold uppercase tracking-widest px-5 py-3 rounded-lg transition-all">
                                     @Lang.T("View Ticket")
                                 </a>

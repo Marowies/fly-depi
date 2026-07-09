@@ -56,7 +56,6 @@ namespace SkyScan.Infrastructure.Data.Repositories_Implementations
                 .Include(f => f.ArrivalAirport).ThenInclude(a => a.City)
                 .OrderBy(x => Guid.NewGuid()) // Random selection
                 .Take(count)
-                .AsNoTracking()
                 .ToListAsync();
         }
 

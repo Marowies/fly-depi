@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using SkyScan.Infrastructure.Data.Data_Sources;
 using SkyScan.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace SkyScan.Presentation.Controllers
 {
@@ -222,11 +223,34 @@ namespace SkyScan.Presentation.Controllers
         }
 
         [HttpGet]
+        [EnableRateLimiting("SearchPolicy")]
         public async Task<IActionResult> Results(string origin, string destination, string date, string tripType = "OneWay", string? returnDate = null)
         {
             if (!DateTime.TryParse(date, out DateTime departureDate))
             {
                 return RedirectToAction("Index");
+            }
+
+            if (departureDate.Date < DateTime.Today)
+            {
+                var newDepartureDate = DateTime.Today.AddDays(1);
+                var newReturnDate = returnDate;
+
+                if (!string.IsNullOrEmpty(returnDate) && DateTime.TryParse(returnDate, out DateTime parsedReturnDate))
+                {
+                    var gap = parsedReturnDate.Date - departureDate.Date;
+                    if (gap < TimeSpan.Zero) gap = TimeSpan.FromDays(7);
+                    newReturnDate = newDepartureDate.Add(gap).ToString("yyyy-MM-dd");
+                }
+
+                return RedirectToAction(nameof(Results), new
+                {
+                    origin = origin,
+                    destination = destination,
+                    date = newDepartureDate.ToString("yyyy-MM-dd"),
+                    tripType = tripType,
+                    returnDate = newReturnDate
+                });
             }
 
             // Backend Validation: Verify that the submitted IDs are valid GUIDs and exist in the DB
@@ -325,22 +349,27 @@ namespace SkyScan.Presentation.Controllers
             {
                 return NotFound("No nearby city found.");
             }
-            var currentLang = _languageService.CurrentLanguage;
-            var cityName = city.Name;
 
-            if (currentLang == "ar")
+            var dbCity = await _airportRepository.GetCityByIdAsync(city.CityId);
+            if (dbCity == null)
             {
-                var dbCity = await _airportRepository.GetCityByIdAsync(city.CityId);
-                if (dbCity != null && !string.IsNullOrEmpty(dbCity.NameAr))
-                {
-                    cityName = dbCity.NameAr;
-                }
+                return Json(new { cityId = city.CityId, name = city.Name });
             }
-            return Json(new { cityId = city.CityId, name = cityName });
+
+            var currentLang = _languageService.CurrentLanguage;
+            var isAr = currentLang == "ar";
+
+            var cityName = isAr && !string.IsNullOrEmpty(dbCity.NameAr) ? dbCity.NameAr : dbCity.Name;
+            var countryName = isAr && !string.IsNullOrEmpty(dbCity.Country?.NameAr) ? dbCity.Country.NameAr : dbCity.Country?.Name ?? dbCity.CountryCode;
+
+            var displayName = $"{cityName}, {countryName}";
+
+            return Json(new { cityId = dbCity.CityId, name = displayName });
         }
 
         [HttpPost]
         [Authorize]
+        [EnableRateLimiting("BookingPolicy")]
         public async Task<IActionResult> ToggleFavorite(ToggleFavoriteRequest request)
         {
             var user = await _userManager.GetUserAsync(User);

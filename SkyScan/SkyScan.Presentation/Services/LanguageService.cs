@@ -191,7 +191,8 @@ namespace SkyScan.Presentation.Services
             { "Booked", "تم الحجز" },
             { "View Ticket", "عرض التذكرة" },
             { "Remove from favorites", "إزالة من المفضلة" },
-            { "Target Price", "السعر المستهدف" }
+            { "Target Price", "السعر المستهدف" },
+            { "Monitoring Until", "مراقبة حتى" }
         };
 
        

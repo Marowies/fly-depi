@@ -5,6 +5,8 @@ using SkyScan.Core.Entities;
 using SkyScan.Core.Entities.AirLine;
 using SkyScan.Core.Repositories_Interfaces;
 using SkyScan.Infrastructure.Identity;
+using SkyScan.Presentation.Models;
+using Microsoft.AspNetCore.RateLimiting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,56 +57,31 @@ namespace SkyScan.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Book(
-            string flightNumber,
-            string departureTime,
-            string origin,
-            string destination,
-            string originIata,
-            string destinationIata,
-            string airlineName,
-            string arrivalTime,
-            decimal price,
-            string redirectUrl,
-            bool hasWifi = false,
-            bool hasFood = false,
-            bool hasEntertainment = false,
-            string? returnFlightNumber = null,
-            string? returnDepartureTime = null,
-            string? returnOrigin = null,
-            string? returnDestination = null,
-            string? returnOriginIata = null,
-            string? returnDestinationIata = null,
-            string? returnAirlineName = null,
-            string? returnArrivalTime = null,
-            bool returnHasWifi = false,
-            bool returnHasFood = false,
-            bool returnHasEntertainment = false,
-            bool createPriceAlert = false,
-            bool addToCalendar = false)
+        [EnableRateLimiting("BookingPolicy")]
+        public async Task<IActionResult> Book(BookFlightRequest request)
         {
-            if (!DateTime.TryParse(departureTime, out var depTime))
+            if (!DateTime.TryParse(request.DepartureTime, out var depTime))
             {
                 return BadRequest("Invalid departure date.");
             }
 
-            var flight = await _flightRepository.GetByFlightNumberAndDepartureAsync(flightNumber, depTime);
+            var flight = await _flightRepository.GetByFlightNumberAndDepartureAsync(request.FlightNumber, depTime);
             if (flight == null)
             {
                 // Materialize flight on demand
-                DateTime.TryParse(arrivalTime, out var arrTime);
+                DateTime.TryParse(request.ArrivalTime, out var arrTime);
                 flight = await _flightRepository.EnsureFlightExistsAsync(
-                    flightNumber,
+                    request.FlightNumber,
                     depTime,
-                    originIata,
-                    destinationIata,
-                    airlineName,
+                    request.OriginIata,
+                    request.DestinationIata,
+                    request.AirlineName,
                     arrTime == default ? depTime : arrTime,
-                    redirectUrl,
-                    price,
-                    hasWifi,
-                    hasFood,
-                    hasEntertainment
+                    request.RedirectUrl,
+                    request.Price,
+                    request.HasWifi,
+                    request.HasFood,
+                    request.HasEntertainment
                 );
             }
 
@@ -114,24 +91,24 @@ namespace SkyScan.Presentation.Controllers
             }
 
             Flight? returnFlight = null;
-            if (!string.IsNullOrEmpty(returnFlightNumber) && DateTime.TryParse(returnDepartureTime, out var retDepTime))
+            if (!string.IsNullOrEmpty(request.ReturnFlightNumber) && DateTime.TryParse(request.ReturnDepartureTime, out var retDepTime))
             {
-                returnFlight = await _flightRepository.GetByFlightNumberAndDepartureAsync(returnFlightNumber, retDepTime);
+                returnFlight = await _flightRepository.GetByFlightNumberAndDepartureAsync(request.ReturnFlightNumber, retDepTime);
                 if (returnFlight == null)
                 {
-                    DateTime.TryParse(returnArrivalTime, out var retArrTime);
+                    DateTime.TryParse(request.ReturnArrivalTime, out var retArrTime);
                     returnFlight = await _flightRepository.EnsureFlightExistsAsync(
-                        returnFlightNumber,
+                        request.ReturnFlightNumber,
                         retDepTime,
-                        returnOriginIata!,
-                        returnDestinationIata!,
-                        returnAirlineName!,
+                        request.ReturnOriginIata!,
+                        request.ReturnDestinationIata!,
+                        request.ReturnAirlineName!,
                         retArrTime == default ? retDepTime : retArrTime,
-                        redirectUrl,
+                        request.RedirectUrl,
                         0.00M, // return price is included in outbound package price
-                        returnHasWifi,
-                        returnHasFood,
-                        returnHasEntertainment
+                        request.ReturnHasWifi,
+                        request.ReturnHasFood,
+                        request.ReturnHasEntertainment
                     );
                 }
             }
@@ -148,10 +125,10 @@ namespace SkyScan.Presentation.Controllers
                     BookingDate = DateTime.UtcNow
                 });
 
-                if (createPriceAlert)
+                if (request.CreatePriceAlert)
                 {
                     // Auto-Favorite Outbound Flight via interface
-                    var outboundTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, price);
+                    var outboundTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(flight.FlightId, request.Price);
                     var existingOutboundAlert = await _priceAlertRepository.FindByUserAndTripAsync(user.Id, outboundTrip.TripId);
                     if (existingOutboundAlert == null)
                     {
@@ -160,7 +137,7 @@ namespace SkyScan.Presentation.Controllers
                             Id = Guid.NewGuid(),
                             UserId = user.Id,
                             TripId = outboundTrip.TripId,
-                            TargetPrice = price
+                            TargetPrice = request.Price
                         });
                     }
                 }
@@ -175,7 +152,7 @@ namespace SkyScan.Presentation.Controllers
                         BookingDate = DateTime.UtcNow
                     });
 
-                    if (createPriceAlert)
+                    if (request.CreatePriceAlert)
                     {
                         // Auto-Favorite Return Flight via interface
                         var returnTrip = await _priceAlertRepository.EnsureTripExistsForFlightAsync(returnFlight.FlightId, 0.00M);
@@ -205,12 +182,12 @@ namespace SkyScan.Presentation.Controllers
                     FlightNumber = flight.FlightNumber,
                     DepartureTime = flight.DepartureTime,
                     ArrivalTime = flight.ArrivalTime,
-                    OriginCityName = flight.DepartureAirport?.City?.Name ?? origin,
-                    OriginIata = flight.DepartureAirport?.IataCode ?? origin,
-                    DestinationCityName = flight.ArrivalAirport?.City?.Name ?? destination,
-                    DestinationIata = flight.ArrivalAirport?.IataCode ?? destination,
-                    AirlineName = flight.Airline?.Name ?? airlineName,
-                    RedirectUrl = flight.RedirectURL ?? redirectUrl
+                    OriginCityName = flight.DepartureAirport?.City?.Name ?? request.Origin,
+                    OriginIata = flight.DepartureAirport?.IataCode ?? request.Origin,
+                    DestinationCityName = flight.ArrivalAirport?.City?.Name ?? request.Destination,
+                    DestinationIata = flight.ArrivalAirport?.IataCode ?? request.Destination,
+                    AirlineName = flight.Airline?.Name ?? request.AirlineName,
+                    RedirectUrl = flight.RedirectURL ?? request.RedirectUrl
                 });
 
                 if (returnFlight != null)
@@ -222,19 +199,19 @@ namespace SkyScan.Presentation.Controllers
                         FlightNumber = returnFlight.FlightNumber,
                         DepartureTime = returnFlight.DepartureTime,
                         ArrivalTime = returnFlight.ArrivalTime,
-                        OriginCityName = returnFlight.DepartureAirport?.City?.Name ?? returnOrigin ?? destination,
-                        OriginIata = returnFlight.DepartureAirport?.IataCode ?? returnOriginIata ?? destinationIata,
-                        DestinationCityName = returnFlight.ArrivalAirport?.City?.Name ?? returnDestination ?? origin,
-                        DestinationIata = returnFlight.ArrivalAirport?.IataCode ?? returnDestinationIata ?? originIata,
-                        AirlineName = returnFlight.Airline?.Name ?? returnAirlineName ?? airlineName,
-                        RedirectUrl = returnFlight.RedirectURL ?? redirectUrl
+                        OriginCityName = returnFlight.DepartureAirport?.City?.Name ?? request.ReturnOrigin ?? request.Destination,
+                        OriginIata = returnFlight.DepartureAirport?.IataCode ?? request.ReturnOriginIata ?? request.DestinationIata,
+                        DestinationCityName = returnFlight.ArrivalAirport?.City?.Name ?? request.ReturnDestination ?? request.Origin,
+                        DestinationIata = returnFlight.ArrivalAirport?.IataCode ?? request.ReturnDestinationIata ?? request.OriginIata,
+                        AirlineName = returnFlight.Airline?.Name ?? request.ReturnAirlineName ?? request.AirlineName,
+                        RedirectUrl = returnFlight.RedirectURL ?? request.RedirectUrl
                     });
                 }
 
                 SaveGuestBookingsToCookie(guestBookings);
             }
 
-            if (addToCalendar)
+            if (request.AddToCalendar)
             {
                 return RedirectToAction(nameof(AddToGoogleCalendar), new { bookingId = mainBookingId, isBookingFlow = true });
             }
@@ -247,8 +224,8 @@ namespace SkyScan.Presentation.Controllers
             }
             if (string.IsNullOrEmpty(finalRedirectUrl))
             {
-                var queryStr = $"flights from {originIata} to {destinationIata} on {depTime:yyyy-MM-dd}";
-                if (!string.IsNullOrEmpty(returnDepartureTime) && DateTime.TryParse(returnDepartureTime, out var retDate))
+                var queryStr = $"flights from {request.OriginIata} to {request.DestinationIata} on {depTime:yyyy-MM-dd}";
+                if (!string.IsNullOrEmpty(request.ReturnDepartureTime) && DateTime.TryParse(request.ReturnDepartureTime, out var retDate))
                 {
                     queryStr += $" through {retDate:yyyy-MM-dd}";
                 }
@@ -265,6 +242,9 @@ namespace SkyScan.Presentation.Controllers
             var bookings = new List<Booking>();
             var now = DateTime.UtcNow;
 
+            var addedBookings = GetAddedBookingsFromCookie();
+            ViewBag.AddedBookings = addedBookings;
+
             if (user != null)
             {
                 var allBookings = (await _bookingRepository.GetBookingsByUserIdAsync(user.Id)).ToList();
@@ -272,7 +252,11 @@ namespace SkyScan.Presentation.Controllers
                 {
                     if (b.Flight != null && b.Flight.DepartureTime < now)
                     {
-                        await _bookingRepository.DeleteAsync(b);
+                        var trackedBooking = (await _bookingRepository.FindAsync(x => x.BookingId == b.BookingId)).FirstOrDefault();
+                        if (trackedBooking != null)
+                        {
+                            await _bookingRepository.DeleteAsync(trackedBooking);
+                        }
                     }
                     else
                     {
@@ -350,13 +334,53 @@ namespace SkyScan.Presentation.Controllers
             });
         }
 
+        private List<Guid> GetAddedBookingsFromCookie()
+        {
+            var cookie = Request.Cookies["AddedToCalendarBookings"];
+            if (string.IsNullOrEmpty(cookie))
+            {
+                return new List<Guid>();
+            }
+
+            try
+            {
+                return JsonSerializer.Deserialize<List<Guid>>(cookie) ?? new List<Guid>();
+            }
+            catch
+            {
+                return new List<Guid>();
+            }
+        }
+
+        private void SaveAddedBookingsToCookie(List<Guid> bookings)
+        {
+            var json = JsonSerializer.Serialize(bookings);
+            Response.Cookies.Append("AddedToCalendarBookings", json, new CookieOptions
+            {
+                Expires = DateTimeOffset.UtcNow.AddYears(1),
+                HttpOnly = true,
+                Secure = true
+            });
+        }
+
         [HttpGet]
+        [EnableRateLimiting("BookingPolicy")]
         public async Task<IActionResult> AddToGoogleCalendar(Guid bookingId, bool isBookingFlow = false)
         {
             var booking = await FindBookingAsync(bookingId);
             if (booking == null)
             {
                 TempData["Error"] = "Booking not found.";
+                return RedirectToAction(nameof(MyBookings));
+            }
+
+            // Check if already added to toggle it off
+            var addedBookings = GetAddedBookingsFromCookie();
+            if (addedBookings.Contains(bookingId))
+            {
+                addedBookings.Remove(bookingId);
+                SaveAddedBookingsToCookie(addedBookings);
+                TempData["Message"] = "Removed flight booking from Google Calendar tracking.";
                 return RedirectToAction(nameof(MyBookings));
             }
 
@@ -523,6 +547,14 @@ namespace SkyScan.Presentation.Controllers
                 if (calendarResponse.IsSuccessStatusCode)
                 {
                     TempData["Message"] = "Flight successfully added to your Google Calendar with reminders!";
+
+                    // Add to cookie tracker
+                    var addedList = GetAddedBookingsFromCookie();
+                    if (!addedList.Contains(bookingId))
+                    {
+                        addedList.Add(bookingId);
+                        SaveAddedBookingsToCookie(addedList);
+                    }
                 }
                 else
                 {

@@ -92,7 +92,11 @@ namespace SkyScan.Infrastructure.Workers
 
                 string emailBody = BuildAlertEmailBody(flight, alert.TargetPrice, match, cheaperAlternatives);
                 await emailService.SendEmailAsync(user.Email, "SkyScan Price Drop & Flight Alert", emailBody);
-                await alertRepo.DeleteAsync(alert);
+                var trackedAlert = (await alertRepo.FindAsync(a => a.Id == alert.Id)).FirstOrDefault();
+                if (trackedAlert != null)
+                {
+                    await alertRepo.DeleteAsync(trackedAlert);
+                }
             }
             catch (Exception ex)
             {

@@ -415,7 +415,7 @@
                 formData.append('destinationIata', btn.dataset.destinationIata);
                 formData.append('airlineName', btn.dataset.airline);
                 formData.append('arrivalTime', btn.dataset.arrTime);
-                formData.append('price', btn.dataset.price);
+                formData.append('price', btn.dataset.priceUsd);
                 formData.append('redirectUrl', btn.dataset.redirect);
 
                 try {
@@ -540,7 +540,7 @@
                     document.getElementById('HiddenDestinationIata').value = destinationIata;
                     document.getElementById('HiddenAirlineName').value = airline;
                     document.getElementById('HiddenArrivalTime').value = btn.dataset.arrTime;
-                    document.getElementById('HiddenPrice').value = price;
+                    document.getElementById('HiddenPrice').value = parseFloat(btn.dataset.priceUsd);
                     document.getElementById('HiddenRedirectUrl').value = redirect;
                     document.getElementById('HiddenHasWifi').value = btn.dataset.amenitiesWifi;
                     document.getElementById('HiddenHasFood').value = btn.dataset.amenitiesMeals;
