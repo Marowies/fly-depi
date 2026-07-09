@@ -1,6 +1,140 @@
-﻿@{
+@{
     ViewData["Title"] = "Privacy Policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<main class="relative min-h-screen pt-40 pb-24 px-8 bg-background">
+    <article class="max-w-3xl mx-auto space-y-10 text-left" dir="ltr">
+        <header class="space-y-3 border-b border-border-light pb-8">
+            <span class="font-sans text-[10px] uppercase tracking-[0.4em] text-accent font-bold">SkyScan</span>
+            <h1 class="font-serif text-4xl font-extrabold tracking-tight text-text-light">Privacy Policy</h1>
+            <p class="text-xs text-text-muted">Last updated: July 9, 2026</p>
+        </header>
+
+        <section class="space-y-3">
+            <p class="text-sm text-text-muted leading-relaxed">
+                SkyScan ("SkyScan," "we," "us") is an independently developed flight-search
+                and trip-planning application. This policy explains what information SkyScan
+                collects, how it is used, and the choices available to you — including how
+                SkyScan uses Google APIs, most notably the Google Calendar API. This policy
+                applies to SkyScan as made available at
+                <a class="text-accent hover:underline" href="https://skyscan.runasp.net/">https://skyscan.runasp.net/</a>.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">1. Information We Collect</h2>
+            <p class="text-sm text-text-muted leading-relaxed">SkyScan collects the following categories of information:</p>
+            <ul class="list-disc list-inside text-sm text-text-muted leading-relaxed space-y-2 pl-2">
+                <li><span class="text-text-light font-semibold">Account information.</span> If you register directly, we store your name, email address, and a securely hashed password. If you sign in with Google, we receive your name, email address, and Google account identifier from Google — we never receive or store your Google password.</li>
+                <li><span class="text-text-light font-semibold">Search activity.</span> To power trending routes and your personal search history, we store the origin, destination, travel dates, and trip type of flight searches you perform while signed in.</li>
+                <li><span class="text-text-light font-semibold">Saved routes and price alerts.</span> If you favorite a route or flight, we store the route and your target price so we can email you if a matching fare drops below it.</li>
+                <li><span class="text-text-light font-semibold">Bookings.</span> When you use SkyScan to proceed with a flight (which redirects you to the airline or a partner site to complete payment), we store the flight details associated with that booking record so it can appear under "My Bookings." SkyScan does not process payments and never collects payment card information.</li>
+                <li><span class="text-text-light font-semibold">Guest activity.</span> If you use SkyScan without an account, your in-progress bookings and calendar-sync status are kept in browser cookies on your device rather than in our database, and are not linked to any account.</li>
+                <li><span class="text-text-light font-semibold">Preferences.</span> Your selected display language and currency are stored in cookies so they persist between visits.</li>
+                <li><span class="text-text-light font-semibold">Google Calendar data (only if you use this feature).</span> See Section 2 below.</li>
+            </ul>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">2. Google Calendar Integration</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                SkyScan offers an optional "Add to Google Calendar" feature so you can save a
+                flight's departure and arrival details as a calendar event. If you choose to use
+                this feature, SkyScan will:
+            </p>
+            <ul class="list-disc list-inside text-sm text-text-muted leading-relaxed space-y-2 pl-2">
+                <li>Redirect you to Google's own consent screen, where Google — not SkyScan — asks you to approve access.</li>
+                <li>Request only the <code class="text-accent">https://www.googleapis.com/auth/calendar.events</code> scope, which allows creating and managing individual calendar events. SkyScan does not request read access to your existing calendar, your full calendar list, or any other Google data.</li>
+                <li>Use the resulting authorization solely to create one calendar event containing your flight number, airline, route, departure/arrival times, and booking reference, with reminders — then discard the access token. SkyScan does not store your Google Calendar access token, and does not read, browse, or export any other events already on your calendar.</li>
+                <li>Record only that a given booking has been added to your calendar (a booking ID, not any calendar content) so the "Added to Google Calendar" button reflects your prior choice.</li>
+            </ul>
+            <p class="text-sm text-text-muted leading-relaxed">
+                <span class="text-text-light font-semibold">Limited Use disclosure:</span> SkyScan's
+                use and transfer to any other app of information received from Google APIs will
+                adhere to the
+                <a class="text-accent hover:underline" href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>,
+                including the Limited Use requirements.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">3. How We Use Information</h2>
+            <p class="text-sm text-text-muted leading-relaxed">We use the information above to:</p>
+            <ul class="list-disc list-inside text-sm text-text-muted leading-relaxed space-y-2 pl-2">
+                <li>Operate core features: searching flights, displaying results, and letting you book, save, and revisit trips.</li>
+                <li>Send you account-related email (email confirmation, password reset, two-factor codes) and, if you've set a price alert, notify you when a matching fare drops.</li>
+                <li>Show trending and recently searched routes.</li>
+                <li>Remember your language and currency preference between visits.</li>
+                <li>Create a calendar event on your behalf, only when you explicitly request it (Section 2).</li>
+            </ul>
+            <p class="text-sm text-text-muted leading-relaxed">We do not sell your information, and we do not use it for advertising or ad targeting.</p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">4. Third-Party Services</h2>
+            <p class="text-sm text-text-muted leading-relaxed">SkyScan relies on the following third-party services to function. Each receives only what it needs to perform its task:</p>
+            <ul class="list-disc list-inside text-sm text-text-muted leading-relaxed space-y-2 pl-2">
+                <li><span class="text-text-light font-semibold">Amadeus</span> — flight search and pricing data (receives your search route and dates, not your identity).</li>
+                <li><span class="text-text-light font-semibold">Google</span> — sign-in (Google OAuth) and, if you opt in, the Calendar API described in Section 2.</li>
+                <li><span class="text-text-light font-semibold">CurrencyFreaks</span> — currency exchange rates used to display prices in your selected currency (receives no personal data).</li>
+                <li><span class="text-text-light font-semibold">OpenStreetMap / Nominatim</span> — converts GPS coordinates to a nearby city, only if you choose "Detect my location" (receives coordinates for that one lookup, not tied to your account).</li>
+                <li><span class="text-text-light font-semibold">Our email provider</span> — delivers account and price-alert emails on our behalf.</li>
+            </ul>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">5. Cookies</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                SkyScan uses cookies to keep you signed in, remember your language/currency choice,
+                and — for guests only — hold in-progress bookings locally in your browser. We do
+                not use third-party advertising or tracking cookies.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">6. Data Retention &amp; Your Choices</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                We keep account, search, alert, and booking data for as long as your account is
+                active. SkyScan does not currently offer automated self-service account deletion;
+                to request that your account and associated data be deleted, or to ask what data
+                we hold about you, email us at the address in Section 8 and we will act on your
+                request. You can revoke SkyScan's access to your Google Calendar at any time from
+                your <a class="text-accent hover:underline" href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account permissions page</a>, independently of contacting us.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">7. Security</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                Passwords are stored using industry-standard salted hashing, never in plain text.
+                Connections to SkyScan are encrypted in transit (HTTPS). Access to Google APIs uses
+                OAuth 2.0; SkyScan never sees or stores your Google password.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">8. Children's Privacy</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                SkyScan is not directed at children under 13, and we do not knowingly collect
+                information from them.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">9. Changes to This Policy</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                If this policy changes, the "Last updated" date above will change accordingly.
+                Material changes affecting how Google user data is handled will be reflected here
+                before taking effect.
+            </p>
+        </section>
+
+        <section class="space-y-3">
+            <h2 class="font-serif text-xl font-bold text-text-light">10. Contact</h2>
+            <p class="text-sm text-text-muted leading-relaxed">
+                Questions about this policy, or requests regarding your data, can be sent to
+                <a class="text-accent hover:underline" href="mailto:skyscanorg@gmail.com">skyscanorg@gmail.com</a>.
+            </p>
+        </section>
+    </article>
+</main>
