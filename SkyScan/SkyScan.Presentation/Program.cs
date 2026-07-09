@@ -13,6 +13,11 @@ using SkyScan.Infrastructure.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using MediatR;
+using FluentValidation;
+using SkyScan.Application;
+using SkyScan.Application.Common.Behaviors;
+using SkyScan.Application.Common.Interfaces;
 
 namespace SkyScan.Presentation
 {
@@ -27,6 +32,14 @@ namespace SkyScan.Presentation
             builder.Services.AddMemoryCache();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<SkyScan.Presentation.Services.ILanguageService, SkyScan.Presentation.Services.LanguageService>();
+            builder.Services.AddScoped<ICookieWriter, SkyScan.Presentation.Services.CookieWriter>();
+
+            // ── CQRS (MediatR) + Validation Pipeline ─────────────────────────────
+            // Scans SkyScan.Application for IRequestHandler<> implementations and,
+            // separately, for FluentValidation IValidator<> implementations.
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationAssemblyMarker).Assembly));
+            builder.Services.AddValidatorsFromAssembly(typeof(IApplicationAssemblyMarker).Assembly);
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             // ── Database ──────────────────────────────────────────────────────────
             builder.Services.AddDbContext<SkyScanDbContext>(options =>
