@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SkyScan.Application.Interfaces;
 
 namespace SkyScan.Infrastructure.Services
@@ -9,10 +10,12 @@ namespace SkyScan.Infrastructure.Services
     public class NominatimGeocodingService : IGeocodingService
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<NominatimGeocodingService> _logger;
 
-        public NominatimGeocodingService(HttpClient httpClient)
+        public NominatimGeocodingService(HttpClient httpClient, ILogger<NominatimGeocodingService> logger)
         {
             _httpClient = httpClient;
+            _logger = logger;
             // Nominatim requires a User-Agent identifying the app
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("SkyScanApp/1.0 (contact: skyscanorg@gmail.com)");
         }
@@ -45,7 +48,7 @@ namespace SkyScan.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error in Nominatim reverse geocoding: {ex.Message}");
+                _logger.LogError(ex, "Error in Nominatim reverse geocoding for ({Latitude}, {Longitude})", latitude, longitude);
             }
             return null;
         }

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using SkyScan.Application.DTOs;
 using SkyScan.Application.Interfaces;
 using SkyScan.Core.Entities;
@@ -21,15 +22,17 @@ namespace SkyScan.Infrastructure.Services
         private readonly string _clientId;
         private readonly string _clientSecret;
         private readonly SkyScanDbContext _dbContext;
+        private readonly ILogger<AmadeusFlightService> _logger;
         private string? _accessToken;
         private DateTime _tokenExpiration = DateTime.MinValue;
 
-        public AmadeusFlightService(HttpClient httpClient, IConfiguration configuration, SkyScanDbContext dbContext)
+        public AmadeusFlightService(HttpClient httpClient, IConfiguration configuration, SkyScanDbContext dbContext, ILogger<AmadeusFlightService> logger)
         {
             _httpClient = httpClient;
             _clientId = configuration["Amadeus:ClientId"] ?? "";
             _clientSecret = configuration["Amadeus:ClientSecret"] ?? "";
             _dbContext = dbContext;
+            _logger = logger;
 
             var baseUrl = configuration["Amadeus:BaseUrl"] ?? "https://test.api.amadeus.com/";
             _httpClient.BaseAddress = new Uri(baseUrl);
@@ -100,7 +103,7 @@ namespace SkyScan.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error retrieving airline name for IATA code {iataCode}: {ex.Message}");
+                _logger.LogError(ex, "Error retrieving airline name for IATA code {IataCode}", iataCode);
             }
 
             return null;
@@ -262,7 +265,7 @@ namespace SkyScan.Infrastructure.Services
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Error querying flight from {origin} to {destination}: {ex.Message}");
+                        _logger.LogError(ex, "Error querying flight from {Origin} to {Destination}", origin, destination);
                     }
                 }
             }
@@ -307,7 +310,7 @@ namespace SkyScan.Infrastructure.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error saving airline {carrierCode} ({resolvedName}) to DB: {ex.Message}");
+                _logger.LogError(ex, "Error saving airline {CarrierCode} ({ResolvedName}) to DB", carrierCode, resolvedName);
             }
 
             localCache[carrierCode] = resolvedName;
@@ -332,7 +335,7 @@ namespace SkyScan.Infrastructure.Services
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error saving airplane {aircraftCode} to DB: {ex.Message}");
+                    _logger.LogError(ex, "Error saving airplane {AircraftCode} to DB", aircraftCode);
                 }
             }
             return airplane ?? new Airplane { AircraftCode = aircraftCode, AircraftName = AircraftNameLookup.GetName(aircraftCode) };
