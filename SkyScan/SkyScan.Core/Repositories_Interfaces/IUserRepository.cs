@@ -28,4 +28,21 @@ namespace SkyScan.Core.Repositories_Interfaces
         Task<AuthResult> ResetPasswordAsync(User user, string token, string newPassword);
         Task<AuthResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
-        // Two-Fa
+        // Two-Factor Authentication
+        Task<bool> GetTwoFactorEnabledAsync(User user);
+        Task<AuthResult> SetTwoFactorEnabledAsync(User user, bool enabled);
+        Task<string?> GetAuthenticatorKeyAsync(User user);
+        Task<AuthResult> ResetAuthenticatorKeyAsync(User user);
+        Task<bool> VerifyTwoFactorTokenAsync(User user, string token);
+        Task<AuthResult> TwoFactorSignInAsync(string provider, string code, bool rememberMe, bool rememberMachine);
+        Task<User?> GetTwoFactorAuthenticationUserAsync();
+
+        // External (Google) Login
+        Task<ExternalLoginData> GetExternalLoginInfoAsync();
+        Task<AuthResult> ExternalLoginSignInAsync(string loginProvider, string providerKey);
+        Task<AuthResult> LinkExternalLoginAsync(User user, string loginProvider, string providerKey, string? providerDisplayName);
+
+        // Cookie Refresh
+        Task RefreshSignInAsync(User user);
+    }
+}
