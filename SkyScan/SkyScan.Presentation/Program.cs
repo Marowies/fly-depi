@@ -23,7 +23,7 @@ namespace SkyScan.Presentation
 {
     public class Program
     {
-        public static async Task Main(string[] args)
+        public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -117,7 +117,6 @@ namespace SkyScan.Presentation
             builder.Services.AddHttpClient<ILocationLookupService, AmadeusLocationLookupService>();
             builder.Services.AddHttpClient<IGeocodingService, NominatimGeocodingService>();
 
-            builder.Services.AddSingleton<ILocationSearchService, LocationSearchService>();
             builder.Services.AddScoped<IFlightFilteringService, FlightFilteringService>();
             builder.Services.AddHttpClient<ICurrencyConversionService, CurrencyConversionService>();
 
@@ -157,13 +156,6 @@ namespace SkyScan.Presentation
 
             // ─────────────────────────────────────────────────────────────────────
             var app = builder.Build();
-
-            // Warm up the In-Memory Search Index
-            using (var scope = app.Services.CreateScope())
-            {
-                var searchService = scope.ServiceProvider.GetRequiredService<ILocationSearchService>();
-                await searchService.InitializeAsync();
-            }
 
             // ── Pipeline ──────────────────────────────────────────────────────────
             app.UseMiddleware<GlobalExceptionMiddleware>();

@@ -24,9 +24,10 @@ namespace SkyScan.Application.Flights.SearchFlights
             // Relocated from FlightController.Search's local ResolveId function (Phase 0 Finding #8).
             // Deliberately kept as the exact same matching algorithm/data source as before (parse as
             // Guid first, else exact/contains match against this cached dropdown's "City, Country"
-            // text) rather than routed through ILocationSearchService's separate autocomplete index —
-            // that index uses prefix-only matching over a possibly different city set, and swapping
-            // to it risks silently changing which searches resolve. See Phase 2c report Flag F2.
+            // text) rather than routed through a separate prefix-only autocomplete index over a
+            // possibly different city set, which risked silently changing which searches resolve.
+            // See Phase 2c report Flag F2. (That separate index -- ILocationSearchService -- was
+            // itself confirmed dead and removed in Phase 2d; see Phase 2d report §4.)
             Guid? ResolveId(string? input)
             {
                 if (string.IsNullOrEmpty(input)) return null;
@@ -120,8 +121,3 @@ namespace SkyScan.Application.Flights.SearchFlights
                 DestinationCityId = finalDestId.Value,
                 DepartureDate = request.DepartureDate,
                 TripType = request.TripType,
-                ReturnDate = dto.ReturnDate
-            };
-        }
-    }
-}
