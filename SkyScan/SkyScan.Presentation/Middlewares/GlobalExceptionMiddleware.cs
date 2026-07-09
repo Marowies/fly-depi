@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
@@ -11,11 +12,13 @@ namespace SkyScan.Presentation.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<GlobalExceptionMiddleware> _logger;
+        private readonly IHostEnvironment _environment;
 
-        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger)
+        public GlobalExceptionMiddleware(RequestDelegate next, ILogger<GlobalExceptionMiddleware> logger, IHostEnvironment environment)
         {
             _next = next;
             _logger = logger;
+            _environment = environment;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -29,11 +32,11 @@ namespace SkyScan.Presentation.Middlewares
             {
                 // If an error is thrown, catch it here
                 _logger.LogError(ex, "An unhandled exception occurred during the request.");
-                await HandleExceptionAsync(context, ex);
+                await HandleExceptionAsync(context, ex, _environment);
             }
         }
 
-        private static Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private static Task HandleExceptionAsync(HttpContext context, Exception exception, IHostEnvironment environment)
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
@@ -43,7 +46,8 @@ namespace SkyScan.Presentation.Middlewares
             {
                 StatusCode = context.Response.StatusCode,
                 Message = "Internal Server Error. Please try again later.",
-                Detailed = exception.Message // In production, hide detailed exceptions from the client
+                // Only leak exception detail in Development — every other environment gets the generic message.
+                Detailed = environment.IsDevelopment() ? exception.Message : "An unexpected error occurred."
             };
 
             var jsonResponse = JsonSerializer.Serialize(response);
