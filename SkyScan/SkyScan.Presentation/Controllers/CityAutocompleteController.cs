@@ -4,13 +4,19 @@ using System.Threading.Tasks;
 
 namespace SkyScan.Presentation.Controllers
 {
+    /// <summary>
+    /// City-name autocomplete for the search form's typeahead, backed by an in-memory
+    /// index (ILocationSearchService). Renamed from SearchController — it has no
+    /// relationship to ISearchRepository (trending/recent searches), which lives in
+    /// FlightController; see Phase 2b Flag F1 and Phase 2c report Flag F1.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class SearchController : ControllerBase
+    public class CityAutocompleteController : ControllerBase
     {
         private readonly ILocationSearchService _searchService;
 
-        public SearchController(ILocationSearchService searchService)
+        public CityAutocompleteController(ILocationSearchService searchService)
         {
             _searchService = searchService;
         }
