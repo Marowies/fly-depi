@@ -178,6 +178,14 @@
                     </button>
 
                     <!-- Language Switcher -->
+                    @{
+                        // Must be percent-encoded: Context.Request.QueryString can itself contain
+                        // '&'/'='/'?' (e.g. on the search Results page). Concatenating it into
+                        // another URL's query string unescaped truncates returnUrl at the first
+                        // '&', silently dropping params like destination/date on redirect back.
+                        var currentUrl = $"{Context.Request.Path}{Context.Request.QueryString}";
+                        var encodedReturnUrl = Uri.EscapeDataString(currentUrl);
+                    }
                     <div class="relative group">
                         <button class="flex items-center gap-1 bg-surface border border-outline hover:border-accent/40 text-text-light hover:text-accent py-2 px-4 rounded-full text-[10px] uppercase tracking-wider transition-all" title="Select Language">
                             <span class="material-symbols-outlined text-sm">language</span>
@@ -185,8 +193,8 @@
                         </button>
                         <div class="absolute ltr:right-0 rtl:left-0 top-full pt-2 w-24 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 z-50">
                             <div class="bg-surface border border-outline rounded-xl shadow-lg py-1">
-                                <a href="/Language/Set?culture=en&returnUrl=@Context.Request.Path@Context.Request.QueryString" class="block px-4 py-2 text-[10px] text-text-light hover:bg-glass hover:text-accent transition-all">English</a>
-                                <a href="/Language/Set?culture=ar&returnUrl=@Context.Request.Path@Context.Request.QueryString" class="block px-4 py-2 text-[10px] text-text-light hover:bg-glass hover:text-accent transition-all">العربية</a>
+                                <a href="/Language/Set?culture=en&returnUrl=@encodedReturnUrl" class="block px-4 py-2 text-[10px] text-text-light hover:bg-glass hover:text-accent transition-all">English</a>
+                                <a href="/Language/Set?culture=ar&returnUrl=@encodedReturnUrl" class="block px-4 py-2 text-[10px] text-text-light hover:bg-glass hover:text-accent transition-all">العربية</a>
                             </div>
                         </div>
                     </div>
