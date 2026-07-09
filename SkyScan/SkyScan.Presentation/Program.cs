@@ -33,6 +33,8 @@ namespace SkyScan.Presentation
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddScoped<SkyScan.Presentation.Services.ILanguageService, SkyScan.Presentation.Services.LanguageService>();
             builder.Services.AddScoped<ICookieWriter, SkyScan.Presentation.Services.CookieWriter>();
+            builder.Services.AddScoped<ICurrentLanguageProvider, SkyScan.Presentation.Services.CurrentLanguageProvider>();
+            builder.Services.AddScoped<SkyScan.Application.Flights.Common.AirportDropdownCache>();
 
             // ── CQRS (MediatR) + Validation Pipeline ─────────────────────────────
             // Scans SkyScan.Application for IRequestHandler<> implementations and,
