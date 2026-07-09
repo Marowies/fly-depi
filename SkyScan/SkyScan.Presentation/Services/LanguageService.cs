@@ -192,7 +192,9 @@ namespace SkyScan.Presentation.Services
             { "View Ticket", "عرض التذكرة" },
             { "Remove from favorites", "إزالة من المفضلة" },
             { "Target Price", "السعر المستهدف" },
-            { "Monitoring Until", "مراقبة حتى" }
+            { "Monitoring Until", "مراقبة حتى" },
+            { "Track and send emails of this booking to price alert.", "تتبع وإرسال رسائل بريد إلكتروني بهذا الحجز إلى تنبيه الأسعار." },
+            { "Add this booking to my calendar.", "إضافة هذا الحجز إلى التقويم الخاص بي." }
         };
 
        

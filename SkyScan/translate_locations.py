@@ -127,27 +127,36 @@ def main():
 
     # Translate & Update Cities
     if cities:
-        print("\nTranslating Cities...")
+        BATCH_SIZE = 50
+        print(f"\nTranslating {len(cities)} Cities in batches of {BATCH_SIZE}...")
         updated_cities = 0
-        for city_id, name in cities:
-            if not name or name.strip() == "":
-                continue
-            try:
-                translation = translator.translate(name, src='en', dest='ar').text
-                if translation:
-                    cursor.execute(
-                        "UPDATE Cities SET NameAr = ? WHERE CityId = ?",
-                        (translation.strip(), city_id)
-                    )
-                    updated_cities += 1
-                    print(f"Translated City: {name} -> {translation}")
-                time.sleep(0.3)  # Rate limiting safety delay
-            except Exception as e:
-                print(f"Error translating City {name}: {e}")
-                time.sleep(1.0) # Longer sleep on error
         
-        conn.commit()
-        print(f"Successfully translated and updated {updated_cities} cities in the DB.")
+        for i in range(0, len(cities), BATCH_SIZE):
+            batch = cities[i:i + BATCH_SIZE]
+            print(f"\n--- Processing batch {i//BATCH_SIZE + 1} of {(len(cities) + BATCH_SIZE - 1)//BATCH_SIZE} ---")
+            
+            for city_id, name in batch:
+                if not name or name.strip() == "":
+                    continue
+                try:
+                    translation = translator.translate(name, src='en', dest='ar').text
+                    if translation:
+                        cursor.execute(
+                            "UPDATE Cities SET NameAr = ? WHERE CityId = ?",
+                            (translation.strip(), city_id)
+                        )
+                        updated_cities += 1
+                        print(f"Translated City: {name} -> {translation}")
+                    time.sleep(0.3)  # Rate limiting safety delay
+                except Exception as e:
+                    print(f"Error translating City {name}: {e}")
+                    time.sleep(2.0) # Longer sleep on error
+            
+            conn.commit()
+            print(f"*** Committed batch {i//BATCH_SIZE + 1}. Total cities updated so far: {updated_cities} ***")
+            time.sleep(1.0) # Small pause between batches
+        
+        print(f"\nSuccessfully translated and updated {updated_cities} cities in the DB.")
 
     cursor.close()
     conn.close()

@@ -203,9 +203,6 @@
                 <div class="flex items-center gap-4">
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <button class="hover:text-accent transition-all duration-300 flex items-center" title="Notifications">
-                            <span class="material-symbols-outlined text-text-light text-xl">notifications</span>
-                        </button>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
                             <button type="submit" class="hover:text-accent transition-all duration-300 flex items-center gap-1" title="Sign Out">
                                 <span class="material-symbols-outlined text-text-light text-xl">logout</span>

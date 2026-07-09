@@ -84,6 +84,8 @@ namespace SkyScan.Presentation.Controllers
             var thirtyDaysAgo = DateTime.UtcNow.AddDays(-30);
             var trending = await _searchRepository.GetTrendingRoutesSinceAsync(thirtyDaysAgo, 5);
 
+            var isAr = currentLang == "ar";
+
             // GetTrendingRoutesSinceAsync already returns one Search per distinct route (top 5 by count)
             var trendingRoutesList = trending
                 .Where(s => s.OriginCity != null && s.DestinationCity != null)
@@ -91,8 +93,8 @@ namespace SkyScan.Presentation.Controllers
                 {
                     OriginCityId = s.OriginCityId,
                     DestinationCityId = s.DestinationCityId,
-                    OriginCityName = s.OriginCity.Name,
-                    DestinationCityName = s.DestinationCity.Name,
+                    OriginCityName = isAr && !string.IsNullOrEmpty(s.OriginCity.NameAr) ? s.OriginCity.NameAr : s.OriginCity.Name,
+                    DestinationCityName = isAr && !string.IsNullOrEmpty(s.DestinationCity.NameAr) ? s.DestinationCity.NameAr : s.DestinationCity.Name,
                     SearchCount = s.OriginCity.SearchCount + s.DestinationCity.SearchCount
                 })
                 .ToList();
@@ -113,8 +115,8 @@ namespace SkyScan.Presentation.Controllers
                             {
                                 OriginCityId = origin.CityId,
                                 DestinationCityId = dest.CityId,
-                                OriginCityName = origin.Name,
-                                DestinationCityName = dest.Name,
+                                OriginCityName = isAr && !string.IsNullOrEmpty(origin.NameAr) ? origin.NameAr : origin.Name,
+                                DestinationCityName = isAr && !string.IsNullOrEmpty(dest.NameAr) ? dest.NameAr : dest.Name,
                                 SearchCount = origin.SearchCount + dest.SearchCount
                             });
                         }
@@ -287,14 +289,23 @@ namespace SkyScan.Presentation.Controllers
 
             // Resolve City Names from the first available airport or default
             var currentLang = _languageService.CurrentLanguage;
+            var isAr = currentLang == "ar";
             var originCity = originAirports.FirstOrDefault()?.City;
+            
+            var originCityName = originCity != null ? (isAr && !string.IsNullOrEmpty(originCity.NameAr) ? originCity.NameAr : originCity.Name) : "Origin";
+            var originCountryName = originCity?.Country != null ? (isAr && !string.IsNullOrEmpty(originCity.Country.NameAr) ? originCity.Country.NameAr : originCity.Country.Name) : originCity?.CountryCode;
+            
             var originName = originCity != null 
-                ? $"{originCity.Name}, {originCity.Country?.Name ?? originCity.CountryCode}" 
+                ? $"{originCityName}, {originCountryName ?? originCity.CountryCode}" 
                 : "Origin";
 
             var destCity = destAirports.FirstOrDefault()?.City;
+            
+            var destCityName = destCity != null ? (isAr && !string.IsNullOrEmpty(destCity.NameAr) ? destCity.NameAr : destCity.Name) : "Destination";
+            var destCountryName = destCity?.Country != null ? (isAr && !string.IsNullOrEmpty(destCity.Country.NameAr) ? destCity.Country.NameAr : destCity.Country.Name) : destCity?.CountryCode;
+            
             var destName = destCity != null 
-                ? $"{destCity.Name}, {destCity.Country?.Name ?? destCity.CountryCode}" 
+                ? $"{destCityName}, {destCountryName ?? destCity.CountryCode}" 
                 : "Destination";
             
             // Search Flights via the provider (Mock or Real) with Caching
